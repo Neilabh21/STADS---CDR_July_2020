@@ -16,7 +16,7 @@
 
 
 %\blindtext %remove this command and start writing your own content
-The Instrumentation System is responsible for capturing star images of required quality. The subsystem is responsible for designing, manufacturing, procuring, testing components like Image sensor, Baffle and Lens in order to meet the requirements 
+The Instrumentation System is responsible for capturing star images of required quality for the System. The subsystem is responsible for designing, manufacturing, procuring, testing, components like Image sensor, Baffle and Lens in order to meet the requirements 
 
 \section{Image Sensor}
 Images sensor is a device which captures photons and gives out digital signal to obtain an image.
@@ -39,12 +39,12 @@ We require to have at least 4 stars in the FOV of the optical system. FOV being 
     \\L=&Sensor\:side\:length
     \\f=&Focal\:length\:of\:lens 
 \end{align*}
-Clearly this formula doesn't say anything about number of stars in the FOV, the required FOV has to be decided using the star catalogue which has been set to a minimum of 8$^{\circ}$ over the smaller dimension of the sensor which gives a focal length of 35mm.
+Clearly this formula doesn't say anything about number of stars in the FOV, the required FOV has to be decided using the star catalogue which has been set to a minimum of 8$^{\circ}$ over the smaller dimension of the sensor which gives a focal length of 35mm. Hence we require a minimum FOV of 8$^{\circ}$ and hence a maximum focal length of 35mm.
 
 Our imaging system has to work in low-light conditions and hence we require to be able to acquire a good amount of light energy on the sensor. To achieve this we require a large enough aperture.
 
 Considering the amount of energy a limiting magnitude star emits, and the losses incurred in that due to transmission through the lens, efficiency of the sensor, and other factors, and further if we divide that light energy onto at least 4 pixels, we have to deal with very small amount of energy being converted to a pixel value. Also considering the noises present in the sensor, we thus have to acquire quite a large amount of energy from the star.
-This is "quite large" because of the focal length that we have to maintain, while maintaining the aperture size. From bench marking as well as our considerations we require an focal length to aperture ratio (f#) between 1 and 2 which is quite small and difficult to achieve considering all other requirements. As the f# decreases it becomes more difficult to design a single lens which can control the aberrations in limits.
+This is "quite large" because of the focal length that we have to maintain, while maintaining the aperture size. From bench marking as well as our considerations we require a focal length to aperture ratio (f\#) between 1 and 2 which is quite small and difficult to achieve considering all other requirements. As the f\# decreases it becomes more difficult to design a lens which can control the aberrations in limits.
 
 \section{Baffle}
 Baffles can be viewed as add-ons to the optical system. They are mainly used to mitigate stray light. It is a conical section, with an entrance window and an exit window which is aligned with the optical axis, that can block the light outside of the FoV.
@@ -74,7 +74,7 @@ The height of the first vane should be determined according to the entrance  ape
 \end{center}
 \par
 where, $x_{n}$ and $(r-y_{n})$ are the position and height of the $n^{th}$ vane, respectively; $a$ is the semi diameter of the lens; $r$ is the semi diameter of the baffle and $L$ is the length of the baffle.
-
+% @rohit What more should I include in the baffle section include your recent design of baffle and than you can add previous design in models chapter also some thing about simulation in sim chapter
 
 
 
