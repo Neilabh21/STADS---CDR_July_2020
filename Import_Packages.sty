@@ -1,0 +1,122 @@
+\ProvidesPackage{Import_Packages}
+
+%%%% Report Set-up
+\usepackage{geometry}
+\geometry{a4paper} % Paper size
+% Set Right and Left margins
+\addtolength{\oddsidemargin}{-.4in}
+\addtolength{\evensidemargin}{-.4in}
+\addtolength{\textwidth}{0.8in}
+% Set Top and Bottom margins
+\addtolength{\topmargin}{-.4in}
+\addtolength{\textheight}{1in}
+
+\setlength{\parindent}{0em} % Set indent of the first-line of a new paragraph
+\setlength{\parskip}{1em} % Set skip length between new paragraphs
+\usepackage{setspace} % Set spacing between lines
+\usepackage{titlesec}
+\usepackage{ragged2e}
+\pagenumbering{Roman}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering}
+  {\chaptertitlename\ \thechapter}{18pt}{\Huge}
+	\titlespacing{\chapter}{0pt}{-15pt}{15pt} % To reduce spacing on top of chapter titles
+\usepackage[toc,page]{appendix} % For appendix
+%----------------------------END----------------------------%
+
+
+%%%% Encoding Format
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{csquotes} % To fix https://tex.stackexchange.com/questions/229638/package-biblatex-warning-babel-polyglossia-detected-but-csquotes-missing
+%----------------------------END----------------------------%
+
+%%%% Enumerate with different tags - alphabet, roman numerals, etc
+\usepackage{enumitem}
+%----------------------------END----------------------------%
+
+%%%% Images
+\usepackage{graphicx}
+\usepackage{rotating} % For rotating images
+\usepackage{subcaption} % For Sub-figures\textbf
+\usepackage[justification=centering]{caption} % For center aligning the image captions
+\usepackage{float}
+%----------------------------END----------------------------%
+
+%%%% Bibliography
+\usepackage[backend=biber, citestyle=numeric, bibstyle=numeric, sorting=none]{biblatex}
+\addbibresource{references.bib} % Reference to the ___.bib file
+%----------------------------END----------------------------%
+
+%%%% Header & Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+
+\fancyhf{} % Remove default header and footer fields
+\fancyhead[R]{STADS - Conceptual Design Review} % Insert Project title
+\fancyhead[L]{\leftmark} % Insert Chapter Name
+\fancyfoot[R]{\thepage} % Insert Page Number
+\fancyfoot[L]{\rightmark} % Insert Section Name
+
+\renewcommand{\headrulewidth}{0.4pt} % Header line thickness
+\renewcommand{\footrulewidth}{0.4pt} % Footer line thickness
+%----------------------------END----------------------------%
+
+%%%% Math Packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{amsthm}
+\usepackage{xspace}
+\usepackage{bm} % Bold font
+
+% Makes available the commands \proof, \qedsymbol and \theoremstyle
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\newcommand{\vect}[1]{\boldsymbol{#1}} % Define \vect command
+%----------------------------END----------------------------%
+
+%%%% Hyperlinks
+\usepackage{hyperref}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-} %To spilt long URLs
+
+% Specify colour of hyper-links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    citecolor = blue,  
+    urlcolor=cyan,
+    pdftitle={Sharelatex Example},
+}
+\urlstyle{same}
+%----------------------------END----------------------------%
+
+%%%% Table
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+%----------------------------END----------------------------%
+
+%%%% Random Text
+\usepackage{blindtext}
+%----------------------------END----------------------------%
+
+%%%% Display Frames
+%\usepackage{showframe}
+%----------------------------END----------------------------%

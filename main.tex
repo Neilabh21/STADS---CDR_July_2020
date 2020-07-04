@@ -1,0 +1,128 @@
+\documentclass[12pt, a4paper, oneside]{book}
+
+
+%%%% Import Custom Packages
+\usepackage{Import_Packages}
+%----------------------------END----------------------------%
+
+
+%%%% Begin Document
+\begin{document}
+
+\frontmatter
+\pagestyle{plain} 
+%%%% Title Page
+\input{Foreword/title_page}
+%----------------------------END----------------------------%
+
+
+%%%% Preface
+\input{Foreword/preface}
+%----------------------------END----------------------------%
+
+
+%%%% Acknowledgements
+\input{Foreword/acknowledgements}
+%----------------------------END----------------------------%
+
+
+%%%% Revision-Log
+\input{Foreword/revision_log}
+%----------------------------END----------------------------%
+
+
+%%%% Acronyms
+\input{Foreword/acronyms}
+%----------------------------END----------------------------%
+
+
+% Make Table of Contents, Figures, Tables
+\tableofcontents
+\listoffigures
+\listoftables
+%----------------------------END----------------------------%
+
+
+\mainmatter
+\pagestyle{fancy}
+%%%% Template
+\input{Chapters/Template/template_chapter} % Comment this import statement to remove the template chapter from being a part of the final report
+%----------------------------END----------------------------%
+
+
+%%%% Introduction
+\input{Chapters/introduction}
+%----------------------------END----------------------------%
+
+
+%%%% Mission
+\input{Chapters/mission}
+%----------------------------END----------------------------%
+
+
+%%%% Requirements on the system
+\input{Chapters/Requirements/req_system}
+%----------------------------END----------------------------%
+
+
+%%%% Requirements on sub-systems
+\input{Chapters/Requirements/req_sub-systems}
+%----------------------------END----------------------------%
+
+
+%%%% System Specifications
+\input{Chapters/system_specs}
+%----------------------------END----------------------------%
+
+
+%%%% Mechanical sub-system
+\input{Chapters/Mechanical/mechanical}
+%----------------------------END----------------------------%
+
+%%%% Instrumentation subsystem
+\input{Chapters/Instrumentation/instr}
+%----------------------------END----------------------------%
+
+
+%%%% FE
+\input{Chapters/Electrical/Electrical_Subsystem}
+%----------------------------END----------------------------%
+
+%%%% FE
+\input{Chapters/GNC/lost_in_space}
+%----------------------------END----------------------------%
+
+%%%% Models
+\input{Chapters/Models/models}
+\input{Chapters/Models/Sensor_Model}
+%----------------------------END----------------------------%
+
+
+%%%% Simulation and results
+\input{Chapters/Simulations/simulations}
+%----------------------------END----------------------------%
+
+
+%%%% Testing and results
+\input{Chapters/Testing/testing}
+%----------------------------END----------------------------%
+
+
+\frontmatter
+%%%% Appendices
+\appendix
+
+\input{Appendix/appendix_A}
+\input{Appendix/appendix_B}
+\input{Appendix/software_used}
+\input{Appendix/team_members}
+%----------------------------END----------------------------%
+
+
+%%%% Bibliography
+\printbibliography
+%----------------------------END----------------------------%
+
+
+\end{document}
+%----------------------------END----------------------------%

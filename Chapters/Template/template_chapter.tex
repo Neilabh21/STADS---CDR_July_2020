@@ -1,0 +1,113 @@
+\chapter{Template Chapter}
+\thispagestyle{fancy}
+
+%-----------------------------------------------------------%
+% There are two ways to add a section:
+%
+%
+% a) Write the section within the same chapter (Prefer this if the section is small)
+%
+%
+% b) Write a separate section file, and import it to the corresponding chapter (Prefer this if the section is fairly large)
+% NOTE: Make sure the names of the (section.tex) are uniquely defined, and easy to read
+%
+%
+%
+%
+%
+% NOTE: Use \section*{} not \section{} for defining sections in appendix part of the doc
+
+\section{Template Section 1}
+\blindtext %remove this command and start writing your own content
+
+%----------------------------OR----------------------------%
+
+\input{Chapters/Template/template_section}
+%----------------------------END----------------------------%
+
+
+%-----------------------------------------------------------%
+\section{CDR - Outline}
+The outline of the CDR which will be followed is as follows:
+
+\begin{enumerate}
+    \item Preface
+    \item Acknowledgements
+    \item Revision Log
+    \item Table of Contents
+    \item List of Tables
+    \item List of Figures
+    \item Acronyms
+    \item Introduction
+    \item Mission
+    \item Requirements on System
+    \item Requirements on Sub-Systems
+    \item System Specifications
+    \begin{enumerate}
+        \item System-level flowchart
+        \item Operational modes \textbf{(if we have any legitimate modes)}
+    \end{enumerate}
+    \item Mechanical Sub-System
+    \begin{enumerate}
+        \item Configurational Layout
+        \item Interfaces (Elec + Mech)
+        \item Integration
+        \item Peripherals
+        \item Manufacturing methods
+        \item Mass Budget? \textbf{(To Be Decided)}
+    \end{enumerate}
+    \item Instrumentation Sub-System
+    \begin{enumerate}
+        \item Lens
+        \item Baffle
+        \item Sensor
+        \item Integration
+        \item Peripherals
+    \end{enumerate}
+    \item Electrical Sub-System
+    \begin{enumerate}
+        \item Interfacing
+        \item PCB
+        \item Feature Extraction
+        \item Power budget? \textbf{(To Be Decided)}
+    \end{enumerate} 
+    \item Guidance, Navigation \& Controls Sub-System
+    \begin{enumerate}
+        \item Star-matching
+        \begin{enumerate}
+            \item Lost-in-Space Mode
+            \item Tracking Mode
+        \end{enumerate}
+        \item Estimation
+    \end{enumerate}
+    \item Models
+    \begin{enumerate}
+        \item CAD Model
+        \item Sensor Model
+    \end{enumerate}
+    \item Simulations \& Results
+    \begin{enumerate}
+        \item Mechanical
+        \item Instrumentation
+        \item Electrical
+        \item Open-Loop Simulations
+        \begin{enumerate}
+            \item Model-in-Loop Simulations
+        \end{enumerate}
+    \end{enumerate}
+    \item Testing \& Results
+    \item Quality Assurance - Practices
+    \begin{enumerate}
+        \item Mechanical
+        \item Instrumentation
+        \item Electrical
+        \item Guidance, Navigation \& Controls Sub-System
+    \end{enumerate}
+    \item Appendix
+    \begin{enumerate}
+        \item Some Appendices
+        \item Softwares Used
+        \item Team Members
+    \end{enumerate}
+\end{enumerate}
+%----------------------------END----------------------------%

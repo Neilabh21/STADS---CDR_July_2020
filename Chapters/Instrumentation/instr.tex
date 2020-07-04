@@ -1,0 +1,87 @@
+\chapter{Instrumentation Sub-system}
+\thispagestyle{fancy}
+
+%-----------------------------------------------------------%
+% There are two ways to add a section:
+%
+%
+% a) Write the section within the same chapter (Prefer this if the section is small)
+%
+%
+% b) Write a separate section file, and import it to the corresponding chapter (Prefer this if the section is fairly large)
+% NOTE: Make sure the names of the (section.tex) are uniquely defined, and easy to read
+
+%\blindtext %remove this command and start writing your own content
+
+
+
+%\blindtext %remove this command and start writing your own content
+The Instrumentation System is responsible for capturing star images of required quality. The subsystem is responsible for designing, manufacturing, procuring, testing components like Image sensor, Baffle and Lens in order to meet the requirements 
+
+\section{Image Sensor}
+Images sensor is a device which captures photons and gives out digital signal to obtain an image.
+The sensor selection is primarily based on the following set of criteria: physical size, power consumption, availability, allowable storage as well as operating temperature. The sensor selection itself is not directly dictated by the star tracker performance requirements but once a sensor is selected, it poses constraints on the lens and the baffle. \par It has been decided that CMOS sensors will be used and not CCDs, mainly due to the extremely low operating temperature of CCDs.
+\subsection{Python 1300 CMOS Image Sensor}
+
+\section{Lens}
+Lens is an optical device which converges or diverges light by means of refraction. It will be placed just before the image sensor.
+
+\subsection{Image Specifications}
+The lens is required to form a good quality image over the entire sensor, which means minimum aberrations in image over the sensor plane. To achieve sub-pixel accuracy we require to form the image of a star( a point sized object at infinity) over a few pixels, which has been decided to be at least 4. This ensures sub-pixel accuracy with centroiding as well as maximum resolving ability for our system.
+
+We require to have at least 4 stars in the FOV of the optical system. FOV being calculated as :
+
+\begin{align}
+    tan(\theta/2)=&\frac{L}{2\times f}
+\end{align}
+\begin{align*}
+    \theta=&FOV
+    \\L=&Sensor\:side\:length
+    \\f=&Focal\:length\:of\:lens 
+\end{align*}
+Clearly this formula doesn't say anything about number of stars in the FOV, the required FOV has to be decided using the star catalogue which has been set to a minimum of 8$^{\circ}$ over the smaller dimension of the sensor which gives a focal length of 35mm.
+
+Our imaging system has to work in low-light conditions and hence we require to be able to acquire a good amount of light energy on the sensor. To achieve this we require a large enough aperture.
+
+Considering the amount of energy a limiting magnitude star emits, and the losses incurred in that due to transmission through the lens, efficiency of the sensor, and other factors, and further if we divide that light energy onto at least 4 pixels, we have to deal with very small amount of energy being converted to a pixel value. Also considering the noises present in the sensor, we thus have to acquire quite a large amount of energy from the star.
+This is "quite large" because of the focal length that we have to maintain, while maintaining the aperture size. From bench marking as well as our considerations we require an focal length to aperture ratio (f#) between 1 and 2 which is quite small and difficult to achieve considering all other requirements. As the f# decreases it becomes more difficult to design a single lens which can control the aberrations in limits.
+
+\section{Baffle}
+Baffles can be viewed as add-ons to the optical system. They are mainly used to mitigate stray light. It is a conical section, with an entrance window and an exit window which is aligned with the optical axis, that can block the light outside of the FoV.
+
+\subsection{Baffle Design}
+The parameters and characteristics that must be considered in baffle design are:
+\begin{itemize}
+    \item \textbf{Dimensions:} Dimensions of the baffle are strongly affected by entrance pupil diameter of optical system, FoV and sun exclusion angle.
+    \item \textbf{Vanes arrangement:} Location, size and shape of vanes should be designed to meet the following conditions:
+    \begin{itemize}
+        \item The vanes should be designed so that none of the optical elements could directly see the places illuminated by intense stray light sources.
+        \item The stray light has maximum reflections inside the baffle and between the vanes before reaching the lens.
+    \end{itemize}
+    \item \textbf{Coating:} The baffle surface must be coated by a black absorbing material.
+\end{itemize}
+
+\subsection{Vanes}
+Vanes are structures inside the baffle that serve the purpose of blocking all first order stray light from entering the lens. Ideally, baffle and vanes must be designed such that with minimum size and number of vanes, maximum percentage of stray light is attenuated.
+\par
+The height of the first vane should be determined according to the entrance  aperture diameter, FoV of the system and the baffle length. The position and height of each consequent vane can be determined using the equations:
+\begin{center}
+    $x_{n+1}=(y_{0}-y_{n+1})\frac{L}{y_{0}-a}$\\
+    \vspace{2em}
+    $y_{n+1}=r-\frac{r+a}{1+z_{n}} $\\
+    \vspace{2em}
+    $z_{n}=2a[r-y_{0}+x_{n}\frac{y_{0}-a}{L}\frac{y_{0}+r}{y_{0}+y_{n}}]$
+\end{center}
+\par
+where, $x_{n}$ and $(r-y_{n})$ are the position and height of the $n^{th}$ vane, respectively; $a$ is the semi diameter of the lens; $r$ is the semi diameter of the baffle and $L$ is the length of the baffle.
+
+
+
+
+\section{Interface}
+%this will include all the elements interfacing and how they are placed in order to perform in desired manner
+\section{Peripherals}
+% we will discus about this
+\clearpage
+
+%----------------------------END----------------------------%
