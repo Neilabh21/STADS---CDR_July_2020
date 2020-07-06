@@ -20,36 +20,68 @@ The Instrumentation System is responsible for capturing star images of required 
 
 \section{Image Sensor}
 Images sensor is a device which captures photons and gives out digital signal to obtain an image.
-The sensor selection is primarily based on the following set of criteria: physical size, power consumption, availability, allowable storage as well as operating temperature. The sensor selection itself is not directly dictated by the star tracker performance requirements but once a sensor is selected, it poses constraints on the lens and the baffle. \par It has been decided that CMOS sensors will be used and not CCDs, mainly due to the extremely low operating temperature of CCDs.
-\subsection{Python 1300 CMOS Image Sensor}
+The sensor selection is primarily based on the following set of criteria: physical size, power consumption, operating temperature as well as availability. The sensor selection itself is not directly dictated by the star tracker performance requirements but once a sensor is selected, it poses constraints on the lens and the baffle. \par It has been decided that CMOS sensors will be used and not CCDs, mainly due to the extremely low operating temperature of CCDs.
+
+\subsection{Python 1300 CMOS Image sensor}
+PYTHON 1300 image sensors utilize high sensitivity 4.8 $\mu$ m x 4.8 $\mu$ m pixels with pixel resolution of 1280 x 1024 that support low noise global shutter readout modes, reduced noise and increased dynamic range. The power dissipation is 420mW with operating temperature between -40$^o$ C to +85$^o$ C.
+
 
 \section{Lens}
 Lens is an optical device which converges or diverges light by means of refraction. It will be placed just before the image sensor.
 
-\subsection{Image Specifications}
-The lens is required to form a good quality image over the entire sensor, which means minimum aberrations in image over the sensor plane. To achieve sub-pixel accuracy we require to form the image of a star( a point sized object at infinity) over a few pixels, which has been decided to be at least 4. This ensures sub-pixel accuracy with centroiding as well as maximum resolving ability for our system.
-
-We require to have at least 4 stars in the FOV of the optical system. FOV being calculated as :
-
-\begin{align}
-    tan(\theta/2)=&\frac{L}{2\times f}
-\end{align}
+\subsection{Image and Lens Specifications Required}
+\begin{itemize}
+    \item \textbf{Spot size}: at least \textbf{4 pixels}
+\\The lens is required to form a good quality image over the entire sensor, which means minimum aberrations in image over the sensor plane. To achieve sub-pixel accuracy we require to form the image of a star( a point sized object at infinity) over a few pixels, which has been decided to be at least 4. This ensures sub-pixel accuracy with centroiding as well as maximum resolving ability for our system while ensuring the sub-pixel accuracy.
+ \item At least \textbf{4 stars} in FOV.\\Hence:
+          \begin{itemize}
+              \item \textbf{FOV} of at least \textbf{8$^{\circ}\times$10$^{\circ}$}.
+              \item \textbf{Focal length} of at most \textbf{35mm}. 
+          \end{itemize} 
+We require to have at least 4 stars in the FOV of the optical system for the Star Matching algorithm to work. FOV being calculated as :
+\begin{equation}
+    tan(\theta/2)=\frac{L}{2\times f}
+\end{equation}
 \begin{align*}
-    \theta=&FOV
-    \\L=&Sensor\:side\:length
-    \\f=&Focal\:length\:of\:lens 
+    \theta=& FOV
+    \\L=& Sensor\:side\:length
+    \\f=& Focal\:length\:of\:lens 
 \end{align*}
 Clearly this formula doesn't say anything about number of stars in the FOV, the required FOV has to be decided using the star catalogue which has been set to a minimum of 8$^{\circ}$ over the smaller dimension of the sensor which gives a focal length of 35mm. Hence we require a minimum FOV of 8$^{\circ}$ and hence a maximum focal length of 35mm.
-
-Our imaging system has to work in low-light conditions and hence we require to be able to acquire a good amount of light energy on the sensor. To achieve this we require a large enough aperture.
+    \item \textbf{1 \textless f\#\textless 2}
+\\Our imaging system has to work in low-light conditions and hence we require to be able to acquire a good amount of light energy on the sensor. To achieve this we require a large enough aperture.
 
 Considering the amount of energy a limiting magnitude star emits, and the losses incurred in that due to transmission through the lens, efficiency of the sensor, and other factors, and further if we divide that light energy onto at least 4 pixels, we have to deal with very small amount of energy being converted to a pixel value. Also considering the noises present in the sensor, we thus have to acquire quite a large amount of energy from the star.
 This is "quite large" because of the focal length that we have to maintain, while maintaining the aperture size. From bench marking as well as our considerations we require a focal length to aperture ratio (f\#) between 1 and 2 which is quite small and difficult to achieve considering all other requirements. As the f\# decreases it becomes more difficult to design a lens which can control the aberrations in limits.
+\end{itemize}
+
+\subsection{Lens Systems}
+Here we specify the lens systems based on just the number of lenses used in the system as all of the lens systems to be considered are for imaging purpose and to achieve the required image quality.
+\subsubsection{Single Lens System}
+\graphicspath{}
+\begin{figure}[h!]
+    \centering
+    \includegraphics{Figures/Instrumentation/single_lens_system.jpg}
+    \caption{Single Lens System showing aperture stop and field stop.}
+    \label{fig:8.1}
+\end{figure}
+\paragraph{Pros}
+\begin{itemize}
+    \item Lower chances of mechanical failure:
+    \\Lens being a sensitive object, more the number of lenses, more the complexity, more the chances of failure including misalignment of lenses, breaking, etc. However, certain commercially available star trackers for cubesats have used multiple lens systems.
+    \item Low mass:
+    \\This depends as we may use a thicker single lens, in place of multiple thinner lenses, but considering the mass of the lens holder to be used, this can be a factor.
+    \item Lowest possible cost:
+    \\This factor may also depend on the lens system in consideration, but can be a big differentiator as a single lens generally cost much less than a multi-lens system.
+    \item Highest transmission coefficient:
+    \\The transmission coefficients ($t$) of general materials for lenses are \textless 0.94. The transmission coefficient of a system can be approximated to be $t^n$ where $n$ is the number of lenses used in the system. So a single provides the highest transmission for same aperture diameter. Our system has to work in low light environment so this is a plus point.
+\end{itemize}
+
 
 \section{Baffle}
 Baffles can be viewed as add-ons to the optical system. They are mainly used to mitigate stray light. It is a conical section, with an entrance window and an exit window which is aligned with the optical axis, that can block the light outside of the FoV.
 
-\subsection{Baffle Design}
+\subsection{Considerations for Baffle Design}
 The parameters and characteristics that must be considered in baffle design are:
 \begin{itemize}
     \item \textbf{Dimensions:} Dimensions of the baffle are strongly affected by entrance pupil diameter of optical system, FoV and sun exclusion angle.
@@ -64,6 +96,12 @@ The parameters and characteristics that must be considered in baffle design are:
 \subsection{Vanes}
 Vanes are structures inside the baffle that serve the purpose of blocking all first order stray light from entering the lens. Ideally, baffle and vanes must be designed such that with minimum size and number of vanes, maximum percentage of stray light is attenuated.
 \par
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/Instrumentation/vane_arrangement.JPG}
+    \caption{Arrangement of vanes in Baffle by ray tracing}
+    \label{fig:my_label}
+\end{figure}
 The height of the first vane should be determined according to the entrance  aperture diameter, FoV of the system and the baffle length. The position and height of each consequent vane can be determined using the equations:
 \begin{center}
     $x_{n+1}=(y_{0}-y_{n+1})\frac{L}{y_{0}-a}$\\
@@ -73,8 +111,41 @@ The height of the first vane should be determined according to the entrance  ape
     $z_{n}=2a[r-y_{0}+x_{n}\frac{y_{0}-a}{L}\frac{y_{0}+r}{y_{0}+y_{n}}]$
 \end{center}
 \par
-where, $x_{n}$ and $(r-y_{n})$ are the position and height of the $n^{th}$ vane, respectively; $a$ is the semi diameter of the lens; $r$ is the semi diameter of the baffle and $L$ is the length of the baffle.
-% @rohit What more should I include in the baffle section include your recent design of baffle and than you can add previous design in models chapter also some thing about simulation in sim chapter
+where, $x_{n}$ and $(r-y_{n})$ are the position and height of the $n^{th}$ vane, respectively; $a$ is the semi diameter of the lens; $r$ is the semi diameter of the baffle and $L$ is the length of the baffle.\\
+
+\textbf{\underline{Note:}} The equations mentioned above are obtained by simple ray tracing of stray light.
+
+
+\subsection{Current Baffle Design}
+The following parameters were fixed (based on the Rugged Blue Series M12 imaging lens) before the baffle design was initiated:
+\begin{itemize}
+    \item \textbf{Aperture of lens system} - 20 $mm$
+    \item \textbf{Focal length of lens system} - 12.5 $mm$
+    \item \textbf{F number} - 2.5
+    \item \textbf{Field of View} - 28.8$^\circ$
+\end{itemize}
+\par
+For determining the length of the baffle, the sun exclusion angle was set to 45$^\circ$ based on data obtained by bench marking and keeping in mind that a higher sun exclusion angle would mean a more effective baffle.
+\par
+Traditionally, a double baffle is designed for an optical system. The front baffle is a shield against direct sunlight and the rear one attenuates the remaining stray light reflected from the front baffle walls. The single baffle that has been designed is simply the rear baffle. 
+%image of baffle here%
+
+
+%\subsection{Baffle Testing}
+%In order to test if a baffle has been correctly manufactured or not, it has to be tested for its sun exclusion angle. The methodology developed for testing the baffle is as follows:
+%\begin{itemize}
+    %\item Acquire a Lay Susan (a simple rotating table that has been modified according to the demands of the testing procedure) and a simple light source (a light bulb should suffice)
+    %\item The baffle should be placed on the Lazy Susan in a dark room
+    %\item A sensor should be placed at the baffle entrance
+    %\item Place the light source in line with sensor center at 0$^\circ$
+    %\item Start rotating the baffle slowly till the sensor detects no light. This angle should be approximately equal to the sun exclusion angle
+%\end{itemize}
+%\par
+%The Lazy Susan to be used has been designed in SolidWorks and includes customization that aids in the testing process. 
+%image of lazy susan here
+%Paste this section in testing chapter
+
+
 
 
 

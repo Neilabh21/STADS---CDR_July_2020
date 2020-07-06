@@ -3,7 +3,7 @@
 
 %-----------------------------------------------------------%
 \section{Requirements on Mechanical Subsystem}
-\subsection{From Mission}
+\subsection{From System}
 \subsection{From Communication and Payload Subsystem} 
 \subsection{From GNC} 
 \subsection{From Electrical Subsystem}
@@ -46,7 +46,7 @@
 %-----------------------------------------------------------%
 \newpage
 \section{Requirements on GNC}
-\subsection{From Mission}
+\subsection{From System}
 \subsection{From Testing Considerations}
 \subsection{From Communication and Payload \mbox{Subsystem} }
 %----------------------------END----------------------------%
@@ -66,11 +66,35 @@
 %-----------------------------------------------------------%
 \newpage
 \section{Requirements on Electrical Subsystem}
-\subsection{From Mission}
+\subsection{From System}
+\begin{itemize}
+    \item System shall operate with power requirement less than 1.5 W.
+    \item The algorithms should be able to process images and give star coordinates on image plane within reasonable bounds.
+    \item The algorithms should be able to process images and give attitude within reasonable bounds at slew rates up to 2$^\circ$/sec.
+    \item To select components which are space-grade.
+    \item Should provide a power and communication link between STADS system and user.
+    \item Overall electrical interface and components should give output in a cycle of specified time.
+    
+\end{itemize}
 \subsection{From Payload and Communication Subsystems}
+\begin{itemize}
+    \item 
+\end{itemize}
 \subsection{From Testing Considerations}
+\begin{itemize}
+    \item 
+\end{itemize}
 \subsection{From GNC}
+\begin{itemize}
+    \item Suitable microcontroller to be selected that can run the algorithms in the stipulated time.
+    
+\end{itemize}
 \subsection{From Mechanical Subsystem}
+\begin{itemize}
+    \item Electrical components, and the PCBs should fit within the specified dimensions.
+    \item Electrical components, and the PCBs should weigh under the specified weight.
+    \item To select components that can tolerate the specified temperature range of -40$^\circ$C to +50$^\circ$C.
+\end{itemize}
 %----------------------------END----------------------------%
 
 

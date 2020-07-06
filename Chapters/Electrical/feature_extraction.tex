@@ -9,9 +9,9 @@ We are working on three different algorithms for Feature Extraction, and selecti
     \ These will be implemented on the FPGA, provided that enough resources are left over after interfacing is implemented. We have two sequential algorithms that we plan to test on the FPGA:
     \begin{itemize}
         \item The pixel-by-pixel tagging algorithm:\\
-        \ This algorithm goes through all the pixels in the image and assigns a tag to each pixel. Tags that get connected at a pixel are merged at the end of tagging. This is a modification of one of the classical algorithms used for image labelling % add reference
+        \ This algorithm goes through all the pixels in the image and assigns a tag to each pixel. Tags that get connected at a pixel are merged at the end of tagging. This is a modification of one of the classical algorithms used for image labelling. An example of how this labelling algorithm works is presented at \href{https://aishack.in/tutorials/labelling-connected-components-example/}{this webpage}.
         \item The line-by-line algorithm:\\
-        \ This algorithm compares the starting and ending points of continuous ranges of pixels in every row and assigns tags to those ranges. Tags that get connected to the same range are merged at the end of comparisons for each row. % add reference
+        \ This algorithm compares the starting and ending points of continuous ranges of pixels in every row and assigns tags to those ranges. Tags that get connected to the same range are merged at the end of comparisons for each row. The algorithm to be implemented is presented in \cite{fe_blob_detection}.
     \end{itemize}
     \item Recursive Algorithms:\\
     We are working on a recursive centroiding algorithm called the region growth algorithm. Recursive algorithms can not be implemented on the FPGA as HLS can not synthesize recursive functions. Therefore, this algorithm will run on the microcontroller.
@@ -44,9 +44,8 @@ In the Gaussian fitting algorithm, an initial centroid is found out using the Ce
 
 We have decided to go with the the center of gravity approach because of the simplicity and the computational cost of implementing the Gaussian Curve Fitting algorithm.
 
-Currently, the pixel-by-pixel algorithm and the region growth algorithm have been coded and tested on both MATLAB and C++. These testing results have been compiled and presented in section \ref{}. % add reference
+Currently, the pixel-by-pixel algorithm and the region growth algorithm have been coded and tested on both MATLAB and C++. These testing results have been compiled and presented in section \ref{sec:Electrical_test}.
 
 We now present the details of the algorithms.
 
-\newpage
 \input{Chapters/Electrical/pixel_by_pixel}

@@ -1,0 +1,26 @@
+\section{PCB}
+\thispagestyle{fancy}
+
+The FPGA selected for our STADS system PCB is Xilinx XC7Z010 with CLG400 package.This FPGA has 2 pacakges CLG225 and CLG400.We have selected CLG400 package because it supports memory card and as FPGA has volatile memory we have planned to program it via a micro SD card whenever it boots up.
+
+The features of this FPGA are
+\begin{itemize}
+    \item {QSPI flash memory }
+    \item {Gigabit ethernet port}
+    \item {USB}
+    \item {Micro SD card}
+    \item {DDR ram}
+    \item {JTAG}
+    \item {Different I/O banks}
+\end{itemize}
+
+Since FPGA's are BGA(Ball grid array) they need multiple layer PCB and in our case we will be needing a 6 layer pcb comprising 4 signal planes, 1 GND plane and 1 VCC plane.Theirs also constraints on the stack up of the PCB in which each signal plane should be placed either adjacent to a GND or VCC plane. This constraints are imposed in order to decrease EMI (Electromagnetic Interference) caused due to the different kinds of i/o pins and integrated chips
+
+Other thing to be kept in mind while making a pcb is the constraints that are imposed by the manufacture side like the minimium trace width that can be laid, minimum gap between the traces, minimum drill size, the number of layers that the manufacture can make and the different types of vias that can be placed by the manufacturer.
+
+While sending objects in space we should keep in mind about the harsh conditions in space like the extremely low and high temperatures, radiations should be kept in mind during pcb designing and for all this proper calculations should be done keeping these factors in consideration and proper components such as military grade or space grade should be selected, Since our FPGA will be operated with high-frequency signals on the PCB transmission lines. Controlled impedance is important for signal integrity: it is the propagation of signals without distortion therefore proper impedance calculation should be done.
+
+FPGA requires many level of voltages to operate properly and they should be powered in a particular order and to get this different voltages we use linear voltage regulators like in our case we need 1v, 3.3v and 5v in the order, for proper working of fpga and for keeping in order we use the power g we are using TSV62130RGT and TSV62150RGT voltage regulators to acheive this Sequencing of the supplies cascading the POWER GOOD outputs of each supply to the ENABLE input for the next supply in the sequence .
+
+we use multiple capacitors instead of a larger capacitor of the same equivalent capacitance because it lowers the ESR, which is the internal resistance of the capacitor limiting the rate at which it can supply it's stored energy back to the circuit and Using a single value capacitor will not filter supply line noise over the entire frequency range needed, so a mix of capacitor values and types are used in parallel whereby a much wider range of noise frequencies can be filtered.
+

@@ -1,2 +1,121 @@
 \section{Estimation}
-% Shashank
+{
+
+\subsection{Introduction}
+{
+Attitude of a satellite refers to its orientation in space with respect to some reference frame. Attitude determination is the process of finding three independent quantities, which are necessary for any minimal parameterization of the attitude. There is a very subtle difference between attitude determination and attitude estimation. Attitude determination in the strictest sense refers to the memory-less approaches that determine the attitude point-by-point in time, quite often without taking the statistical properties of the attitude measurements into account. Attitude estimation, on the other hand, refers to approaches with memory, i.e. those that use a dynamic model of the spacecraft’s motion in a filter that retains information from a series of measurements taken over time. For our system, we are doing Attitude determination.
+
+The inputs to the algorithm are a set of inertial frame vectors of the image stars that have been identified by the star-matching algorithm.The corresponding body-frame vectors of those stars are also the inputs to the estimator block. Since star catalogues generally follow ICRF(International Celestial Reference Frame) coordinate system, the inertial frame vectors will be in ICRF and thus the determined attitude will be with respect to ICRF. The output of the algorithm is the estimated quaternion, which is equivalent to the attitude matrix from inertial frame to the body frame.
+}
+
+\subsection{Estimation Algorithms}  
+{
+
+\subsubsection{TRIAD Algorithm}
+{
+The name \textbf{``TRIAD"} is an acronym for \textbf{TRIaxial Attitude Determination}. This spacecraft attitude determination method uses exactly two vector measurements i.e. for star trackers, measurements from only two stars would be used. In a star tracker we have more number of measurements available but the algorithm is incapable of utilising more than 2. Therefore TRIAD is not a preferred choice for a star tracker.
+}
+
+
+\subsubsection{AIM Algorithm} %this section should be reduced
+\label{sec:AIM}
+{
+ \textbf{AIM} is an acronym for \textbf{Attitude estimation using Image Matching}.
+Almost all the attitude estimation algorithms are based on the minimisation of Wahba's loss function(discussed in later sections). These attitude estimation algorithms all share one important drawback, when used with a star tracker. They
+determine the attitude of the spacecraft, based on observations which are represented as unit vectors. In a
+star tracker however, the observations are 2D star centroids on the image plane. The conversion of these 2D
+coordinates to unit vectors is not straightforward. Because of optical and electronic distortion, temperature,
+magnetic and star intensity effects, an empirical model based on laboratory calibrations is usually used
+to convert the coordinates.\newline
+In classical approach we convert image coordinates of observed stars into unit vectors. Whereas in AIM, inverse conversion is performed to change the vector coordinates (i,j,k) of the
+database stars to coordinates in the image plane (x'; y').
+
+\begin{equation}
+    x'= x_{0} + \frac{Fi}{k}
+\end{equation}
+
+\begin{equation}
+y'= y_{0} + \frac{Fj}{k}
+\end{equation}
+
+At the heart of AIM lies a very efficient optimization to find the transformation which matches the stars of two
+images optimally on top of each other.In order to find the transformation which optimally matches the stars of two images on top of each other, we
+first construct a cost function which needs to be minimized.
+This cost function is the sum of the euclidean
+distances squared between each pair of image star and transformed database star. This distance is multiplied
+by a weight which is specific for each star pair. This weight could be determined based on e.g. a confidence
+measure for the centroid, calculated in the centroiding algorithm. This way, a star of which the centroid
+has been determined with higher confidence in the centroiding algorithm, could be given more value in the
+tracking step. The cost function is constructed as follows:
+
+\begin{equation}
+    T(\phi,t_{x},t_{y})=\sum_{i=1}^{n_{s}} w_{i}((x_{i}-x'_i cos\phi + y'_{i} sin\phi -t_{x})^{2}+(y_{i}-x'{i}sin\phi -y'_{i}cos\phi -t_y)^{2})
+\end{equation}
+
+Here $w_i$ is the weight given to each star i, ($x_i$,$y_i$) are the coordinates of the observed star i in the image plane, ($x'_i$,$y'_i$) are the coordinates of the corresponding database star i in the image plane, \(\phi\) is the
+angle over which the database stars are rotated, $t_x$ and $t_y$ are the distances over which the database
+stars are translated in x and y direction respectively.
+
+The unknown variables \(\phi\), $t_x$, and $t_y$ which minimize this cost function can be found by calculating the
+derivative of this cost function with respect to each of the unknowns and setting the three obtained equations equal to zero.
+
+The 3 transformation values can be converted to 3 euler angles. We can then calculate the quaternion from these euler angles.
+
+We use QUEST algorithm for our system as it is the most commonly used algorithm for star trackers. 
+
+}
+
+
+\subsubsection{Wahba's Problem}
+{We can improve on the TRIAD method in two ways: by allowing arbitrary weighting
+of the measurements and by allowing the use of more than two measurements. The latter is especially important for use with star trackers that can track many stars simultaneously.Wahba’s problem is to find the orthogonal matrix A with determinant 1 that minimizes the loss function:
+
+\begin{equation}
+    L(A)=\frac{1}{2} \sum_{i=1}^{n}a_{i}||b_{i}-Ar_{i}||^2
+\end{equation}
+
+where $b_i$ is a set of n unit vectors measured in spacecraft's body frame, $r_i$ are the corresponding unit vectors in a reference frame, and $a_i$ are non-negative
+weights.
+
+Algorithms for solving Wahba’s problem fall into two classes. The first solves for the attitude matrix directly, and the second solves for the quaternion representation of the attitude matrix. Matrix solutions of Wahba's problem include \textbf{Singular Value Decomposition method}, \textbf{Fast Optimal Attitude matrix(FOAM)} etcetra. Quaternion solutions include \textbf{Davenport's q method}, \textbf{QUEST}, \textbf{ESOQ} etcetra. Quaternion solutions have proven to be much useful in practice. Among the above mentioned algorithms QUEST is most popularly used for star trackers. The AIM algorithm mentioned before uses 2-D vectors instead of 3-D and thus has a different cost function.
+
+Using the orthogonality of A, the unit norm of the vectors and the cyclic invariance of trace:
+
+\begin{equation}
+||b_{i}-Ar_{i}||^2 = ||b_{i}||^2 + ||Ar_{i}||^2 -2b_{i}.(Ar_{i}) = 2- 2 tr(Ar_{i}b_{i}^{T})
+\end{equation}
+
+Thus we can write the cost function as:
+\begin{equation}
+    L(A)= \lambda _{0} - tr(AB^{T})
+\end{equation}
+with
+\begin{equation}
+    \lambda_{0}= \sum_{i=1}^{n} a_{i}
+\end{equation}
+
+and the Attitude profile matrix B defined as 
+
+\begin{equation}
+    B= \sum_{i=1}^{n} a_{i} b_{i} r_{i}^{T}
+\end{equation}
+
+Now it is clear that the loss function is minimised when tr(A$B^T$) is maximised.
+
+}
+
+
+
+}
+
+\subsection{QuEST}
+{
+}
+
+
+\subsection{Attitude Accuracy}
+{
+}
+
+
+}

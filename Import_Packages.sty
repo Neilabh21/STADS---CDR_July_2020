@@ -117,6 +117,54 @@
 \usepackage{blindtext}
 %----------------------------END----------------------------%
 
+
+%%%% Create Flowchart environment
+
+% Modify line spacing of \listof{} command
+% Refer https://tex.stackexchange.com/questions/14856/change-spacing-between-elements-in-newfloat-listof
+\makeatletter
+\renewcommand*{\listof}[2]{%
+  \@ifundefined{ext@#1}{\float@error{#1}}{%
+    \@namedef{l@#1}{\@dottedtocline{1}{1.5em}{2.3em}}%
+    \float@listhead{#2}%
+  \begingroup\setlength{\parskip}{0.2in}% default: 0pt
+    \@starttoc{\@nameuse{ext@#1}}%
+  \endgroup}}
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+                       \if@mainmatter
+                         \refstepcounter{chapter}%
+                         \typeout{\@chapapp\space\thechapter.}%
+                         \addcontentsline{toc}{chapter}%
+                                   {\protect\numberline{\thechapter}#1}%
+                       \else
+                         \addcontentsline{toc}{chapter}{#1}%
+                       \fi
+                    \else
+                      \addcontentsline{toc}{chapter}{#1}%
+                    \fi
+                    \chaptermark{#1}%
+                    \addtocontents{lof}{\protect\addvspace{10\p@}}%
+                    \addtocontents{lot}{\protect\addvspace{10\p@}}%
+                    \addtocontents{myfloat}{\protect\addvspace{10\p@}}%adds space to the new list
+                    \if@twocolumn
+                      \@topnewpage[\@makechapterhead{#2}]%
+                    \else
+                      \@makechapterhead{#2}%
+                      \@afterheading
+                    \fi}
+\makeatother 
+
+% Define \begin{Flowchart}....\end{Flowchart} environment
+\newfloat{Flowchart}{tpbh}{grp}[chapter]
+
+% Define \listofflowcharts command
+\newcommand{\listofflowchartsname}{List of Flowcharts} % Insert title of the page
+\newcommand{\listofflowcharts}{%
+  \listof{Flowchart}{\listofflowchartsname}%
+}
+%----------------------------END----------------------------%
+
+
 %%%% Display Frames
 %\usepackage{showframe}
 %----------------------------END----------------------------%
