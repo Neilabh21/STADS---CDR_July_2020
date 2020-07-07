@@ -1,9 +1,25 @@
 \subsection{Tracking Mode}
-% Pranjal god
+% Pranjal god - Lol XD
 
 \subsubsection{Introduction}
-Tracking Mode is the primary operating mode of a satellite (the other being the Lost-in-Space Mode), wherein the attitude of the satellite is already known. The main objective of tracking mode is to perform Star Matching using the \textit{a priori} attitude information to decrease the computation time as compared to the Lost-in-Space Mode for successfully matching stars observed in the sky with their true Star-IDs (from the pre-loaded Star Catalogue). 
+Tracking Mode is the primary operating mode of a satellite (the other being the Lost-in-Space Mode), wherein the attitude of the satellite is already known. The main objective of tracking mode is to perform Star Matching using the \textit{a priori} attitude information to decrease the computation time as compared to the Lost-in-Space Mode for successfully matching observed stars with their true Star-IDs (from the pre-loaded Star Catalogue). 
 
 \subsubsection{Literature Survey}
-After an extensive literature survey, 
+After an extensive literature survey on Tracking Mode algorithms, a few algorithms were shortlisted based on the number of citations, space heritage, ease of implementation and the year of publication. Some papers were survey based papers which documented an extensive study on different algorithms proposed till date. Many algorithms were shortlisted based on the results shown in these papers. These algorithms are mentioned in detail below. 
+
+\subsubsection{Recursive Mode Star Identification Algorithms}
+% hey, don't write "This Paper", instead write "This algorithm \cite{ref} proposes ...."
+This paper proposes two methods for recursive mode star identification, the Spherical Polygon search (SP-search) and the Star Neighbourhood Approach (SNA). Once the Lost In Space Algorithm (LISA) has been executed for a single frame of the star tracker, the proposed algorithm (SNA or SP Search) is used to obtain expected stars in the FOV from the Star Catalogue for the next frame. These expected stars form the \textit{Reference Image}.
+The Feature Extraction process is executed in the next frame, obtaining the true centroids, which form the \textit{Measured Image}.The Star ID process is completed by matching the inter-star angles between the measured image and the reference image. The two algorithms are explained in detail below. 
+\begin{itemize}
+    \item \textbf{Spherical Polygon Approach}\\
+    The first approach is derived by the spherical polygon search (SP-search) algorithm, used to access all the cataloged stars observed by the sensor field-of-view (FOV) and recursively add/remove candidate cataloged stars according the predicted image motion induced by camera attitude dynamics. Star identification is then accomplished by a star pattern matching technique which identifies the observed stars in the reference catalog and assigns the true Star ID to the observed stars. 
+\end{itemize}
+
+
+
+
+
+
+
 

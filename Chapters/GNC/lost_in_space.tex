@@ -23,7 +23,7 @@ previously obtained information (the previous attitude and the angular velocity 
 
 As mentioned earlier, a Star Tracker operates in the Lost-in-Space mode when it has no \textit{a priori} information of the attitude. Such cases occur when the STADS module is turned on for the first time, or when the Tracking mode fails.
 
-A literature survey was performed to select a suitable algorithm for the Lost-in-Space mode. A few algorithms stood out in particular over the course of the survey. These algorithms, or a variant of the said, appeared to be used commonly, either due to their relatively simple implementation, their efficient and shorter run-time process, and their robustness to noise and false star-like objects that could enter the FOV.
+A literature survey was performed to select a suitable algorithm for the Lost-in-Space mode. A few algorithms stood out in particular over the course of the survey. These algorithms, or a variant of the said, appeared to be used commonly, either due to their relatively simple implementation, their efficient and shorter run-time process, and their robustness to noise and non-star objects that could enter the FOV.
 Some of these algorithms are mentioned in detail.
 
 \subsubsection{Planar Triangle Star Identification Technique}
@@ -122,3 +122,43 @@ The radial pattern and cyclic pattern arrays are used as a reference and searche
 In its testing through simulations, the star identification rate increases with increasing $R_r$, and an appropriate $N_q$ needs to be selected.
 
 This method was considered as, since the FPGA-based implementation of this algorithm \cite{zhao2017real}, claimed to be faster than traditional implementations of Star-Matching algorithms on a micro-controller.
+
+
+\subsubsection{Geometric Voting Algorithm}
+This method \cite{kolomenkin2008geometric} requires all the close-pairs of catalogue stars to be sorted in a lookup table based on the distances between the stars.
+
+The angular distance between every pair of stars from the captured image is calculated, and its corresponding catalogue star pair is found from the lookup table. These catalogue star pairs then vote for the image star pair with similar distances. As the angular distance is a symmetric relationship, each member of the catalogue star pair votes for each member of the image star pair. 
+Each vote here corresponds to a possible identity for the image star, from the respective catalogue star. Usually, the correct identity of an image star is the one that receives the most number of votes at the end of process. Since this approach relies only on geometric information, it is thus not sensitive to the photometric properties of the sensor which might change during the operation of the system.
+The use of star brightness as a filter was left for further studies, with the capability to reduce the runtime of the algorithm.
+
+This algorithm uses information from the entire image and does not rely only on the local neighbourhoods of a certain star, thus making it more robust. The voting method is also capable of ignoring non-star objects in the image since the concurrent use of all of the image stars minimizes the influence of these non-stars.
+
+% Insert Flowchart - Algorithm
+
+An important aspect of this algorithm, is that there is a verification step after right after the voting step. 
+If a non-star object is ever detected by Feature Extraction, there is a reasonable probability of the non-star being voted on by an actual catalogue star. It can thus be misidentified as a star. Such \textit{false detections} affect the accuracy when calculating the attitude, and hence should be minimized. Hence a verification step, that can accurately detect and ignore such star-pairs is important for 
+
+% Insert Flowchart - verification Step
+
+This algorithm was initially considered, and was implemented in Python.
+One of the key issues, however, was the \textit{localization uncertainty} ($\delta$), an important parameter in deciding the interval of the search window for a given angular distance. 
+The parameter can be interpreted as the noise that arises from detection of stars by the sensor, as well as the noise involved in Feature Extraction. Thus, this parameter could not be theoretically calculated, but had to be tuned either by running simulations, or testing out the algorithm on actual hardware.
+
+It was, however, decided to disqualify this algorithm, because of the following concerns:
+\begin{enumerate}
+    \item Ambiguity in how to proceed if a star receives equal number of votes from two or more catalogue stars
+    
+    \item The minimum number of votes that an image star should accumulate for the matching to occur was ambiguous
+    
+    \item The verification step did not mention the minimum number of votes that a star should accumulate for it to pass the step
+    
+    \item The time-taken to search for the angular distance of an image star pair from the lookup table was time-consuming, since the lookup table was large, and the average number of stars in an image was large as well 
+\end{enumerate}
+
+The 4-Star Matching Algorithm (Refer \ref{sec:4SM}), addressed these issues, and was thus selected as the Lost-in-Space algorithm.
+
+
+\subsubsection{4-Star Matching Algorithm}
+\label{sec:4SM}
+
+This algorithm \cite{dong2006brightness} \ref{appendix:k-vector}

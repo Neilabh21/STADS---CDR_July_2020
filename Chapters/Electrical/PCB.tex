@@ -1,13 +1,15 @@
 \section{PCB}
 \thispagestyle{fancy}
 
-The FPGA selected for our STADS system PCB is Xilinx XC7Z010 with CLG400 package.This FPGA has 2 pacakges CLG225 and CLG400.We have selected CLG400 package because it supports memory card and as FPGA has volatile memory we have planned to program it via a micro SD card whenever it boots up.
+The FPGA selected for our STADS system is Xilinx XC7Z010. This FPGA is available in 2 packages CLG225 (225 pin BGA) and CLG400 (400 pin BGA). Initially we selected CLG225 since we had never worked on a BGA before and the complexity of routing increases as the number of pins increase. However, we had to shift to CLG400 package because the CLG225 package doesn't support boot via $\mu$SD card.  As FPGA has volatile memory we have planned to program it via a $\mu$SD card whenever it boots up.
 
 The features of this FPGA are
 \begin{itemize}
     \item {QSPI flash memory }
-    \item {Gigabit ethernet port}
-    \item {USB}
+    \item {PMOD interface}
+    \item {Gigabit Ethernet port}
+    \item {USB OTG}
+    \item {USB-UART interface}
     \item {Micro SD card}
     \item {DDR ram}
     \item {JTAG}

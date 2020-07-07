@@ -110,12 +110,14 @@
 
 \frontmatter
 %%%% Appendices
-\appendix
-
+\renewcommand\thesection{\Alph{section}} % Change numbering of sections to Uppercase-Letter
+\begin{appendices}
 \input{Appendix/appendix_A}
 \input{Appendix/appendix_B}
+\input{Appendix/k-vector}
 \input{Appendix/software_used}
 \input{Appendix/team_members}
+\end{appendices}
 %----------------------------END----------------------------%
 
 
