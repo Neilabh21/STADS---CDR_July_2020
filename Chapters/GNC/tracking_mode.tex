@@ -1,8 +1,12 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
 \subsection{Tracking Mode}
 % Pranjal god - Lol XD
 
 \subsubsection{Introduction}
-Tracking Mode is the primary operating mode of a satellite (the other being the Lost-in-Space Mode), wherein the attitude of the satellite is already known. The main objective of tracking mode is to perform Star Matching using the \textit{a priori} attitude information to decrease the computation time as compared to the Lost-in-Space Mode for successfully matching observed stars with their true Star-IDs (from the pre-loaded Star Catalogue). 
+Tracking Mode is the primary operating mode of a satellite (the other being the Lost-in-Space Mode, which is generally a rare event in the lifetime of a standard operating star tracker), wherein the attitude of the satellite is already known. The main objective of tracking mode is to perform Star Matching using the \textit{a priori} attitude information to decrease the computation time as compared to the Lost-in-Space Mode for successfully matching observed stars with their true Star-IDs (from the pre-loaded Star Catalogue). 
 
 \subsubsection{Literature Survey}
 After an extensive literature survey on Tracking Mode algorithms, a few algorithms were shortlisted based on the number of citations, space heritage, ease of implementation and the year of publication. Some papers were survey based papers which documented an extensive study on different algorithms proposed till date. Many algorithms were shortlisted based on the results shown in these papers. These algorithms are mentioned in detail below. 
@@ -13,13 +17,97 @@ This paper proposes two methods for recursive mode star identification, the Sphe
 The Feature Extraction process is executed in the next frame, obtaining the true centroids, which form the \textit{Measured Image}.The Star ID process is completed by matching the inter-star angles between the measured image and the reference image. The two algorithms are explained in detail below. 
 \begin{itemize}
     \item \textbf{Spherical Polygon Approach}\\
-    The first approach is derived by the spherical polygon search (SP-search) algorithm, used to access all the cataloged stars observed by the sensor field-of-view (FOV) and recursively add/remove candidate cataloged stars according the predicted image motion induced by camera attitude dynamics. Star identification is then accomplished by a star pattern matching technique which identifies the observed stars in the reference catalog and assigns the true Star ID to the observed stars. 
+    \\
+    The Spherical Polygon Approach does not require any (accurate or not) initial guess of the spacecraft attitude, and does not use the typically low accuracy magnitude information. The algorithm is recursive in the sense that it matches 3 stars at a time observed in the \textit{Measured Image} till all the observed stars are matched. 
+   If \textit{$s_{i}$}, \textit{$s_{j}$}, and \textit{$s_{k}$} are three different observed star directions (unit-vectors), it is always possible to set
+   \begin{equation}
+        \textit{$s_{k}$} = a\textit{$s_{i}$} + b\textit{$s_{j}$} +c(\textit{$s_{i}$} \times \textit{$s_{j}$})
+    \end{equation}
+    unless \textit{$s_{i}$} and \textit{$s_{j}$} are not parallel (i.e. double stars). The a, b and c coefficients represent an invariant set of parameters with respect to the used system of coordinates. This means that there exist, in the Star Catalogue, three stars (\textit{$v_{i}$}, \textit{$v_{j}$} and \textit{$v_{k}$}) such that condition (10.1) holds as,  
+    \begin{equation}                    
+        \textit{$v_{k}$} = a'\textit{$v_{i}$} + b'\textit{$v_{j}$} +c'(\textit{$v_{i}$} \times \textit{$v_{j}$})
+    \end{equation}
+    where the a', b', and c' coefficients will differ from the a, b, and c coefficients because of the sensor’s limited precision, that is, because the observed stars directions do not perfectly overlap with the catalog star directions.\\
+    The algorithm uses the \textbf{\textit{k}-vector} range searching technique twice to finally match a triad of observed stars. Based on these facts, the algorithm follows the following steps:
+    \begin{enumerate}                   
+        \item The first instance of the use of \textbf{\textit{k}-vector} is to find all the catalogue star pairs (\textit{$v_{i}$} and \textit{$v_{j}$}) admissible with the observed star pair \textit{$s_{i}$} and \textit{$s_{j}$}.
+        \item For each possible pair of catalogue stars, there exists a corresponding solution for the true catalogue star \textit{$v_{k}$} associated with the observed \textit{$s_{k}$} star.
+        \item To find the true solution for \textit{$v_{k}$} out of all possible solutions, it has to be searched within a cone of aperture h$\sigma$ around each solution, which is done using the \textbf{\textit{k}-vector} technique.
+        \item This is accomplished by approximating the observed cone area as the area covered by a spherical polygon, which is identified as the intersection of six cones, as shown in fig. 10.6
+        \item The SPS procedure has a successful end if only one star falls within one of the cones of aperture h$\sigma$. When this occurs, the triad (\textit{$s_{i}$}, \textit{$s_{j}$}, \textit{$s_{k}$}) is matched with the triad (\textit{$v_{i}$}, \textit{$v_{j}$}, \textit{$v_{k}$}). 
+    \end{enumerate}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.35]{Figures/GNC/sp_search.png}
+        \caption{Spherical Polygon}
+        \label{fig:sp_search}
+    \end{figure}
+    
+    \item \textbf{Star Neighbourhood Approach}\\
+    
+    The Star Neighbourhood approach is the second recursive algorithm which uses the previously identified stars to access the candidate stars (which form the \textit{Reference Image}) to match with the current observed stars (which form the \textit{Measured Image}). This approach makes use of the spacecraft attitude at each frame (obtained by estimating the Angular Velocity from the Gyroscope) and the previously identified Star IDs. The steps of the algorithm are detailed below:
+    \begin{enumerate}
+        \item The LISA is run for the first time which determines the \textbf{attitude matrix} and \textbf{Star-IDs} at time $t_{0}$.
+        \item \textbf{Simulation of Stars}\\
+        By knowing the attitude matrix at each time step we can calculate the normal vectors to the sensor frame in the body frame, which is known as the 'Bore-sight vector', to simulate the frames of stars at the next time step, i.e, create a simulation of the actual image which will contain catalogue stars and place them at positions at which the 'true centroids' should ideally be found (\textit{Reference Image}).
+        \item The simulated star unit vectors are converted to image plane coordinates ($x_{i}$, $y_{i}$)using the following formula:
+        \begin{equation}
+            x_{i} = -f\frac{x^{T}b_{i}}{z^{T}b_{i}} \hspace{3em} y_{i} = -f\frac{y^{T}b_{i}}{z^{T}b_{i}}
+        \end{equation}
+        where \textbf{$C^{T}$ = [x,y,z]} is the sensor attitude matrix, \textbf{$b_{i}$ (i=1,2,3.....n)} are the simulated star vectors and \textbf{f} is the camera focal length. 
+        \item The estimated location of star i at the current frame ($x_{i}$, $y_{i}$)$_{t+\delta t}$ is calculated by adding the location of star i at the previous frame ($x_{i}$, $y_{i}$)$_{t}$ and estimated translation of the frame $\omega\delta$t.
+        \item Now the estimated locations of stars (Reference Image) is matched with the measured locations of stars (Measured Image) using a Radius based approach as shown in figure (10.7). 
+        \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.20]{Figures/GNC/radius_matching.png}
+        \caption{Radius Based Matching}
+        \label{fig:radius_based_sna}
+        \end{figure}
+        \item For the unmatched stars from steps 4 and 5, the \textbf{Star Neighbourhood Table} is used to identify the stars which enter the sensor frame at ($t+\delta t$), by checking the inter-star angles between the unmatched stars and their matched star neighbours. 
+    \end{enumerate}
+    The logic for the SNA is shown below:
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.5]{Figures/GNC/sna_flowchart.png}
+        \caption{Logic Flow Diagram - SNA algorithm}
+        \label{fig:sna_flowchart}
+    \end{figure}
 \end{itemize}
 
+\subsubsection{Rapid Star Tracking Algorithm}
+This algorithm does not require any previous attitude information or an estimate of the angular velocity of the spacecraft, unlike the previous algorithm. Instead, it only uses the previously identified stars' information (Right Ascension, Declination, Star ID) to track stars in the current frame. Before understanding the details of the algorithm, some terms are introduced:
+\begin{itemize}
+    \item \textbf{Reference Image} : The image from the previous frame where all the observed stars have been identified.
+    \item \textbf{Observed/Measured Image} : The image at the current frame where only the centroid information is known, and the task at hand is to correctly identify these centroids using the information of the Reference Stars (in the Reference Image). 
+\end{itemize}
+The principle of the algorithm is detailed step-by-step below:
+\begin{enumerate}
+    \item The star images at the $(k-1)^{th}$ frames and before have been identified, and the objective is to identify the Observed Image at $(k)^{th}$ frame. The identified star image at $(k-1)^{th}$ frame is considered as the Reference Image for the $(k)^{th}$ frame. 
+    \item The euclidean distance between the stars in the two images is calculated and compared with a \textbf{radius r}, known as the matching radius, to determine if any reference stars fall in the neighbourhood of an observed star, and if yes, how many. 
+    \item If a star's neighborhood in the observed image includes only one star in reference image, the star in observation image is matched with the star in reference image and the star in the observation star image is 'tracked' successfully.
+    \item If a star's neighborhood in observation star image includes no
+    star or more than one star in reference star image, the star is not matched and tracked. 
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.3]{Figures/GNC/radius_based_zhang.png}
+        \caption{Radius Based Star Matching}
+        \label{fig:radius_zhang}
+    \end{figure}
+    \item The $(k+1)^{th}$ reference star image can be generated from the tracking results and used to match with the next observation star image in the same way; then stars can be tracked continuously.
+    \item Now the stars in the Reference Image will be moved away from the FOV one-by-one. When the stars left in the reference image is less than \textbf{3}, new star identification is necessary, which is done by calculating the star sensor's \textbf{boresight} vector according to the result of the previous tracking, and the stars around the boresight can be obtained from the Star Catalogue.  
+    \item The stars vectors obtained from the catalogue in the previous step are obtained from the \textit{Celestial Coordinates} (RA, Dec.) and need to be converted to \textit{Image Plane Coordinates} to start again from step 1. This process is known as \textbf{Star Mapping} is generally a time-consuming task, hence it is executed only when the reference stars are less than 3. 
+\end{enumerate}
 
-
-
-
-
-
-
+To speed up the process of star tracking, the algorithm also proposes 3 optimisation techniques. These are explained below:
+\begin{itemize}
+    \item Parallel Star Centroiding\\
+    'Ref pixel by pixel algo from feature extraction'
+    
+    \item Sorting Before Matching\\
+    In step 2 in the algorithm above, the matching between the stars in observation star image and reference star image is implemented one-by-one. But matching between stars with a long distance is meaningless, so sorting before matching is introduced. That is, the stars in the observation image are sorted in ascending order according to their image plane coordinates using bubble sort, and then the matching is carried out. This decreases the number of operations significantly. 
+    
+    \item Star Catalogue Partition\\
+    In step 6 and 7 of the algorithm, new star identification using Star Mapping is done, When catalogue stars are accessed using the boresight vector, searching through the entire guide catalogue is 
+\end{itemize}
+%----------------------------END----------------------------%
+\end{document}

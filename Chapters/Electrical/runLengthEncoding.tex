@@ -1,0 +1,18 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\subsection{The Run Length Encoding Algorithm}
+This algorithm has been descrobed in \cite{fe_blob_detection}. The inputs and outputs are the same as those of the tagging algorithm, described in section \ref{subsec:fe_pixel}. The Star IDs are again allotted in no particular fashion. The algorithm follows the following main steps:
+\begin{enumerate}
+    \item While parsing a row, the algorithm makes note of $\sum C_{i_{x}}Intensity_{i}, \sum Intensity_{i} $ and number of pixels for each interval of bright pixels it encounters.
+    \item While comparing rows, it tags each interval of bright pixels in the latter row with the tag of the first (left-most) bright interval it is connected to.
+    \begin{itemize}
+        \item Tags of other bright intervals in the previous row connected to the same one in the latter row are merged after each comparison.
+        \item Intervals in the latter row not connected to any in the previous row are assigned a new tag. For the first row, a tag is assigned to each disjoint interval of bright pixels.
+    \end{itemize}
+    \item The data from the latter row is added to the global data (the data from the previous rows). The rows corresponding to the tags to be merged are then merged. The data relevant for comparisons from the latter row is then put in the array containing data from the previous row along with the tag for each of the intervals. The process is then repeated for each row in the image.
+\end{enumerate}
+The flow of the algorithm is shown in flowchart \ref{FC:flow_fe_rle}
+%----------------------------END----------------------------%
+\end{document}

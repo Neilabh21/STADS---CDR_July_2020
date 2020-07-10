@@ -1,4 +1,8 @@
-\subsection{The Pixel-By-Pixel Tagging Algorithm}
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\subsection{The Pixel-By-Pixel Tagging Algorithm} \label{subsec:fe_pixel}
 
 This algorithm is a modified version of the image labelling algorithm presented in \cite{imglabelseq}. The input is the image captured by the image sensor, and the output is an array containing the centroids of 4-connected regions of bright pixels in the input image in the frame centered at the center of the image and scaled to the size of the pixels (rather than in units of pixel lengths), along with Star IDs that are set as an integer between 1 and N, with N being the number of stars detected by the algorithm. These are allotted in the order of the position of the stars in the output array.
 
@@ -32,11 +36,6 @@ We now describe the algorithm:
     \item It then goes through all the data corresponding to the merged tags and the unflagged tags and filters out the ones that have too few or too many pixels and finds the centroids for the remaining regions.
     \item The Star IDs are then added to the array and this, along with the number of regions, is given as the final output.
 \end{enumerate}
-The flowchart for this algorithm is shown in Figure \ref{FC:pbp_centroiding}
-\newpage
-\begin{Flowchart}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Electrical/centroiding_2.png}
-    \caption{Pixel-by-Pixel Tagging Algorithm}
-    \label{FC:pbp_centroiding}
-\end{Flowchart}
+The flowchart for this algorithm is shown in Figure \ref{FC:pbp_centroiding}.
+%----------------------------END----------------------------%
+\end{document}

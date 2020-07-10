@@ -1,3 +1,7 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
 \chapter{Mechanical Sub-system}
 \thispagestyle{fancy}
 
@@ -11,14 +15,40 @@
 % b) Write a separate section file, and import it to the corresponding chapter (Prefer this if the section is fairly large)
 % NOTE: Make sure the names of the (section.tex) are uniquely defined, and easy to read
 
-\blindtext %remove this command and start writing your own content
+%\blindtext %remove this command and start writing your own content
 
 
+%PCB& 3
+%Side Panels & 4
+%Top Panel& 1
+%Bottom Panel & 1
+%Rods& 4
+%Spacers & 16
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Some Section 0}
-\blindtext %remove this command and start writing your own content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\hspace{0.7cm}% 
+%----------------------------OR----------------------------%
+
+\subfile{Chapters/Mechanical/mechanical_req}
+%----------------------------END----------------------------%
 
 %----------------------------OR----------------------------%
 
-\input{Chapters/Mechanical/mechanical_sec1}
+\subfile{Chapters/Mechanical/mechanical_load}
 %----------------------------END----------------------------%
+\subfile{Chapters/Mechanical/mechanical_config}
+\subfile{Chapters/Mechanical/mechanical_mass}
+\section{Thermals}
+\text Could not be started in near future because of following reasons:
+\begin{enumerate}
+    \item Requires component level details for thermal inputs in Simulations.
+    \item Requires modelling of supporting structures(AUX+PS4OP).
+\end{enumerate}
+\subfile{Chapters/Mechanical/mechanical_integration}
+\subfile{Chapters/Mechanical/mechanical_manufacturing}
+\section{Peripherals + Auxiliary} 
+\text This task will be started once discussed with the team and gaining clarity on certain aspects requiring some key decisions.
+%----------------------------END----------------------------%
+\end{document}

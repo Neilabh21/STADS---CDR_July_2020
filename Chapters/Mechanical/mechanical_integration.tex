@@ -1,0 +1,29 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\section{Integration}
+\begin{enumerate}
+    \item \textbf{Interface Control Document:} We have defined mechanical interfaces between components. However some key interfaces arise from electro-mechanical, optical subsystems. Hence, this task will be on hold as of now.
+    \item \textbf{Integration Sequence:} The importance of modular integration from Spacers and solid rod is known for small cubesats/modules. The assumption in this integration sequence is that the electrical interface of PCB is done directly only to the just below PCB or just above PCB.
+    \begin{enumerate}
+        \item Fix Bottom Panel.
+        \item Interface all 4 solid rods using threads like a nut.
+        \item Insert 4 Bottom spacers inside solid rod symmetrically.
+        \item Fix Microcontroller PCB using solid rod and support through Bottom spacers.
+        \item Insert 4 Middle spacers inside solid rod symmetrically.
+        \item Position FPGA PCB using solid rod and later interface electrically through the connector with Microcontroller PCB.
+        \item Insert 4 Middle spacers inside solid rod symmetrically.
+        \item Position Optics PCB using solid rod and later interface. electrically through the connector with FPGA PCB.
+        \item Interface all 4 Top spacers with a solid rod using threads like nut and bolt.
+        \item Interface Top Panel with Top spacers using screws.
+        \item Interface Baffle and Side Panels.
+    \end{enumerate}
+    \item \textbf{Problems with Integration with Support rails:} Usually for attaching PCB with stubs, the screw head should be on the side along with PCB. To tighten a screw we need a torque wrench which is typically 5-6 cms long. To use the torque wrench, the site should be free from surrounding components. The CAD has 3 stubs with the middle stub surrounded from both sides, making it difficult to attach the screw with a torque wrench. We decided not to proceed with this model with support rails due to the following reasons.
+    \begin{enumerate}
+        \item We need to reduce the stubs from 5 to 3 in the support rails. We have to conduct integration of the 3 stubs with as minimum movement and pre-stress as possible, and we will require a rotational motion for the integration as a solution proposed by Sanket Team.
+        \item In the middle PCB, we will have to change the screw position. PCB size will become reduced hence it will not allow FPGA PCB to be designed in that constraint as FPGA itself is a big component.
+    \end{enumerate}
+\end{enumerate}
+%----------------------------END----------------------------%
+\end{document}

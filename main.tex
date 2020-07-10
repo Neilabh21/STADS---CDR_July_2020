@@ -12,27 +12,27 @@
 \frontmatter
 \pagestyle{plain} 
 %%%% Title Page
-\input{Foreword/title_page}
+\subfile{Foreword/title_page}
 %----------------------------END----------------------------%
 
 
 %%%% Preface
-\input{Foreword/preface}
+\subfile{Foreword/preface}
 %----------------------------END----------------------------%
 
 
 %%%% Acknowledgements
-\input{Foreword/acknowledgements}
+\subfile{Foreword/acknowledgements}
 %----------------------------END----------------------------%
 
 
 %%%% Revision-Log
-\input{Foreword/revision_log}
+\subfile{Foreword/revision_log}
 %----------------------------END----------------------------%
 
 
 %%%% Acronyms
-\input{Foreword/acronyms}
+\subfile{Foreword/acronyms}
 %----------------------------END----------------------------%
 
 
@@ -47,64 +47,64 @@
 \mainmatter
 \pagestyle{fancy}
 %%%% Template
-\input{Chapters/Template/template_chapter} % Comment this import statement to remove the template chapter from being a part of the final report
+\subfile{Chapters/Template/template_chapter} % Comment this import statement to remove the template chapter from being a part of the final report
 %----------------------------END----------------------------%
 
 
 %%%% Introduction
-\input{Chapters/introduction}
+\subfile{Chapters/introduction}
 %----------------------------END----------------------------%
 
 
 %%%% Mission
-\input{Chapters/mission}
+\subfile{Chapters/mission}
 %----------------------------END----------------------------%
 
 
 %%%% Requirements on the system
-\input{Chapters/Requirements/req_system}
+\subfile{Chapters/Requirements/req_system}
 %----------------------------END----------------------------%
 
 
 %%%% Requirements on sub-systems
-\input{Chapters/Requirements/req_sub-systems}
+\subfile{Chapters/Requirements/req_sub-systems}
 %----------------------------END----------------------------%
 
 
 %%%% System Specifications
-\input{Chapters/system_specs}
+\subfile{Chapters/system_specs}
 %----------------------------END----------------------------%
 
 
 %%%% Mechanical sub-system
-\input{Chapters/Mechanical/mechanical}
+\subfile{Chapters/Mechanical/mechanical}
 %----------------------------END----------------------------%
 
 %%%% Instrumentation subsystem
-\input{Chapters/Instrumentation/instr}
+\subfile{Chapters/Instrumentation/instr}
 %----------------------------END----------------------------%
 
 
 %%%% Electrical Sub-system
-\input{Chapters/Electrical/Electrical_Subsystem}
+\subfile{Chapters/Electrical/Electrical_Subsystem}
 %----------------------------END----------------------------%
 
 %%%% GNC Sub-system
-\input{Chapters/GNC/GNC_subsystem}
+\subfile{Chapters/GNC/GNC_subsystem}
 %----------------------------END----------------------------%
 
 %%%% Models
-\input{Chapters/Models/models}
+\subfile{Chapters/Models/models}
 %----------------------------END----------------------------%
 
 
 %%%% Simulation and results
-\input{Chapters/Simulations/simulations}
+\subfile{Chapters/Simulations/simulations}
 %----------------------------END----------------------------%
 
 
 %%%% Testing and results
-\input{Chapters/Testing/testing}
+\subfile{Chapters/Testing/testing}
 %----------------------------END----------------------------%
 
 
@@ -112,11 +112,11 @@
 %%%% Appendices
 \renewcommand\thesection{\Alph{section}} % Change numbering of sections to Uppercase-Letter
 \begin{appendices}
-\input{Appendix/appendix_A}
-\input{Appendix/appendix_B}
-\input{Appendix/k-vector}
-\input{Appendix/software_used}
-\input{Appendix/team_members}
+\subfile{Appendix/appendix_A}
+\subfile{Appendix/appendix_B}
+\subfile{Appendix/k-vector}
+\subfile{Appendix/software_used}
+\subfile{Appendix/team_members}
 \end{appendices}
 %----------------------------END----------------------------%
 

@@ -1,19 +1,48 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+
+\begin{document}
+
 % ------------ %
 % Sensor Model %
 % ------------ %
+
 \newpage
-\section{Sensor Model}
+\section{\SM}
+
+\subsection{Background} % Why
+There are mainly three approaches for testing in star identiﬁcation algorithm research: digital simulation, hardware-in-the-loop simulation, and field test of star observation. These three approaches correspond to three different stages in designing a star sensor and a star identiﬁcation algorithm.
+
+\subsubsection{Digital Simulations}
+At the early design stage, preliminary performance evaluation of the algorithm is done using digital simulation to determine appropriate identification parameters. Digital simulation is computer-based and is involved in the whole process of star image simulation, star image processing, and star identification. 
+
+\subsubsection{Hardware In-Loop Simulation}
+After the design of the star sensor finishes, star identiﬁcation algorithms can be veriﬁed using the method of hardware-in-the-loop simulation. Through hardware-in-the-loop simulation, star ﬁeld simulator (SFS) generates star images. Then the imaging, processing, and identification of those generated star images are done by star sensor. 
+
+\subsubsection{Field Testing}
+Field tests of star observation are done during the night. Star images are photographed and then identified by the star sensor method in order to further verify the star identification algorithms. 
+
+\subsubsection{Star Image Simulation}
+As for star identiﬁcation algorithms, star image simulation is the fundamental work of the research. That is, when star sensor’s attitude or boresight pointing is given, those star images photographed by star sensor can be simulated.
+
+
+
+
+
+\subsection{Motivation}
+As it is infeasible to put hardware in the space for testing of our algorithms, we need a modular \SM to simulate the Image Output from the lens system and the sensor to test the Star Tracker Algorithms. Additionally, we should be able to change the hardware systems under consideration, whether it be the lens system or the CMOS sensor, so that we can compare the performance of our algorithms under different hardware configurations. 
 
 
 
 
 \subsection{Introduction} % What
- Sensor Model 
+The \SM is a framework which uses the boresight inputs and the star catalogue to simulate the output of the Image Sensor. This is based on the characterisation of the lens system as well as the CMOS Image Sensor. 
 
 
 
-\subsection{Motivation} % Why
-\blindtext
+
+
 
 
 
@@ -48,50 +77,104 @@
 \subsubsection{Lens Model} % Seidel Coefficients, Simplistic Model
 \blindtext
 
-\subsubsection{Image Generation at Sensor} % What happens in the Sensor
+\subsubsection{CMOS Model} % What happens in the Sensor
 \blindtext
 
 \subsubsection{Slew Model} % Sum images over different time instants
 \blindtext
 
-\subsubsection{Noise Model}
+
+\subsubsection{Noise Model} % Introduction to noise model
 \blindtext
+
+
 
 
 
 
 \subsection{Noise Model}
-\blindtext
+Noise in a sensor has a strong influence on the maximum responsivity and the dynamic range of the sensor.There are sources of noise at various stages of the image capturing process. Reasons for sensor noise are quite different and are explained below:
+
+
 
 \subsubsection{Parasitic Light Sensitivity} % ???
 \blindtext
 
 \subsubsection{Quantum Efficiency} % 1. Quantum Efficiency% 
-\blindtext
+Quantum efficiency (QE) is one of the most important characteristics of any electro-optical
+device including the CMOS image sensor. QE is the ratio of average number of electrons
+generated in the pixel ($\mu$e) to the average number of impinging photons %micro sign- p) 
+on the pixel during exposure time.When talking about sensitivity, QE plays an important role, as well as
+the pixel sensitive area and the use of microlenses. QE can also be defined as the 
+measure of how efficiently the sensor converts light (photons) to charge
+(electrons). The more electrons in a pixel during the integration period, the
+higher the output level of the sensor, so the more sensitive the sensor is for
+that specific wavelength of the light. A QE of 1 means that every photon
+generates (in average) one electron. Normally the QE is less than 1 (or 100%).
+Read noise and QE combined gives the overall sensitivity of the sensor as QE/Read
+Noise, or the minimum amount of light you can see.
+Formula used to calculate this:
+
 
 \subsubsection{Background Light} % 2.
 \blindtext
 
 \subsubsection{Photon Shot Noise} % 3.
-\blindtext
+Image sensors measure scene irradiance by counting the number of discrete photons incident on the sensor over a given time interval. The independence of random individual photon arrivals leads to photon noise, a signal dependent form of uncertainty that is a property of the underlying signal itself. Individual photon detections can be treated as independent events that follow a random temporal distribution. As a result, photon counting is a classic Poisson process.Even from Quantum Statistics, when collecting photons from an unvarying source over a set amount of time, we get a Poisson Distribution.Hence, If the mean value of the number of photons that hit the sensor is n, the rms noise(variance in the number of photons) is the square root of n.
+
+The formula used in the code is: 
+
+
 
 \subsubsection{Photo-Response Non-Uniformity} % 4.
-\blindtext
+When uniform light falls on a camera sensor, each pixel should output exactly the same value. Small variations in cell size and substrate material result in slightly different output values. The difference between the true response from a sensor and a uniform response is known as 'Photo Response Non Uniformity' (PRNU).
+Since PRNU is caused by the physical properties of the sensor itself, it is almost impossible to eliminate completely and is usually considered to be a normal characteristic of the sensor.It is a light sensitive noise, and signal-dependent.
+The formula used in the code is:
+
 
 \subsubsection{Fixed Pattern Noise} % 5.
-\blindtext
+FPN (also called non-uniformity)in LSB10 is the spatial percentage variation in pixel output values under uniform illumination due to device and interconnect parameter variations (mismatches) across the sensor. It is fixed for a given sensor, but can vary from sensor to sensor.This is the standard deviation value.
+Fixed Pattern Noise is the variation in pixel dark signal over a frame and is determined by calculating Standard Deviation of mean image obtained from set of frame taken in dark.
+The formula used in the code is:
+
 
 \subsubsection{Dark Noise} % 6. Dark Current, DSNU, Dark Noise
-\blindtext
+Dark Noise, given in no. of Electrons, is the noise due the reverse bias leakage current in
+all diodes.The average dark signal delivered by a sensor or a camera will be composed out of- a fixed DC offset, very often introduced by the analog circuitry on pixel/column/chip-level, or by an
+extra black level offset, and a thermal component, also known as the dark current or leakage current. This part has a linear dependency on the exposure or integration time as well as temperature(at least if saturation of the sensor is not reached).The dark current decreases with decreasing temperature.
+The Dark Temporal Noise is given in number of electrons and the Dark Signal / Dark Current is
+given in number of electrons per second. The variance of the Dark Noise is given as DS x ts.
+
+As the dark current results from spontaneously generated electrons, the dark current is measured by simply "counting" these electrons. Since counting electrons obeys Poisson statistics, the noise associated with the dark current I is proportional to the square root of the number of dark electrons that accumulate during the exposure. 
+
+Formula Used In the code:  
+
 
 \subsubsection{Pixel Storage Node Leakage} % 7. 
-\blindtext
+In a global shutter, after exposure the integrated charge from each pixel is transferred to the pixel storage node. Since this is typically diffusion, it has some leakage. The storage nodes of some pixels are leakier than others, resulting in the bright spots that can be seen in images with larger frame times and the default timing.
+The storage node of each row is reset during the row overhead time of the previous frame. The time between 2 resets of the floating diffusion is therefore equal to 1/frame rate.
+Formula Used in the code:
+
 
 \subsubsection{Dead Pixels} % 8.
-\blindtext
+Alternatively referred to as a defective pixel, a dead pixel is a term used to describe pixels that no longer produce any output. It occurs if the pixel has a defect in its PN junction, and it may generate leakage paths.The number of dead pixels on a sensor is dependent on the process quality used for forming the image sensor.
+Formula used in the code:
+
 
 \subsubsection{Read Noise} % 9.
-\blindtext
+Read noise is a combination of noise from the pixel and from the ADC. The Read Noise (RN) of the sensor is the equivalent noise level (in electrons RMS) at the output of the camera in the dark and at zero integration time. The ADCs for a CMOS image sensor are in each pixel.
+Read noise basically determines the contrast resolution that the camera is able to achieve. The lower the read noise level, the lower the minimum number of signal electrons that can be detected. Read noise is also important in combination with expressing the sensitivity of a camera. 
+It is one of the main sources of noise in an imaging camera for relatively short exposures. Low read noise is desirable as it allows the camera to detect low level signals and attain a high dynamic range and therefore results in a more sensitive sensor.
+The read noise of the CMOS sensor is a noise distribution and is normally given as in e-, as a median value.
+Formula used in the code:
+
+
+
+
+
+
+
+\subsection{Softwares Used}
 
 
 
@@ -99,17 +182,22 @@
 \subsection{Iterations of the Sensor Model}
 \blindtext
 
-\subsubsection{Current Model - Version 3 (Matlab)}
-\blindtext
-
-\subsubsection{Version - 2 (Matlab)}
+\subsubsection{Version - 1 (Python)}
 \blindtext
 
 \subsubsection{Version - 1 (Matlab)}
 \blindtext
 
-\subsubsection{Version - 1 (Python)}
+\subsubsection{Version - 2 (Matlab)}
 \blindtext
+
+\subsubsection{Current Model - Version 3 (Matlab)}
+\blindtext
+
+
+
+
+
 
 
 
@@ -121,3 +209,5 @@
 
 \subsection{Future Tasks}
 \blindtext
+%----------------------------END----------------------------%
+\end{document}

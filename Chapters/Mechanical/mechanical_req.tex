@@ -1,0 +1,60 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\section{Requirements/Benchmarking}
+\begin{enumerate}
+    \item \textbf{Requirements from ISRO:}
+    \begin{enumerate}
+        \item Mass of the system should be less than 10 kg.
+         \item The volume of the system should be of the standard dimension 1U / 2U / 3U.
+         \item Structure of the system should be designed to survive the launch loads.
+         \item Maintain the temperature range of all components within specified limits.
+         \item Electrical interface with PS4OP - D-Typer/Circular MIL grade connectors. 
+         \item Dummy mass/ balancing with identical mass \& footprint to be made available in case of non-readiness of the system (after the realisation of vehicle interfaces) for launch.
+        \item System to be qualified / acceptance tested to the environmental test levels specified for PSLV.
+        \item Define system reference frame \& axes.
+        \item System name shall be printed, engraved or otherwise marked on the system.
+        \item  Prepare a mock interface mimicking the PS4 OP interface. This interface should replicate the PS4 OP in form and functionality.
+        \item Procurement certificates for the harness fabrication, adhesives \& cable ties and any other materials used in the satellite have to be     provided to ISRO.
+    \end{enumerate}
+    \item \textbf{Requirements on Mechanical Subsystem from System:}
+    \begin{enumerate}
+        \item Size of the module should be restricted to 5cm *5cm *10cm (with Baffle).
+        \item To make our system within 200 grams (w/o Baffle) 300 grams (w/ Baffle).
+        \item System should be designed to sustain Launch Loads.
+        \item System should provide a mechanical interfacing link to the user satellite.
+        \item Maintain the temperature range of all components within specified limits.
+        \item Out-gassing of the system to be avoided.
+        \item System should be integrable, as a module.
+    \end{enumerate}
+    \item \textbf{Requirements on Mechanical Subsystem from Electrical Subsystem:}
+    \begin{enumerate}
+        \item Integrate the FPGA PCB.
+        \item Integrate the Microcontroller PCB.
+    \end{enumerate}
+    \item \textbf{Requirements on Mechanical Subsystem from Instrumentation Subsystem:}
+    \begin{enumerate}
+        \item Integrate the Optics PCB.
+        \item Integrate the Baffle.
+    \end{enumerate} 
+    \item \textbf{Requirements on Electrical Subsystem from Mechanical Subsystem:}
+    \begin{enumerate}
+    %Do check out this %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \item Height of connector between PCB`s.
+        \item Accommodate all the components on FPGA and Microcontroller PCBs of size less than 45mm x 45 mm x 1.5mm. 
+    \end{enumerate}
+    \item \textbf{Requirements on Instrumentation Subsystem from Mechanical:} Subsystem:
+    \begin{enumerate}
+        \item Distance between Baffle Interface and Optics PCB.
+        \item Accommodate all the components on FPGA and Microcontroller PCBs of size less than 45mm x 45 mm x 1.5mm.
+    \end{enumerate}
+    \item \textbf{Other Requirements from Mechanical Subsystem:}
+    \begin{enumerate}
+        \item Other subsystems to provide component design for thermal Inputs for thermal modeling.
+    \end{enumerate}
+
+\end{enumerate}
+%----------------------------END----------------------------%
+\end{document}
+                

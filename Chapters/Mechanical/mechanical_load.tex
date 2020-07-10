@@ -1,0 +1,85 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\section{Loading}
+The satellite is carried to its orbit by a launch vehicle in a flight lasting about 17 minutes.
+During this period, the vehicle experiences high levels of acceleration, vibrations and
+shocks which are transmitted to the payloads attached to the flight decks of the vehicle.
+Launch loads experienced include static loads, vibration loads, acoustic loads and shocks
+and impose certain strict requirements on the structure of the satellite. Satellite structure
+should be able to withstand these loads during launch. All the components should be
+safe and working after the launch. The loading specification for which the launch vehicle
+interface is tested is assumed to be the loading data for the satellite during launch. \newline
+\newline
+    \textbf{Static Loading}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |p{3cm} | p{6cm} | p{3cm} | }
+    \hline
+    \textbf{Direction} & \textbf{Loading} \\
+    \hline
+    \textbf{Longitudinal} & 3.5g Tensile, 7g Compressive \\
+    \hline
+    \textbf{Lateral} & 6g Tensile/ Compressive \\
+    \hline
+    \end{tabular}
+    \caption{Static Loads}
+    \label{tab:my_label}
+\end{table}
+
+\textbf{Harmonic Loading}
+\newline
+DA-Displacement Amplitude
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |p{3.5cm}|p{3.5cm}|p{3.3cm}|p{3.3cm}| }
+ \hline
+     & \textbf{Frequency range(Hz)} & \textbf{Qualification level} &\textbf{Acceptance level} \\
+     \hline
+\textbf{Longitudinal axis} & (i) 5-8 & 34.5 mm(DA)  & 23 mm (DA) \\
+     \hline
+ & (ii) 10-100 & 4.5g & 3g \\
+ \hline
+ \textbf{Lateral axis} & (i) 5-8 & 34.5 mm(DA) & 23 mm(DA) \\
+ \hline
+ & (ii) 8-100 & 3g & 2g \\
+ \hline
+\textbf{Sweep rate} & 2 oct/min & 4 oct/min &  \\
+ \hline
+ \end{tabular}
+    \caption{Harmonic Vibration Loads}
+    \label{tab:my_label}
+\end{table}
+
+\textbf{Random Loading}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |p{3cm}|p{3cm}|p{3cm}| }
+ \hline
+    & \textbf{Qualification} & \textbf{Acceptance} \\
+ \hline
+\textbf{Frequency(Hz)} &  \textbf{PSD($g^2/Hz$)} &  \textbf{PSD($g^2/Hz$)} \\
+\hline
+20 & 0.002 & 0.001 \\
+\hline
+110 & 0.002 & 0.001 \\
+\hline
+250 & 0.034 & 0.015 \\
+\hline
+1000 & 0.034 & 0.015 \\
+\hline
+2000 & 0.009 & 0.004 \\
+\hline
+g RMS & 6.7 & 4.47 \\
+\hline
+Duration & 2 min/axis & 1 min/axis \\
+\hline
+ \end{tabular}
+    \caption{Random Vibration Loads}
+    \label{tab:my_label}
+\end{table}
+%----------------------------END----------------------------%
+\end{document}

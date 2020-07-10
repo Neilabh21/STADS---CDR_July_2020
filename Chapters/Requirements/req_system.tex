@@ -1,20 +1,40 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
 \chapter{Requirements On System}
 \thispagestyle{fancy}
 
 
 %-----------------------------------------------------------%
 \section{From Mission}
-\blindtext
 %----------------------------END----------------------------%
 
 
 %-----------------------------------------------------------%
 \section{From Payload}
-\blindtext
+\begin{itemize}
+    \item Module should be compatible with 1U/2U/3U CubeSats
+    \item To be able to estimate the attitude upto an accuracy of 0.01$^\circ$
+    \item System should operate within a minimum tolerable slew rate of 2$^\circ$/sec
+    \item System should have interfacing facilities with user satellite
+    \item System should be integrable, as a module
+    \item System should provide attitude data with a minimum update rate of 4 $Hz$
+    \item System should provide attitude within reasonable accuracy bounds for atleast 90 \% sky coverage (Lost In-Space) and 98 \% sky coverage (Tracking Mode)
+\end{itemize}
 %----------------------------END----------------------------%
-
+\section{From Space Environment}
+\begin{itemize}
+    \item System should be able to survive in space conditions
+    \item Outgassing of the system should be avoided
+\end{itemize}
+%-----------------------------------------------------------%
+\section{From Launch}
+\begin{itemize}
+    \item System should be able to survive launch
+\end{itemize}
 
 %-----------------------------------------------------------%
 \section{From Testing Considerations}
-\blindtext
 %----------------------------END----------------------------%
+\end{document}
