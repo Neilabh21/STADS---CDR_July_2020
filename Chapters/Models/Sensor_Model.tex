@@ -4,21 +4,25 @@
 
 \begin{document}
 
-% ------------ %
-% Sensor Model %
-% ------------ %
+% ===================== %
+% Star Image Simulation %
+% ===================== %
 
 \newpage
-\section{\SM}
+\section{\SIS}
 
-\subsection{Background} % Why
+% ---------- %
+% Background %
+% ---------- %
+
+\subsection{Background} % BG
 There are mainly three approaches for testing in star identiﬁcation algorithm research: digital simulation, hardware-in-the-loop simulation, and field test of star observation. These three approaches correspond to three different stages in designing a star sensor and a star identiﬁcation algorithm.
 
 \subsubsection{Digital Simulations}
 At the early design stage, preliminary performance evaluation of the algorithm is done using digital simulation to determine appropriate identification parameters. Digital simulation is computer-based and is involved in the whole process of star image simulation, star image processing, and star identification. 
 
 \subsubsection{Hardware In-Loop Simulation}
-After the design of the star sensor finishes, star identiﬁcation algorithms can be veriﬁed using the method of hardware-in-the-loop simulation. Through hardware-in-the-loop simulation, star ﬁeld simulator (SFS) generates star images. Then the imaging, processing, and identification of those generated star images are done by star sensor. 
+After the design of the star sensor finishes, star identiﬁcation algorithms can be veriﬁed using the method of hardware-in-the-loop simulation. Through hardware-in-the-loop simulation, star ﬁeld simulator (SFS) generates star images. Then the imaging, processing, and identification of those generated star images are done by star tracker. 
 
 \subsubsection{Field Testing}
 Field tests of star observation are done during the night. Star images are photographed and then identified by the star sensor method in order to further verify the star identification algorithms. 
@@ -26,28 +30,39 @@ Field tests of star observation are done during the night. Star images are photo
 \subsubsection{Star Image Simulation}
 As for star identiﬁcation algorithms, star image simulation is the fundamental work of the research. That is, when star sensor’s attitude or boresight pointing is given, those star images photographed by star sensor can be simulated.
 
+% ---------- %
+% Motivation %
+% ---------- %
 
+\subsection{Motivation} % Why
+When designing an optical high precision pointing system many factors contribute to the pointing performance. It may be necessary to consider several system architectures and trade offs amongst several hardware options. Another choice is in terms of the Feature Extraction, Star Matching (Lost in Space and Tracking Mode, both) and Estimation algorithms - it may be necessary to verify that the current set of algorithms can achieve the desired accuracy. However, the conventional approach of hardware testing is impossible for a space-based system. 
 
+One cost-effective method to perform hardware trade studies and to analyze performance is to create a computer simulation of the optical hardware. There are several noise sources from the selected detector and theoretical optical limitations which affect the system performance. The simulation must be \emph{robust} to capture the \emph{dominant noise sources} which impact the downstream pointing precision. 
 
+Therefore, the goal for \SIS (SIS) is -
+\begin{displayquote}
+    \emph{``To develop a robust model of the lens system and image sensor that can generate simulated star field images which include optical aberrations and sensor noises."}
+\end{displayquote}
+The images can be analyzed with simulations to characterise the centroid error.
 
-\subsection{Motivation}
-As it is infeasible to put hardware in the space for testing of our algorithms, we need a modular \SM to simulate the Image Output from the lens system and the sensor to test the Star Tracker Algorithms. Additionally, we should be able to change the hardware systems under consideration, whether it be the lens system or the CMOS sensor, so that we can compare the performance of our algorithms under different hardware configurations. 
-
-
-
+% ------------ %
+% Introduction %
+% ------------ %
 
 \subsection{Introduction} % What
-The \SM is a framework which uses the boresight inputs and the star catalogue to simulate the output of the Image Sensor. This is based on the characterisation of the lens system as well as the CMOS Image Sensor. 
 
+As mentioned earlier, the goal for the \SIS is to develop a robust model of the lens system and image sensor that can generate simulated star field images which include optical aberrations and sensor noises. 
 
+Thus, given the sensor's attitude or boresight pointing and angular velocities, this robust \SISM should be able to simulate the photographs by the CMOS Image Sensor. 
 
-
-
-
+% -------- %
+% Overview %
+% -------- %
 
 
 \subsection{Overview} % Summary
-\blindtext
+The generation of simulated images involves several steps. These are summarised in the following block level flowchart -
+
 % Block Level Flowchart here
 
 % Sensor Model Flowchart
@@ -78,32 +93,58 @@ The \SM is a framework which uses the boresight inputs and the star catalogue to
 \blindtext
 
 \subsubsection{CMOS Model} % What happens in the Sensor
-\blindtext
+Visual information is recorded via the CMOS sensor placed at the focal plane of the optics system to measure the light gathered during the exposure. The sensor is platted into an array of pixels, each of which is tasked to gather the light arriving within a small patch of sensor area. The efficiency with which the sensor and its pixels gather light, and the accuracy to which it determines the amount gathered by each pixel, are crucial in determining the quality of the recorded image. \cite{DSLRs} 
+
+Hence, we need to have an accurate model for the CMOS Sensor. The noise effects in the CMOS Sensor have been separated out into the Noise Model; thus, this CMOS Model takes the input as the wavefront incident on the sensor due to the stars, and produces a no-noise matrix of pixel values as seen by the sensor. 
+
+\subsubsection{Noise Model} % Introduction to noise model
+The incoming light from the stars is the signal we need the CMOS Imaging Sensor to transcribe faithfully; inaccuracies in the recording process constitute noise, and inhibit the ability to reconstruct the Star Vectors in the image frame, which leads to inaccuracies in the Star Tracking and Star Matching Algorithms. In order to extract the best performance from the CMOS Imaging Sensor, it is helpful to have an understanding of the various contributions to image noise and how various design choices in the Lens System and the choice of CMOS Sensor affect this noise.
+
 
 \subsubsection{Slew Model} % Sum images over different time instants
 \blindtext
 
-
-\subsubsection{Noise Model} % Introduction to noise model
-\blindtext
-
-
-
+% ---------------------- %
+% Noise Model - Detailed %
+% ---------------------- %
 
 
 
 \subsection{Noise Model}
-Noise in a sensor has a strong influence on the maximum responsivity and the dynamic range of the sensor.There are sources of noise at various stages of the image capturing process. Reasons for sensor noise are quite different and are explained below:
+There are several image sensor noise sources that must be simulated in the camera model. Our image sensor of choice is a CMOS sensor, and so, we have focused on the noises specific to a CMOS Sensor. The noises that have been considered in the Sensor Model, in a chronological order are - \emph{Background Light, Photon Shot Noise, Quantum Efficiency, Parasitic Light Sensitivity, Photo-Response Non-Uniformity, Fixed Pattern Noise, Dark Noise, Pixel Storage Node Leakage, Dead Pixels} and \emph{Read Noise}.
+
+The order is based on the following information - 
+The background light is due to the ambient light level throughout the universe. This is a constant value and this needs to be added first as it is not a part of 
+
+
+\subsubsection{Background Light} % 2.
+Background Light/noise, or ambient noise, is the noise introduced in the image which can come from various uncontrollable sources,like other celestial sources or cosmic radiation. The photoelectron density that is formed in the process of background imaging can be expressed as follows:
+\begin{equation}
+  b=\int{b_oA\tau(\lambda)P(\lambda)A_pt_s} d\lambda
+\end{equation}
+Where, b0 = 5 x 10$^(10) = 2.512^Mb$ , 
+Mb stands for the magnitude order of the background which can be generally of brightness of 10.0 Mv. 
+\\A$_p$ stands for Area of a Single Pixel,
+\\A stands for Optical Entrance Pupil Area,
+\\$\tau (\lambda)$ is the Optical Transmittance,
+\\P($\lambda$) is the Spectral Response, and
+\\t$_s$ is the Integration Time.
+
+
+\subsubsection{Photon Shot Noise} % 3.
+Image sensors measure scene irradiance by counting the number of discrete photons incident on the sensor over a given time interval. The independence of random individual photon arrivals leads to photon noise, a signal dependent form of uncertainty that is a property of the underlying signal itself. Individual photon detections can be treated as independent events that follow a random temporal distribution. As a result, photon counting is a classic Poisson process.Even from Quantum Statistics, when collecting photons from an unvarying source over a set amount of time, we get a Poisson Distribution.Hence, If the mean value of the number of photons that hit the sensor is n, the RMS noise(variance in the number of photons) is the square root of n.
+
+The formula used in the code is:
+
+Pixel Value = poissrnd(Pixel Value)
 
 
 
-\subsubsection{Parasitic Light Sensitivity} % ???
-\blindtext
 
 \subsubsection{Quantum Efficiency} % 1. Quantum Efficiency% 
 Quantum efficiency (QE) is one of the most important characteristics of any electro-optical
 device including the CMOS image sensor. QE is the ratio of average number of electrons
-generated in the pixel ($\mu$e) to the average number of impinging photons %micro sign- p) 
+generated in the pixel ($\mu$e) to the average number of impinging photons ($\mu$p) 
 on the pixel during exposure time.When talking about sensitivity, QE plays an important role, as well as
 the pixel sensitive area and the use of microlenses. QE can also be defined as the 
 measure of how efficiently the sensor converts light (photons) to charge
@@ -114,15 +155,39 @@ generates (in average) one electron. Normally the QE is less than 1 (or 100%).
 Read noise and QE combined gives the overall sensitivity of the sensor as QE/Read
 Noise, or the minimum amount of light you can see.
 Formula used to calculate this:
+\begin{equation}
+    QE(\lambda)= \mu_e/\mu_p
+\end{equation}
 
 
-\subsubsection{Background Light} % 2.
-\blindtext
 
-\subsubsection{Photon Shot Noise} % 3.
-Image sensors measure scene irradiance by counting the number of discrete photons incident on the sensor over a given time interval. The independence of random individual photon arrivals leads to photon noise, a signal dependent form of uncertainty that is a property of the underlying signal itself. Individual photon detections can be treated as independent events that follow a random temporal distribution. As a result, photon counting is a classic Poisson process.Even from Quantum Statistics, when collecting photons from an unvarying source over a set amount of time, we get a Poisson Distribution.Hence, If the mean value of the number of photons that hit the sensor is n, the rms noise(variance in the number of photons) is the square root of n.
+\subsubsection{Parasitic Light Sensitivity} % ???
+Parasitic Light Sensitivity (PLS) is the ratio of the light sensitivity of the photodiode to the light sensitivity of the Memory Node (also called the Storage Node) in Global Shutter. \newline
 
-The formula used in the code is: 
+Parasitic Light Sensitivity Noise (PLSN) is due to the light incident into Memory Node. An increase of PLS leads to a deterioration in the image quality.  This  is  because  the  photo-electrons  generated  by  incident  light  to  Memory Node  are  added  to  the  photo-electrons stored in Memory Node after the exposure. \newline
+
+The Memory Node is about 80,000x more sensitive than the Photodiode. However, the Memory Node is susceptible to photons only after the Shutter Closes. So, the time to be taken into account is $t_{Readout} - t_{Close}$. \newline
+
+Formula Used in the code:
+\begin{equation}
+    \begin{aligned}
+        \boxed{ \color{blue} PLS_{Noise} =  \frac{PV_0}{PLS} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \color{black}} 
+    \end{aligned}
+\end{equation}
+where, $PV_0$ is the Pixel Value without noise. 
+
+Derivation:
+\begin{equation*}
+    \begin{aligned}
+        \text{\# photons in } t_{Capture} & \rightarrow P_0 \\
+        \text{\# photons in } (t_{Readout} - t_{Close}) & \rightarrow P_0 \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \\
+        \text{PV due to } P_0 \text{ in } t_{Capture} & \rightarrow PV_0 \\
+        \text{PV due to } P_0 \text{ in } (t_{Readout} - t_{Close}) & \rightarrow \frac{PV_0}{PLS} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right)
+    \end{aligned}
+\end{equation*}
+where, $PV$ is the Pixel Value. 
+
+Note that the PLSN depends on the input illumination on the Sensor, which is why this noise has been included after Background Light, Photon Shot Noise and Quantum Efficiency.
 
 
 
@@ -132,10 +197,20 @@ Since PRNU is caused by the physical properties of the sensor itself, it is almo
 The formula used in the code is:
 
 
+Pixel Value += G * N(PRNU * Pixel Value, PRNU * Pixel Value)
+
+A Pseudo-Random Generator is used, and N=Normal Distribution Function.
+
+
+
 \subsubsection{Fixed Pattern Noise} % 5.
 FPN (also called non-uniformity)in LSB10 is the spatial percentage variation in pixel output values under uniform illumination due to device and interconnect parameter variations (mismatches) across the sensor. It is fixed for a given sensor, but can vary from sensor to sensor.This is the standard deviation value.
 Fixed Pattern Noise is the variation in pixel dark signal over a frame and is determined by calculating Standard Deviation of mean image obtained from set of frame taken in dark.
 The formula used in the code is:
+
+Pixel Value= Pixel Value + G * N(0, FPN)
+
+A Pseudo-Random Generator is implemented and N=Normal Distribution.
 
 
 \subsubsection{Dark Noise} % 6. Dark Current, DSNU, Dark Noise
@@ -149,16 +224,24 @@ As the dark current results from spontaneously generated electrons, the dark cur
 
 Formula Used In the code:  
 
+Pixel Value $+= G * round(DTN + DS * t_s + N(0,\sqrt{DS *t_s}))$
+
+DTN=Dark Temporal Noise, DS=Dark Signal, N=Normal Distribution.
+
 
 \subsubsection{Pixel Storage Node Leakage} % 7. 
 In a global shutter, after exposure the integrated charge from each pixel is transferred to the pixel storage node. Since this is typically diffusion, it has some leakage. The storage nodes of some pixels are leakier than others, resulting in the bright spots that can be seen in images with larger frame times and the default timing.
 The storage node of each row is reset during the row overhead time of the previous frame. The time between 2 resets of the floating diffusion is therefore equal to 1/frame rate.
 Formula Used in the code:
 
+ Pixel Value =Pixel Value- G * round(PSNL * (t$_{Readout} - t_{Close}$))
+
+
 
 \subsubsection{Dead Pixels} % 8.
 Alternatively referred to as a defective pixel, a dead pixel is a term used to describe pixels that no longer produce any output. It occurs if the pixel has a defect in its PN junction, and it may generate leakage paths.The number of dead pixels on a sensor is dependent on the process quality used for forming the image sensor.
-Formula used in the code:
+\\Formula used in the code:
+\\The value for this is a Random Number (from Uniform Distribution). If N Pixels on the sensor are dead, then their Pixel Value = 0 (a Pseudo-Random generator implemented)
 
 
 \subsubsection{Read Noise} % 9.
@@ -167,6 +250,11 @@ Read noise basically determines the contrast resolution that the camera is able 
 It is one of the main sources of noise in an imaging camera for relatively short exposures. Low read noise is desirable as it allows the camera to detect low level signals and attain a high dynamic range and therefore results in a more sensitive sensor.
 The read noise of the CMOS sensor is a noise distribution and is normally given as in e-, as a median value.
 Formula used in the code:
+
+DNR =$ 20 * \log_{10}{(FWC / Read Noise)}$
+
+From this formula, the read noise is calculated appropriately.
+
 
 
 
@@ -185,13 +273,13 @@ Formula used in the code:
 \subsubsection{Version - 1 (Python)}
 \blindtext
 
-\subsubsection{Version - 1 (Matlab)}
+\subsubsection{Version - 1 (MATLAB)}
 \blindtext
 
-\subsubsection{Version - 2 (Matlab)}
+\subsubsection{Version - 2 (MATLAB)}
 \blindtext
 
-\subsubsection{Current Model - Version 3 (Matlab)}
+\subsubsection{Current Model - Version 3 (MATLAB)}
 \blindtext
 
 
@@ -209,5 +297,7 @@ Formula used in the code:
 
 \subsection{Future Tasks}
 \blindtext
+
+\printbibliography
 %----------------------------END----------------------------%
 \end{document}

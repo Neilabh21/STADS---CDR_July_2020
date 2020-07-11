@@ -3,29 +3,67 @@
 %-----------------------------------------------------------%
 \begin{document}
 \section{Mass Budget}
-\begin{enumerate}
-    \item \textbf{Mechanical Mass budget(Panels):}
-    \text Please note that Integration Mass will be 10\% of total mass according to Satellite Wiki. (Don't forget to cite)
-    \begin{table}[h!]
+    \begin{table}[H]
         \centering
-        \begin{tabular}{|p{3cm}|p{4cm}|}
+        \begin{tabular}{|p{2.5cm}|p{4cm}|p{2.5cm}|}
              \hline
-             \textbf{Component} & \textbf{Mass in Grams}  \\
+             \multicolumn{3}{|c|}{\textbf{Mechanical Subsystem}} \\
              \hline
-              Frame & 75.130\\
+             Serial No.& Component & Mass(gm)  \\
              \hline
-             Rods+Spacers & 8.440 \\
+              1 & Frame & 75\\
              \hline
-             Integration & 41.785 \\
+             2 & Rods+Spacers & 10 \\
              \hline
-             Total & 125.355 \\
+             3 & Integration & 10 \\
+             \hline
+              & \textbf{Total} & 95 \\
              \hline
         \end{tabular}
         \caption{Mechanical Subsystem Mass Budget}
         \label{tab:my_label}
     \end{table}
-    \item \textbf{Optics Mass Budget(Optics PCB, Lens holder and Baffle):}
-    \item \textbf{Electrical Mass Budget(will contain Microprocessor PCB and FPGA PCB)}
-\end{enumerate}
+    
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|p{2.5cm}|p{4cm}|p{2.5cm}|}
+             \hline
+             \multicolumn{3}{|c|}{\textbf{Instrumentation Subsystem}} \\
+             \hline
+             Serial No.& Component & Mass(gm)  \\
+             \hline
+             1 & Optics PCB & \\
+             \hline
+             2 & Lens & \\
+             \hline
+             3 & Lens Holder &\\
+             \hline
+             4 & Baffle &\\
+             \hline
+             & \textbf{Total} & \\
+             \hline
+        \end{tabular}
+        \caption{Instrumentation Subsystem Mass Budget}
+        \label{tab:my_label}
+    \end{table}
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|p{2.5cm}|p{4cm}|p{2.5cm}|}
+             \hline
+             \multicolumn{3}{|c|}{\textbf{Electrical Subsystem}} \\
+             \hline
+             Serial No.& Component & Mass(gm)  \\
+             \hline
+             1 & FPGA PCB & 12\\
+             \hline
+             2 & Micro-controller PCB & 12\\
+             \hline
+             & \textbf{Total} & 24\\
+             \hline
+        \end{tabular}
+        \caption{Mechanical Subsystem Mass Budget}
+        \label{tab:my_label}
+    \end{table}
+
 %----------------------------END----------------------------%
 \end{document}

@@ -1,0 +1,24 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\subsection{The Region Growth Algorithm}
+Starting from the first pixel in the top left corner of the raw image, only every n\textsuperscript{\textit{th}} pixel in the row is checked against the threshold. This value of n is decided based upon the typical size of a star. Suppose the smallest star is a 3x3 one, than the value of n will be 3. Since every detectable star will have a diameter of at least n pixels, no stars will be missed. However, if we check every pixel, the results won't improve and only execution time increases. When the end of the row is reached, the algorithm skips two rows and repeats itself. In this way only 1/9 of all the pixels need to be checked (for case where n = 3). This results in a slight decrease in run-time, nothing too significant, as the majority of the time is spent in the "region-growing" of the algorithm, so it is recommended that n be kept as close to 1 as possible.
+
+Whenever a pixel above the threshold is detected, the Region Growing Algorithm is called to find all pixels belonging to the detected star. When the Region Growing Algorithm completes, the search over the image plane continues.
+
+This algorithm is responsible for finding all pixels belonging to a single star by growing out from a single pixel of that star. It is a recursive algorithm which works as follows:
+\begin{itemize}
+    \item The algorithm is given the location of a single pixel, called the seed, belonging to a star.
+    \item The seed is added to a list of pixels belonging to the star.
+    \item An array is maintained to prevent recursion happening with the same star and the seed's value in the array is set to zero to prevent it from being detected again.
+    \item The seed's four neighbouring pixels are checked against the detection threshold.
+    \item If a neighbouring pixel is above the threshold, the algorithm is called recursively with that pixel as seed.
+    \item The algorithm completes when no more neighbouring pixels above the threshold can be found.
+    \item If the number of pixels in a region is less than a decided floor value or more than a ceiling value then the obtained region is ignored.
+\end{itemize}
+The threshold is set accordingly so as to not compromise on the accuracy of the centroid of the star while successfully ignoring any pixels that are simply giving noisy values. The Region Growing Algorithm returns a list of pixels belonging to the same star as the seed. Too few pixels indicate a dead pixel or star which is too faint to detect reliably. The list may also not contain too many pixels, as this indicates that the moon, earth, or reflections from the sun are entering the FOV. Lists with too few or too many pixels are discarded for this reason.
+
+The flow of the algorithm is shown in flowchart \ref{FC:flow_fe_rga}
+%----------------------------END----------------------------%
+\end{document}

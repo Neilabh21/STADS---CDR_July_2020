@@ -8,8 +8,7 @@
 %-----------------------------------------------------------%
 \section{Requirements on Mechanical Subsystem}
 \subsection{From System}
-\subsection{From Communication and Payload Subsystem} 
-\subsection{From GNC} 
+\subsection{From Communication and Payload Subsystem}  
 \subsection{From Electrical Subsystem}
 \subsection {From Testing Considerations} 
 %----------------------------END----------------------------%
@@ -51,8 +50,12 @@
 \newpage
 \section{Requirements on GNC}
 \subsection{From System}
+\begin{itemize}
+    \item Estimator must be capable of giving attitude with required accuracy with the obtained data
+    \item Algorithms should be selected which are less computationally expensive
+    \item The pre-processed star catalogue used onboard should consist of data from stars of specfied upper magnitude.
+\end{itemize}
 \subsection{From Testing Considerations}
-\subsection{From Communication and Payload \mbox{Subsystem} }
 %----------------------------END----------------------------%
 
 

@@ -16,6 +16,8 @@ We are working on three different algorithms for Feature Extraction, and selecti
         \ This algorithm goes through all the pixels in the image and assigns a tag to each pixel. Tags that get connected at a pixel are merged at the end of tagging. This is a modification of one of the classical algorithms used for image labelling. An example of how this labelling algorithm works is presented at \href{https://aishack.in/tutorials/labelling-connected-components-example/}{this webpage}.
         \item The run length encoding (RLE) algorithm:\\
         \ This algorithm compares the starting and ending points of continuous ranges of pixels in every row and assigns tags to those ranges. Tags that get connected to the same range are merged at the end of comparisons for each row. The algorithm to be implemented is presented in \cite{fe_blob_detection}.
+        \item OpenCV Implementation:\\
+        This involved the usage of OpenCV's inbuilt function findContours, followed by calculating it's moments to give us the centroid. Unfortunately, this approach had one problem, that findContours was not one of the FPGA synthesizable functions and since none of the other centroiding techniques were synthesizable on an FPGA either, we had to abandon this approach. It could not be done on a microcontroller as microcontrollers do not have OpenCV functions already implemented, so we would basically be implementing them from scratch on a microcontroller.
     \end{itemize}
     \item Recursive Algorithms:\\
     We are working on a recursive centroiding algorithm called the region growth algorithm. Recursive algorithms can not be implemented on the FPGA as HLS can not synthesize recursive functions. Therefore, this algorithm will run on the microcontroller.
@@ -101,6 +103,7 @@ We now present the details of the algorithms.
 
 \subfile{Chapters/Electrical/pixel_by_pixel}
 \subfile{Chapters/Electrical/runLengthEncoding}
+\subfile{Chapters/Electrical/Region_Growth}
 
 \begin{Flowchart}
     \centering
@@ -109,11 +112,19 @@ We now present the details of the algorithms.
     \label{FC:pbp_centroiding}
 \end{Flowchart}
 
+
 \begin{Flowchart}
     \centering
-    \includegraphics[width = 0.7\textwidth]{Figures/Electrical/centroiding_3.png}
+    \includegraphics[width = \textwidth]{Figures/Electrical/centroiding_3_non_coding.png}
     \caption{Run Length Encoding Algorithm}
     \label{FC:flow_fe_rle}
+\end{Flowchart}
+
+\begin{Flowchart}
+    \centering
+    \includegraphics[width = \textwidth]{Figures/Electrical/centroiding_4_non_coding.png}
+    \caption{Region Growth Algorithm}
+    \label{FC:flow_fe_rga}
 \end{Flowchart}
 %----------------------------END----------------------------%
 \end{document}

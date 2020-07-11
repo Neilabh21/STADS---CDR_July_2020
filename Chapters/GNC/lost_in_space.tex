@@ -125,10 +125,11 @@ The radial pattern and cyclic pattern arrays are used as a reference and searche
 
 In its testing through simulations, the star identification rate increases with increasing $R_r$, and an appropriate $N_q$ needs to be selected.
 
-This method was considered as, since the FPGA-based implementation of this algorithm \cite{zhao2017real}, claimed to be faster than traditional implementations of Star-Matching algorithms on a micro-controller.
+This method was initially considered since its FPGA-based implementation \cite{zhao2017real} claimed to be faster than the traditional implementations of Star-Matching algorithms on a micro-controller. However, with the increasing complexities involved in the FPGA programming of this algorithm, lead to the decision to disqualify this algorithm.
 
 
 \subsubsection{Geometric Voting Algorithm}
+\label{sec:GVA}
 This method \cite{kolomenkin2008geometric} requires all the close-pairs of catalogue stars to be sorted in a lookup table based on the distances between the stars.
 
 The angular distance between every pair of stars from the captured image is calculated, and its corresponding catalogue star pair is found from the lookup table. These catalogue star pairs then vote for the image star pair with similar distances. As the angular distance is a symmetric relationship, each member of the catalogue star pair votes for each member of the image star pair. 
@@ -140,7 +141,7 @@ This algorithm uses information from the entire image and does not rely only on 
 % Insert Flowchart - Algorithm
 
 An important aspect of this algorithm, is that there is a verification step after right after the voting step. 
-If a non-star object is ever detected by Feature Extraction, there is a reasonable probability of the non-star being voted on by an actual catalogue star. It can thus be misidentified as a star. Such \textit{false detections} affect the accuracy when calculating the attitude, and hence should be minimized. Hence a verification step, that can accurately detect and ignore such star-pairs is important for 
+If a non-star object is ever detected by Feature Extraction, there is a reasonable probability of the non-star being voted on by an actual catalogue star. It can thus be misidentified as a star. Such \textbf{false matches} affect the accuracy when calculating the attitude, and hence should be minimized. Hence a verification step, that can accurately detect and ignore such star-pairs is important for 
 
 % Insert Flowchart - verification Step
 
@@ -165,8 +166,128 @@ The 4-Star Matching Algorithm (Refer \ref{sec:4SM}), addressed these issues, and
 \subsubsection{4-Star Matching Algorithm}
 \label{sec:4SM}
 
-This algorithm \cite{dong2006brightness}
-% Hey just added this for making the text aligned in tracking mode. 
-This is a meaningless text. This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.This is a meaningless text.
+This algorithm \cite{dong2006brightness} involves a “4-star matching” pattern recognition procedure, that requires a  brightness independent guide star catalogue as well as a K-vector based reference star catalogue. The generation of these catalogues depends on parameters such as the Limiting Magnitude, and the FOV of the optics system.
+
+The Limiting Magnitude for the optics systems was decided as 6. The number of stars from the star catalogue with a visible magnitude $\le 6$ are 5060 - these stars are classified as the \textbf{Guide Stars}. The catalogue that contains the Star-IDs of these stars, as well as the pointing unit vectors of these stars in the ICRS frame is stored as part of the \textbf{Guide Star Catalogue}.
+The pairwise angular distance is computed between every pair of the Guide Stars as follows:
+\begin{equation}
+    d_{ij} := \cos(\theta_{ij}) = \vect{v_i}.\vect{v_j} = \vect{v_{ix}}\vect{v_{jx}} + \vect{v_{iy}}\vect{v_{jy}} + \vect{v_{iz}}\vect{v_{jz}}
+    \label{eq:ST_AngDst}
+\end{equation}
+where, $\vect{v_i}$ corresponds to the pointing unit vector of the $i^{th}$ Guide Star.
+If this computed angular distance is $\le$ the FOV ($cos(\phi)$, where $\phi=$ FOV), they are stored.
+All such pairs of stars are then compiled, and are sorted based on their angular distance. These angular distance values are then used to generate the K-vector for the angular distance. These pairwise Star-IDs and the corresponding K-vector value is stored as part of the \textbf{Reference Star Catalogue}. These catalogues shall be available on-board the STADS module.
+% Insert catalogue images
+
+ 
+When the module takes an image, the centroids of the stars that are identified from the image are obtained from Feature Extraction. These 2-dimensional centroids are then converted to 3-dimensional unit vectors in the body-frame that point towards the source of light responsible for a given centroid \cite{erlank2013development}.
+%insert light-ray image
+
+For a given $(x, y)$ centroid the corresponding unit vector is defined as follows:
+\begin{equation}
+    \begin{bmatrix} u_{x} \\ u_{y} \\ u_{z} \end{bmatrix} = \begin{bmatrix} x/r_{2} \\ y/r_{2} \\ f/r_{2} \end{bmatrix}
+\end{equation}
+\begin{equation}
+    r_{2} = \sqrt{x^2 + y^2 + f^2}
+\end{equation}
+
+where, $f = $ focal length of the optic system in the module.
+
+Once these 3D unit vectors are generated for each of the centroids present in the image, the algorithm dictates that the Star-Matching process be operated on \textbf{four stars} at a time.
+
+Once these four stars are selected, the pairwise angular distances between every possible star pair is computed using their corresponding unit vectors (\ref{eq:ST_AngDst}). Hence there are $\binom 4 2 = 6$ unique angular distances.
+These angular distances are stored in an array called the \textbf{Star-Pair Array} (SPA), which is defined as follows:
+\begin{equation}
+    \text{SPA} = \begin{bmatrix}s_1\\ s_2\\ s_3\\ s_4\\ s_5\\ s_6\end{bmatrix} := \begin{bmatrix} d_{12} \\ d_{13} \\ d_{14} \\ d_{23} \\ d_{24} \\ d_{34} \end{bmatrix}
+\end{equation}
+
+where, $d_{ij}$ corresponds to the angular distance between the $i^{th}$ and $j^{th}$ image-star.
+
+Now for a given element from the SPA, the algorithm needs to find all those star-pairs from the Reference Star Catalogue whose angular distance $(d_{ij})$ lies in the interval:
+\begin{equation}
+    d_{ij} \in [s_i-\delta, s_i+\delta]
+    \label{eq:ST_SearchWindow}
+\end{equation}
+where, $\delta$ is the \textit{localization uncertainty} which was discussed before. However instead of searching through the entire Reference Star Catalogue to find all those entries which satisfy the condition given by (\ref{eq:ST_SearchWindow}), the algorithm employs the use of K-vector to perform this task \textit{`search-lessly'}.
+
+Firstly the following values are computed:
+\begin{equation}
+    k_{bot} = \text{floor}\bigg[ \frac{\big(\cos(\delta)s_i - \sin(\delta)\sqrt{1 - s^2_i} \big)- q}{m} \bigg]
+\end{equation}
+\begin{equation}
+    k_{top} = \text{ceil}\bigg[ \frac{\big(\cos(\delta)s_i + \sin(\delta)\sqrt{1 - s^2_i} \big)- q}{m} \bigg]
+\end{equation}
+where, $q=$ the y-intercept of the Z-vector line , and $m=$ slope of the Z-vector line (Ref \ref{appendix:k-vector}).
+
+The ID range of candidate star-pairs is then obtained from the K-vector as follows:
+\begin{equation}
+    R_{start} = K[k_{bot}] + 1
+\end{equation}
+\begin{equation}
+    R_{end} = K[k_{top}]
+\end{equation}
+where, K[i] refers to the $i^{th}$ element of the K-vector, $R_{start}$ refers to the start index of the Reference Star Catalogue, and $R_{end}$ refers to the end index of the Reference Star Catalogue.
+
+All those star-pairs that $\in [R_{start}, R_{end}]$ are termed as candidate star-pairs. The Star-IDs of these candidate star-pairs are stored in an array called the \textbf{Candidate Star-Pair Array} (CSPA). Note that the size of this array is cannot be fixed before, but rather be dynamically allotted since the number of the candidate star-pairs vary for each measured angular distance.
+
+A \textbf{Star Identification Matrix} (SIM) is then constructed with the dimensions - $(N, 6)$ where $N = $ number of Guide Stars, and all the elements are initialized to zero. 
+Subsequently the CSPA for the first element in the SPA is computed. All those rows of the SIM corresponding to the Star-IDs stored in CSPA are selected. The first column of all these rows are then updated to 1.
+Similarly, the algorithm proceeds with the rest of the SPA elements, updating the $i^{th}$ column values respectively for the $i^{th}$ SPA element.
+
+If and only if there is \textbf{one row} from the SIM that is exactly $[1,1,1,0,0,0]$, the index of this row is identified as the Catalogue Star-ID of the first image-star.
+If there are no rows or more than one row with this value, then the first image-star cannot be identified. Similarly, for the other stars, the rows need to be as follows:
+\begin{equation}
+    \begin{bmatrix} S_1 \\ S_2 \\ S_3 \\ S_4\end{bmatrix} = \begin{Bmatrix} [1,1,1,0,0,0] \\ [1,0,0,1,1,0] \\ [0,1,0,1,0,1] \\ [0,0,1,0,1,1] \end{Bmatrix}
+\end{equation}
+
+Once an image-star is matched, it is not used again. The remaining image-stars are used with additional image-stars to make a new 4-star group. The above procedure is then repeated.
+If none of the four stars are identified in a matching procedure, at least one star should still be removed to build a new 4-star group. In this way all of the image-stars are matched.
+
+This algorithm was selected as the Star-Matching algorithm for the Lost-in-Space mode, because:
+\begin{enumerate}
+    \item The paper which had laid down the 4-Star Matching Algorithm \cite{dong2006brightness}, had done so without any ambiguity in its implementation, and was thus a straightforward task to implement it
+    \item The algorithm employed the K-vector based \textit{search-less} technique which would significantly reduce the run-time of Star-Matching
+\end{enumerate}
+
+\textbf{Verification Step}
+
+At the end of any Star-Matching algorithm, as mentioned earlier in (\ref{sec:GVA}), it is important to have a verification step that can detect \textbf{false matches} if any, and hence discard them from being used by the estimation algorithm to estimate the attitude.
+
+The verification step that was implemented in the Geometric Voting Algorithm \cite{kolomenkin2008geometric} was used as reference. This step, however, was modified before being implemented.
+% insert flowchart
+
+The voting strategy is employed, to vote all the matched image-stars whose pairwise angular distance with other matched image-stars computed using the body-frame vectors $(d_{ij})$ equals \textit{(to a predetermined tolerance)} the angular distance computed using the ICRS-frame vectors of the respective matched Guide Stars $(d'_{ij})$, defined as follows:
+\begin{equation}
+    \bigg|\frac{d_{ij}}{d'_{ij}} - 1\bigg| \le \frac{tol}{100}
+    \label{eq:ST_Verify_Tol}
+\end{equation}
+where, $tol=$ the tolerance value, expressed in percentage. In this case a value of $tol=2\%$ was chosen.
+It can be observed that the maximum number of votes which can be accumulated by an image-star is $(N-1)$, where, $N=$ the number of matched image-stars. However, if there any false matches, this maximum value will not be accumulated by any of the image-stars. Hence the following checks were enforced to detect these false matches.
+
+Once the voting step is completed for all the matched image-stars, the votes accumulated are checked against a lower-bound which is computed as follows:
+\begin{equation}
+    n_{LB} = \frac{p_1 \times N}{100}
+\end{equation}
+where, $p_1=$ the lower-bound, expressed in percentage. In this case a value of $p_1=35\%$ was chosen. 
+All those image-stars which have votes $\le n_{LB}$, are considered to have \textbf{failed}, and hence discarded. Let this number of failed stars be $N_f$.
+This constitutes the \textbf{Check-1} step.
+
+Following this, a threshold value is calculated as follows:
+\begin{equation}
+    n_{TH} = \frac{p_2 \times (N - N_f)}{100}
+\end{equation}
+where, $p_2=$ the threshold, expressed in percentage. In this case a value of $p_2=80\%$ was chosen. All those image-stars which have votes $\ge n_{TH}$ are considered to have \textbf{passed}, and thus matched properly. 
+Only these image-stars are considered by the estimation algorithm to estimate the attitude.
+This constitutes the \textbf{Check-2} step.
+
+The Check-1 step, ensures that all those image-stars which have accumulated too few votes are appropriately removed. 
+An assumption is made here, which is that these image-stars that are removed were indeed \textbf{false matches} because of the low number of votes.
+Hence any of the other image-star should have accumulated the maximum of $(N-N_f-1)$ number of votes, provided they are all true matches. 
+However, it is not necessary that from the remaining pool, all the stars be true-matches, and thus accumulate $(N-N_f-1)$ number of votes.
+
+Hence to remove \textbf{probable false matches} from the remaining pool of image-stars, Check-2 step is included.
+From the earlier assumption, it can be deduced that the falsely matched image-stars, in the initial voting stage, would have had no impact in the voting step of other stars, since the angular distances computed using these falsely matched image-stars and other matched image-stars would fail the condition given by (\ref{eq:ST_Verify_Tol}). \\
+Hence the threshold value $n_{TH}$ which is computed, appropriately signifies the minimum number of votes that should be accumulated by an image-star from the remaining pool for it to be a true match.
+
 %----------------------------END----------------------------%
 \end{document}

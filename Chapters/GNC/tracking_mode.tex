@@ -43,20 +43,22 @@ The Feature Extraction process is executed in the next frame, obtaining the true
         \label{fig:sp_search}
     \end{figure}
     
-    \item \textbf{Star Neighbourhood Approach}\\
+    \item \textbf{Star Neighbourhood Approach} \label{sna}\\
     
     The Star Neighbourhood approach is the second recursive algorithm which uses the previously identified stars to access the candidate stars (which form the \textit{Reference Image}) to match with the current observed stars (which form the \textit{Measured Image}). This approach makes use of the spacecraft attitude at each frame (obtained by estimating the Angular Velocity from the Gyroscope) and the previously identified Star IDs. The steps of the algorithm are detailed below:
     \begin{enumerate}
         \item The LISA is run for the first time which determines the \textbf{attitude matrix} and \textbf{Star-IDs} at time $t_{0}$.
-        \item \textbf{Simulation of Stars}\\
+        \item \textbf{Simulation of Stars}
         By knowing the attitude matrix at each time step we can calculate the normal vectors to the sensor frame in the body frame, which is known as the 'Bore-sight vector', to simulate the frames of stars at the next time step, i.e, create a simulation of the actual image which will contain catalogue stars and place them at positions at which the 'true centroids' should ideally be found (\textit{Reference Image}).
-        \item The simulated star unit vectors are converted to image plane coordinates ($x_{i}$, $y_{i}$)using the following formula:
+        \item \textbf{Star Mapping}
+        The simulated star unit vectors are converted to image plane coordinates ($x_{i}$, $y_{i}$)using the following formula:
         \begin{equation}
             x_{i} = -f\frac{x^{T}b_{i}}{z^{T}b_{i}} \hspace{3em} y_{i} = -f\frac{y^{T}b_{i}}{z^{T}b_{i}}
         \end{equation}
         where \textbf{$C^{T}$ = [x,y,z]} is the sensor attitude matrix, \textbf{$b_{i}$ (i=1,2,3.....n)} are the simulated star vectors and \textbf{f} is the camera focal length. 
-        \item The estimated location of star i at the current frame ($x_{i}$, $y_{i}$)$_{t+\delta t}$ is calculated by adding the location of star i at the previous frame ($x_{i}$, $y_{i}$)$_{t}$ and estimated translation of the frame $\omega\delta$t.
-        \item Now the estimated locations of stars (Reference Image) is matched with the measured locations of stars (Measured Image) using a Radius based approach as shown in figure (10.7). 
+        \item \textbf{Star Spot Prediction}
+        The estimated location of star i at the current frame ($x_{i}$, $y_{i}$)$_{t+\delta t}$ is calculated by adding the location of star i at the previous frame ($x_{i}$, $y_{i}$)$_{t}$ and estimated translation of the frame $\omega\delta$t.
+        \item \textbf{Star Matching} Now the estimated locations of stars (Reference Image) is matched with the measured locations of stars (Measured Image) using a Radius based approach as shown in figure (10.7). 
         \begin{figure}[!h]
         \centering
         \includegraphics[scale=0.20]{Figures/GNC/radius_matching.png}
@@ -74,7 +76,7 @@ The Feature Extraction process is executed in the next frame, obtaining the true
     \end{figure}
 \end{itemize}
 
-\subsubsection{Rapid Star Tracking Algorithm}
+\subsubsection{Rapid Star Tracking Algorithm} \label{rapidtrack}
 This algorithm does not require any previous attitude information or an estimate of the angular velocity of the spacecraft, unlike the previous algorithm. Instead, it only uses the previously identified stars' information (Right Ascension, Declination, Star ID) to track stars in the current frame. Before understanding the details of the algorithm, some terms are introduced:
 \begin{itemize}
     \item \textbf{Reference Image} : The image from the previous frame where all the observed stars have been identified.
@@ -97,17 +99,41 @@ The principle of the algorithm is detailed step-by-step below:
     \item Now the stars in the Reference Image will be moved away from the FOV one-by-one. When the stars left in the reference image is less than \textbf{3}, new star identification is necessary, which is done by calculating the star sensor's \textbf{boresight} vector according to the result of the previous tracking, and the stars around the boresight can be obtained from the Star Catalogue.  
     \item The stars vectors obtained from the catalogue in the previous step are obtained from the \textit{Celestial Coordinates} (RA, Dec.) and need to be converted to \textit{Image Plane Coordinates} to start again from step 1. This process is known as \textbf{Star Mapping} is generally a time-consuming task, hence it is executed only when the reference stars are less than 3. 
 \end{enumerate}
-
+\begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.4]{Figures/GNC/rapid_tracking_flowchart.png}
+        \caption{Rapid Star Tracking Algorithm Flowchart}
+        \label{fig:rapid_tracking_flowchart}
+\end{figure}
 To speed up the process of star tracking, the algorithm also proposes 3 optimisation techniques. These are explained below:
 \begin{itemize}
-    \item Parallel Star Centroiding\\
+    \item \textit{Parallel Star Centroiding}:\\
     'Ref pixel by pixel algo from feature extraction'
     
-    \item Sorting Before Matching\\
+    \item \textit{Sorting Before Matching} \label{sorting_before_matching}:\\
     In step 2 in the algorithm above, the matching between the stars in observation star image and reference star image is implemented one-by-one. But matching between stars with a long distance is meaningless, so sorting before matching is introduced. That is, the stars in the observation image are sorted in ascending order according to their image plane coordinates using bubble sort, and then the matching is carried out. This decreases the number of operations significantly. 
     
-    \item Star Catalogue Partition\\
-    In step 6 and 7 of the algorithm, new star identification using Star Mapping is done, When catalogue stars are accessed using the boresight vector, searching through the entire guide catalogue is 
+    \item \textit{Star Catalogue Partition} \label{catalogue_partition}:\\
+    In step 6 and 7 of the algorithm, new star identification is done by accessing catalogue stars using the boresight vector and then mapping them onto the star sensor plane (Star Mapping), which can be time consuming and inefficient if searching for stars through the entire guide star catalogue. This is solved using the concept of \textit{'sub-catalogue'}.
+    \begin{itemize}
+        \item The celestial sphere is divided into 6 equal zones by using an inscribed cube and then pushing the sides of the cube away from the center of the sphere, to generate 6 equal parts of the celestial spheres. 
+        \item Each one of the 6 zones can be partitioned into N x N sub portions. This way, the entire celestial sphere is divided into 6 x N x N sub portions. 
+        \item Now all the guide stars can be assigned into these sub portions, instead of their irregular distribution on the whole celestial sphere. This way, if the boresight direction is known in step 6, the sub portion and hence the guide stars around that boresight can be found quickly. The partition table will be pre-processed and stored with the guide catalogue. 
+    \end{itemize}
 \end{itemize}
+
+
+\subsubsection{Rapid Star Tracking Using Star Spot Matching Between Adjacent Frames} \label{zhang}
+This algorithm is very similar to the 'Rapid Star Tracking Algorithm' with a minor difference being in how the \textbf{Reference Image} is formed at every frame. The algorithm introduces another step, known as \textbf{Star Spot Prediction},  that only the attitude information of the current frame is used to match stars at the next frame instead of using the information of previously identified stars, evident after comparing Figure \ref{fig:zhang_tracking_flowchart} and Figure \ref{fig:rapid_tracking_flowchart}. \\
+The attitude information is used to calculate the boresight vector of the current frame, after which the Star ID process is carried out as described in steps 2, 3 and 4 of section \ref{sna}. 
+Star matching between the predicted centroids (Reference Image) and the true centroids (Measured Image) is carried out as shown in Fig. \ref{fig:radius_zhang}. 
+\begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.35]{Figures/GNC/zhang_tracking_flowchart.png}
+        \caption{Star Tracking Algorithm Flowchart}
+        \label{fig:zhang_tracking_flowchart}
+\end{figure}
+
+Similar to algorithm \ref{rapidtrack}, this algorithm also proposes three optimisation techniques to speed up the process of star tracking, where \textit{Sorting Before Matching} and \textit{Star Catalogue Partition} are the same as described in sections \ref{sorting_before_matching} and \ref{catalogue_partition}. The third technique is known as \textbf{Threshold Mapping}, which essentially puts up a threshold for carrying out the process of 'Star Mapping'. As already mentioned in step 7 of section \ref{rapidtrack}, star mapping is generally a time consuming task, and executing it at every frame may defeat the purpose of a tracking mode algorithm. 
 %----------------------------END----------------------------%
 \end{document}

@@ -105,6 +105,7 @@ B_{12}-B_{21} \\
 \end{equation}
 A real symmetric n*n matrix has n real eigenvalues and n real eigenvectors that can be chosen to form an  orthonormal basis.The eigenvalue/eigenvector representation of K(B) can be written as:
 \begin{equation}
+\label{value_of_K_matrix}
     K(B)= \sum_{i=1}^{4} \lambda_{i} \textbf{q}_{i} \textbf{q}_{i}^{T}
 \end{equation}
 where $\textbf {q}_i $ is the eigenvector with eigenvalue $\lambda_i$, also the eigenvalues are labeled so that 
@@ -132,14 +133,14 @@ where
 \begin{equation}
 H(\lambda)= \lambda I_{4} - K(B)
 \end{equation}
-
-\[
+\begin{equation}
+\label{value_of_H_matrix}
  H(\lambda)=
   \begin{bmatrix}
  (\lambda+ tr(B)) I_{3} - S  & -\textbf{z}    \\
   -\textbf{z}^T  &  \lambda- tr(B)
   \end{bmatrix}
-\]
+\end{equation}
 and 
 \begin{equation}
     S= B + B^{T}
@@ -149,6 +150,7 @@ and
 \end{equation}
 If we know $\lambda _{max}$ we obtain the optimal quaternion as:
 \begin{equation}
+\label{final_quaternion}
     \textbf{q}=\alpha
     \begin{bmatrix}
     adj(\rho I_{3} - S)\textbf{z} \\
@@ -163,9 +165,9 @@ Previously in the team, other forms of QUEST such as \textbf{Optimal QUEST} and 
 
 
 
-\subsubsection{QUEST 2}  % add Equation number
+\subsubsection{QUEST 2} 
 {
-The QUEST solution can be related to the adjoint of the matrix H defined in Eq.(10.16). With Eq.(10.10) and K(B)= $\sum_{i=1}^{4}$ $\mathbf{q}_{i}$ $\mathbf{q}_{i}^{T}$
+The QUEST solution can be related to the adjoint of the matrix H defined in Eq.(\ref{value_of_H_matrix}). With Eq.(\ref{value_of_K_matrix}) and K(B)= $\sum_{i=1}^{4}$ $\mathbf{q}_{i}$ $\mathbf{q}_{i}^{T}$
 
 we can express H in the form,
 \begin{equation}
@@ -174,6 +176,7 @@ we can express H in the form,
 
 The adjoint of this matrix is 
 \begin{equation}
+\label{adjoint_of_H}
    adj H(\lambda)= \sum_{i=1}^{4} (\lambda - \lambda_{j}) (\lambda - \lambda_{k}) (\lambda - \lambda_{l}) \textbf{q}_{i} \textbf{q}_{i}^{T}
 \end{equation}
 
@@ -184,7 +187,7 @@ where \{i,j,k,l\} is a permutation of \{1,2,3,4\}. Setting $\lambda = \lambda_{m
 
 where $\gamma$ is positive if $\lambda_{1} \ne \lambda_{2}$ , which we have seen to be the condition for uniqueness of the attitude solution. In fact, $\gamma$ is just d $\psi_{QUEST}$ / d $\lambda$ evaluated at $\lambda$ = $\lambda_{max}$.
 
-The 4-4 component of Eq.() is
+The 4-4 component of Eq.(\ref{adjoint_of_H}) is
 \begin{equation}
    [adj H(\lambda_{max})]_{44} = det(\rho I_{3} - S) = \gamma \hat{q_{4}}^{2}
 \end{equation}
@@ -194,7 +197,7 @@ and the other three elements of the fourth column are
    [adj H(\lambda_{max})]_{k4} = [adj(\rho I_{3} - S) \textbf{z}]_{k} = \gamma \hat{q}_{4} \hat{q_{k}}  for  k = 1,2,3
 \end{equation}
 
-Comparing with Eq.() establishes that the QUEST quaternion estimate is just the normalized fourth column of adj H($\lambda$) and that
+Comparing with Eq.(\ref{final_quaternion}) establishes that the QUEST quaternion estimate is just the normalized fourth column of adj H($\lambda$) and that
 
 \begin{equation}
    \alpha = \pm (\gamma \hat{q}_{4})^{-1} = \pm [\gamma det(\rho I_{3} - S)]^{-1/2}
@@ -206,7 +209,7 @@ Comparing with Eq.() establishes that the QUEST quaternion estimate is just the 
 
 \subsubsection{Flow of code}
 {
-We have three different approaches to carry out the computation necessary for estimation. All three implementations are mathematically identical, and give the same results. However they might differ in their computation cost. Computation analysis of the three implementation is one of the future tasks. Currently all three approaches are implemented. \ref{sec:esti_flow_of_code} shows the flow of code for all three implementations.
+We have three different approaches to carry out the computation necessary for estimation. All three implementations are mathematically identical, and give the same results. However they might differ in their computation cost. Computation analysis of the three implementation is one of the future tasks. Currently all three approaches are implemented. Fig. \ref{sec:esti_flow_of_code} shows the flow of code for all three implementations.
 \begin{figure}
 \centering
 \includegraphics[scale=0.50]{Figures/GNC/estimation_flowchart.png}
@@ -219,26 +222,35 @@ We have three different approaches to carry out the computation necessary for es
 
 \subsubsection{Results}
 {
-Due to the fact that all three implementations of estimation were mathematically identical and there was no limitation on computation cost, the results of the MIL simulation were computed using Approach 2. The requirement for the system is 0.01$^\circ$ (36 arcsec), and since we had to consider a number smaller than our requirements, we set 1 arcsec into the Markley formulas (refer to section \ref{sec:Atti_Accu}) to calculate number of stars. The number of stars were calculated to be ~5.15 which was up scaled to 6. Total of 15 images and a threshold value of 18, 19 and 20 was considered for the simulation. \ref{sec:esti_result_variation} shows plot of error and their norm in each image and their variation as the number of matched stars vary.
+Due to the fact that all three implementations of estimation are mathematically identical and there was no limitation on computation cost, the results of the MIL simulation were computed using Approach 2. The requirement for the system is 0.01$^\circ$ (36 arcsec), and since we had to consider a number smaller than our requirements, we set 1 arcsec into the Markley formulas (Refer to section \ref{sec:Atti_Accu}) to calculate number of stars. The number of stars were calculated to be about 5.15 which was up scaled to 6. Total number of 15 images and a threshold value of 18, 19 and 20 was considered for the simulation. Fig. \ref{sec:esti_result_variation} shows error (for Threshold 20) and their norm in each image, and their variation as the number of matched stars vary.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.50]{Figures/GNC/Result_Plot_Threshold_20_4stars.png}
-\includegraphics[scale=0.50]{Figures/GNC/Result_Plot_Threshold_20_6stars.png}
-\includegraphics[scale=0.50]{Figures/GNC/Result_Plot_Threshold_20_8stars.png}
-\includegraphics[scale=0.50]{Figures/GNC/Result_Plot_Threshold_20_10stars.png}
+\includegraphics[scale=0.55]{Figures/GNC/Result_Plot_Threshold_20_4stars.png}
+\includegraphics[scale=0.55]{Figures/GNC/Result_Plot_Threshold_20_6stars.png}
+\includegraphics[scale=0.55]{Figures/GNC/Result_Plot_Threshold_20_8stars.png}
+\includegraphics[scale=0.55]{Figures/GNC/Result_Plot_Threshold_20_10stars.png}
 \caption{Flow of Code in different Approaches}
 \label{sec:esti_result_variation}
 \end{figure}
-}
+
+The error in attitude generally decreases for a image with increase in number of matched stars, with all the images having an error within the requirements for the case with 10 matched stars. These results are accurate as all the matched stars are matched correctly. However, a single incorrectly matched star can have a profound affect on the estimated attitude and the error can increase by orders of magnitude. Fig, \ref{sec:esti_result_flaw} highlights this affect, where Image 10 has a single star matched incorrectly. 
+\begin{figure}
+\centering
+\includegraphics[scale=0.70]{Figures/GNC/Result_Plot_Threshold_20.png}
+\caption{Affect of a Incorrectly Matched Stars}
+\label{sec:esti_result_flaw}
+\end{figure}
 
 }
 
+}
 
-\subsection{Attitude Accuracy} % Add reference of markley check labels
+
+\subsection{Attitude Accuracy}
 \label{sec:Atti_Accu}
 {
-After benchamrking of other star trackers, we set 0.01$^\circ$ (36 arcsec) as accuracy for STADS. From literature survey and benchmarking of other star tracker vendors, we also know that accuracy of a star tracker is defined in terms of certain angles about the their boresight and across boresight axis. We are not clear about the quantities used to express accuracy, more specifically, what are these angles, how do other companies go about calculating them, and what experimental validation do they provide in order to support their values. We will send mails to professors and other companies regarding this issue.
+After benchamrking of other star trackers, we set 0.01$^\circ$ (36 arcsec) as accuracy for STADS. From literature survey and benchmarking of other star tracker vendors, we also know that the accuracy of a star tracker is defined in terms of certain angles about the their boresight and across boresight axis. We are not clear about the quantities used to express accuracy, more specifically, what are these angles, how do other companies go about calculating them, and what experimental validation do they provide in order to support their values. We will send mails to professors and other companies regarding this issue.
 
 Markley\cite{markley2014fundamentals} provides some insight into accuracy for a star tracker by the following formulas,
 
@@ -264,7 +276,7 @@ The lower value of the number of pixels for the rectangular sensor is taken so t
 The error values in the above formulas, give the maximum achievable accuracy about different axes. For $\kappa_{cent}$ = 0.1 , $N_{pixels}$ = 1024 and $N_{stars}$ = 5, this gives a cross boresight accuracy of 3.1 arcsec for a 20$^\circ$x$20^\circ$ FOV. This means that for these given parameters, the actual accuracy will be greater than or equal to 3.1 arcsec.
 Therefore, these set of formulas, only give a lower bound on the achievable error, which doesn't hold any practical significance as the goal of accuracy is to find a upper bound on error. 
 
-These formulas are only helpful to get a rough estimate about the number of stars that must be matched by the star matching algorithm for STADS to have accuracy within the requirements. As these formulas give only the best accuracy, our actual accuracy would be more than this value. So instead of setting accuracy to be 0.01$^\circ$ (36 arcsec) (As in requirements), we set better accuracy than what we intend to achieve in the formulas (We used 1 arcsec for MIL simulation) to find the number of matched stars.
+These formulas are only helpful to get a rough estimate about the number of stars that must be matched by the star matching algorithm for STADS to have accuracy within the requirements. As these formulas give only the best accuracy, our actual accuracy would be more than this value. So instead of setting accuracy to be 0.01$^\circ$ (36 arcsec) (As in requirements), we set better accuracy than what we intend to achieve in the formulas (1 arcsec was used for MIL simulation) to find the number of matched stars.
 
 As we didn't have any standard method to quantify error, we came with our own method of quantifying error for the MIL simulation. In this method, error about different axes is defined as the corresponding Euler angles of the error quaternion between actual quaternion and the estimated quaternion.
 
