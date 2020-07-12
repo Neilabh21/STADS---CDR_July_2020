@@ -151,39 +151,121 @@ This algorithm also proposes three optimisation techniques to speed up the proce
 This algorithm proposes a new star tracking algorithm, where the processes of Star Prediction and Star Matching are approached differently as compared to all algorithms discussed before. The algorithm does not require the use of a Gyroscope for obtaining the spacecraft angular velocity or the attitude information of any frame. Instead, the algorithm proposes an 'attitude independent' approach for estimating the angular velocity, i.e, the angular velocity can be estimated even without the attitude information of the current frame, and this estimated angular velocity is then used for centroid prediction. 
 \begin{itemize}
     \item \textbf{Angular Velocity Estimation and Centroid Prediction}\\
-    The angular velocity estimate is obtained using only the centroid information of the previous \textbf{two} frames. The process is detailed below:
-    \begin{enumerate}
-        \item Each star's unit vector can be calculated from its corresponding image plane coordinates by using the following formula:
-        \begin{equation}
-            \begin{bmatrix}
-            x\\y\\z
-            \end{bmatrix} = \frac{1}{\sqrt{u^2 + v^2 + f^2}} 
-            \begin{bmatrix}
-            u\\v\\f
-            \end{bmatrix}
-        \end{equation}
-        where f is the lens focal length, and (u,v) are the image plane coordinates.
-        \item Now, recalling Euler's Rotation Matrix (or Direction Cosine Matrix or DCM) from one reference frame to another: 
-       \footnotesize{ \begin{equation}
-            DCM = 
-            \begin{bmatrix}
-            cos(\Psi)cos(\theta) & sin(\psi)cos(\theta) & -sin(\theta) \\
-            -sin(\psi)cos(\phi)+ cos(\psi)sin(\theta)sin(\phi) & cos(\psi)cos(\phi)+sin(\theta)sin(\psi)sin(\phi) & cos(\theta)sin(\phi)\\
-            sin(\phi)sin(\psi)+cos(\psi)sin(\theta)cos(\phi) & -cos(\psi)sin(\phi)+sin(\phi)sin(\theta)cos(\phi) & cos(\theta)cos(\phi)
-            \end{bmatrix}
-        \end{equation}
-        }\\
-        \begin{equation}
-            \begin{bmatrix}
-            x\\y\\z
-            \end{bmatrix} = DCM 
-            \begin{bmatrix}
-            x_{o}\\y_{o}\\z_{o}
-            \end{bmatrix}
-        \end{equation}
-        where \
+    The angular velocity estimate is obtained using only the centroid information of the previous \textbf{two} frames. 
+    %The process is detailed below:
+    % \begin{enumerate}
+    %     \item Each star's unit vector can be calculated from its corresponding image plane coordinates by using the following formula:
+    %     \begin{equation}
+    %         \begin{bmatrix}
+    %         x\\y\\z
+    %         \end{bmatrix} = \frac{1}{\sqrt{u^2 + v^2 + f^2}} 
+    %         \begin{bmatrix}
+    %         u\\v\\f
+    %         \end{bmatrix}
+    %     \end{equation}
+    %     where f is the lens focal length, and (u,v) are the image plane coordinates.
+    %     \item Now, recalling Euler's Rotation Matrix (or Direction Cosine Matrix or DCM) from one reference frame to another: 
+    %   \footnotesize{ \begin{equation}
+    %         DCM = 
+    %         \begin{bmatrix}
+    %         cos(\psi)cos(\theta) & sin(\psi)cos(\theta) & -sin(\theta) \\
+    %         -sin(\psi)cos(\phi)+ cos(\psi)sin(\theta)sin(\phi) & cos(\psi)cos(\phi)+sin(\theta)sin(\psi)sin(\phi) & cos(\theta)sin(\phi)\\
+    %         sin(\phi)sin(\psi)+cos(\psi)sin(\theta)cos(\phi) & -cos(\psi)sin(\phi)+sin(\phi)sin(\theta)cos(\phi) & cos(\theta)cos(\phi)
+    %         \end{bmatrix}
+    %     \end{equation}
+    %     }\\
+    %     \normalsize 
+    %     \begin{equation} \label{dcm_rotate}
+    %         \begin{bmatrix}
+    %         x\\y\\z
+    %         \end{bmatrix} = DCM 
+    %         \begin{bmatrix}
+    %         x_{o}\\y_{o}\\z_{o}
+    %         \end{bmatrix}
+    %     \end{equation}
+    %     where \textbf{$\phi$} is roll in radians about the x-axis, \textbf{$\theta$} is pitch in radians about the y-axis, and \textbf{$\psi$} is yaw in radians about the z-axis.  
         
-    \end{enumerate}
+    %     \item Assuming the small angle approximation, ($sin(\omega) = \omega$, $cos(\omega) = 1$ ; $\omega\psi = 0$; $\omega$ and $\psi$ $<<$ 1), \\
+    %     Euler's equation can be reduced:
+    %     \begin{equation}
+    %         DCM \approx
+    %         \begin{bmatrix}
+    %         1 & \psi & -\theta \\ -\psi + \theta\phi & 1 + \theta\psi\phi & \phi \\
+    %         \psi\phi+\theta & -\phi + \theta\psi & 1 
+    %         \end{bmatrix} = 
+    %         \begin{bmatrix}
+    %         1 & \psi & -\theta \\ -\psi & 1 & \phi \\ \theta & -\phi & 1
+    %         \end{bmatrix}
+    %     \end{equation}\\
+    %     Therefore, equation \ref{dcm_rotate} can be written as: 
+    %     \begin{equation}
+    %     \begin{bmatrix}
+    %         x\\y\\z
+    %     \end{bmatrix} = 
+    %     \begin{bmatrix}
+    %         1 & \psi & -\theta \\ -\psi & 1 & \phi \\ \theta & -\phi & 1
+    %     \end{bmatrix}
+    %     \begin{bmatrix}
+    %         x_{o}\\y_{o}\\z_{o}
+    %     \end{bmatrix}
+    %     \end{equation}
+        
+    % \end{enumerate}
+    Let the centroid of the $i_{th}$ star in the current frame and the previous frame be denoted by ($u_{i}(k)$, $v_{i}(k)$) and ($u_{i}(k-1)$, $v_{i}(k-1)$) respectively. Then the change in the u and v positions of the $i_{th}$ star is given by:
+     \begin{equation} \label{slew_prediction_1}
+        \begin{bmatrix}
+         \Delta u_{i}(k) \\ \Delta v_{i}(k)
+        \end{bmatrix} = 
+        \begin{bmatrix}
+        \frac{u_{i}(k-1)v_{i}(k-1)}{f} & -f \frac{u_{i}(k-1)^2}{f} & v_{i}(k-1) \\
+        f + \frac{v_{i}(k-1)^2}{f} & -\frac{u_{i}(k-1)v_{i}(k-1)}{f} & -u_{i}(k-1)
+        \end{bmatrix}
+        \begin{bmatrix}
+         \Phi(k) \\ \theta(k) \\ \Psi(k)
+        \end{bmatrix}
+     \end{equation}
+     where \textbf{$\Phi$} is roll in radians about the x-axis, \textbf{$\theta$} is pitch in radians about the y-axis, \textbf{$\Psi$} is yaw in radians about the z-axis and f is the focal length.  \\ 
+     Now equation \ref{slew_prediction_1} can be transformed to solve for the Roll, Pitch and Yaw given $\Delta u$ and $\Delta v$, and can be re-written as follows: 
+     \footnotesize
+     \begin{equation} \label{slew_prediction_2}
+         \begin{bmatrix}
+         \Phi \\ \theta \\ \Psi
+        \end{bmatrix} = 
+        \begin{pmatrix}
+        \begin{bmatrix}
+        \frac{u_{i}v_{i}}{f} & -f-\frac{u_{i}^2}{f} & v_{i} \\
+        f+\frac{v_{i}^2}{f} & -\frac{u_{i}v_{i}}{f} & -u_{i}
+        \end{bmatrix}^T
+        \begin{bmatrix}
+        \frac{u_{i}v_{i}}{f} & -f-\frac{u_{i}^2}{f} & v_{i} \\
+        f+\frac{v_{i}^2}{f} & -\frac{u_{i}v_{i}}{f} & -u_{i}
+        \end{bmatrix}
+        \end{pmatrix}^{-1}
+        \begin{bmatrix}
+        \frac{u_{i}v_{i}}{f} & -f-\frac{u_{i}^2}{f} & v_{i} \\
+        f+\frac{v_{i}^2}{f} & -\frac{u_{i}v_{i}}{f} & -u_{i}
+        \end{bmatrix}^T
+        \begin{bmatrix}
+        \Delta u_{i} \\ \Delta v_{i}
+        \end{bmatrix}
+     \end{equation}
+     
+    \normalsize
+     The centroid prediction process is carried out in the following steps:
+     \begin{enumerate}
+         \item The change in each stars' position from the previous image \emph{(k-1)} to the current image \emph{(k)} is calculated:
+         \begin{equation}
+             \Delta u_{i}(k) = u_{i}(k) - u_{i}(k-1); \Delta v_{i}(k) = v_{i}(k) - v_{i}(k-1)
+         \end{equation}
+         
+         \item Equation \ref{slew_prediction_2} is solved to obtain the estimated roll, pitch and yaw of the optical detector. These values are the rotation angular rates from the previous frame to the current frame. Dividing these rates by the detector frame rate results in the estimated angular velocity. 
+         \item A valid assumption here would be that the estimated rates between the previous frame \emph{(k-1)} and the current frame \emph{(k)} will be equal to the estimated rates between the current frame \emph{(k)} and the next frame \emph{(k+1)}. 
+        \item Equation \ref{slew_prediction_1} can now be solved for $\Delta u(k+1)$ and $\Delta v(k+1)$, i.e, the change in the position of stars between the current frame \emph{(k)} and the next frame \emph{(k+1)}, using the estimated Roll, Pitch and Yaw obtained in the previous step. 
+        \item Adding $\Delta u$ and $\Delta v$ to the position of stars at the current frame gives the \textbf{\emph{estimated}} positions of stars at the next frame (\emph{k+1}). 
+     \end{enumerate}
+     
+     \item \textbf{Window Based Centroiding}\\
+     Window Based Centroiding is another approach for the \textbf{\emph{Star Matching}} process instead of the traditional Radius Based Matching as seen in Fig. \ref{fig:radius_zhang} 
 \end{itemize}
 
 %----------------------------END----------------------------%

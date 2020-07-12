@@ -58,11 +58,8 @@ A modest flowchart for the Pre-processing sub-block is given here -
 % ---------- %
 
 \subsubsection{Processing}
-Visual information is recorded via the CMOS sensor placed at the focal plane of the optics system to measure the light gathered during the exposure. The sensor is platted into an array of pixels, each of which is tasked to gather the light arriving within a small patch of sensor area. The efficiency with which the sensor and its pixels gather light, and the accuracy to which it determines the amount gathered by each pixel, are crucial in determining the quality of the recorded image. \cite{DSLRs} 
 
-Hence, we need to have an accurate model for the CMOS Sensor. The noise effects in the CMOS Sensor have been separated out into the Noise Model; thus, this CMOS Model takes the input as the wavefront incident on the sensor due to the stars, and produces a no-noise matrix of pixel values as seen by the sensor. 
-
-The flowchart for the Processing sub-block is given here -
+The flowchart for the Processing sub-block is given in Figure \ref{fig:SIS_v2_PR}
 
 \begin{Flowchart}[h!]
     \centering
@@ -70,6 +67,26 @@ The flowchart for the Processing sub-block is given here -
     \caption{Processing Sub-Block - Version 2}
     \label{fig:SIS_v2_PR}
 \end{Flowchart}
+
+Visual information is recorded via the CMOS sensor placed at the focal plane of the optics system to measure the light gathered during the exposure. The sensor is platted into an array of pixels, each of which is tasked to gather the light arriving within a small patch of sensor area. The efficiency with which the sensor and its pixels gather light, and the accuracy to which it determines the amount gathered by each pixel, are crucial in determining the quality of the recorded image. \cite{DSLRs} 
+
+Hence, we need to have an accurate model for the CMOS Sensor. The noise effects in the CMOS Sensor have been separated out into the Noise Model; thus, this CMOS Model takes the input as the wavefront incident on the sensor due to the stars, and produces a no-noise matrix of pixel values as seen by the sensor. 
+
+The processing sub-block involves the following steps -
+\begin{enumerate}[label={}]
+    \descitem{Trim to FOV -} This sub-sub-block trimming the database of all the stars to those within the Field of View of the Star Tracker, given its attitude. 
+    \descitem{ICRS Frame to Lens Frame -} This sub-sub-block transforms the unit vectors of the stars in the database from the ICRS Frame to the Lens Frame (3D)
+    \descitem{Lens Frame to Sensor Frame -} This sub-sub-block projects the 3D unit vectors of the stars onto the 2D Sensor Frame. 
+    \descitem{Trim to Sensor -} This sub-sub-block trims the stars to within the Sensor Frame. This is because there can be stars within the Field of View, but still outside the Sensor Frame. 
+    \descitem{Image Generation -} This sub-sub-block generates the image using the star database and the inputs. For more details, refer to \ref{subsubsection:IG}.
+    \descitem{Noise Model -} This sub-sub-block adds the required noises at the Sensor.
+\end{enumerate}
+
+% ---------------- %
+% Image Generation %
+% ---------------- %
+
+\subsubsection{Image Generation \label{subsubsection:IG}}
 
 % ----------- %
 % Noise Model %
@@ -107,10 +124,10 @@ The Memory Node is about 80,000x more sensitive than the Photodiode. However, th
 Formula Used in the code:
 \begin{equation}
     \begin{aligned}
-        \boxed{ \color{blue} PV =  PV_0 + \frac{PV_0}{PLS} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \color{black}} 
+        \boxed{ \color{blue} PV =  PV_0 + \frac{PV_0}{\texttt{PLS}} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \color{black}} 
     \end{aligned}
 \end{equation}
-where, $PV_0$ is the Pixel Value before PLS is applied. 
+where, $PV_0$ is the Pixel Value before \texttt{PLS} is applied. 
 
 Derivation:
 \begin{equation*}
@@ -150,31 +167,33 @@ PRNU in \% of Signal is the non-uniformity in spatial variation of pixel value f
 
 The formula used in the code is:
 \begin{equation}
-    \boxed{ \color{blue} PV = PV_0 + \mathcal{N}(PRNU \cdot PV_0, PRNU \cdot PV_0)   \color{black}}
+    \boxed{ \color{blue} PV = PV_0 + \mathcal{N}(\texttt{PRNU} \cdot PV_0, \texttt{PRNU} \cdot PV_0)   \color{black}}
 \end{equation}
 
-where, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, $PRNU$ is the PRNU noise value in \%, and $\mathcal{N}(\mu, \sigma)$ is the Normal Distribution Function.
+where, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, \texttt{PRNU} is the PRNU Noise value in \%, and $\mathcal{N}(\mu, \sigma)$ is the Normal Distribution Function.
 
-A Pseudo-Random Generator with a Seed Value is used to ensure that the noise remains same across iterations because PRNU Value is remains same for each pixel over time. 
+A Pseudo-Random Generator with a Seed Value is used to ensure that the noise remains same across iterations because \texttt{PRNU} Value is remains same for each pixel over time. 
 
 % -- %
 % DN %
 % -- %
 
 \subsubsection{Dark Noise} % 6. Dark Current, DSNU, Dark Noise
-Dark Noise, given in no. of Electrons, is the noise due the reverse bias leakage current in
-all diodes.The average dark signal delivered by a sensor or a camera will be composed out of- a fixed DC offset, very often introduced by the analog circuitry on pixel/column/chip-level, or by an
-extra black level offset, and a thermal component, also known as the dark current or leakage current. This part has a linear dependency on the exposure or integration time as well as temperature(at least if saturation of the sensor is not reached).The dark current decreases with decreasing temperature.
-The Dark Temporal Noise is given in number of electrons and the Dark Signal / Dark Current is
-given in number of electrons per second. The variance of the Dark Noise is given as DS x ts.
+Dark Noise, given in no. of Electrons, is the noise due the reverse bias leakage current in all diodes. The average dark signal delivered by a sensor or a camera will be composed out of - a fixed DC offset, very often introduced by the analog circuitry on pixel/column/chip-level, or by an
+extra black level offset, and a thermal component, also known as the dark current or leakage current. This part has a linear dependency on the exposure or integration time as well as temperature (at least if saturation of the sensor is not reached). The dark current decreases with decreasing temperature.
+
+The Dark Temporal Noise is given in number of electrons and the Dark Signal / Dark Current is given in number of electrons per second. The variance of the Dark Noise is given as $DS \cdot t_S$.
 
 As the dark current results from spontaneously generated electrons, the dark current is measured by simply "counting" these electrons. Since counting electrons obeys Poisson statistics, the noise associated with the dark current I is proportional to the square root of the number of dark electrons that accumulate during the exposure. 
 
 Formula Used In the code:  
+\begin{equation}
+    \boxed{ \color{blue} PV = PV_0 + \texttt{G} \cdot \texttt{round}(\mathcal{N}(\texttt{DTN} + \texttt{DS} \cdot t_S, \sqrt{\texttt{DS} \cdot t_S}))   \color{black}}
+\end{equation}
 
-Pixel Value $+= G * round(DTN + DS * t_s + N(0,\sqrt{DS *t_s}))$
+where, $G$ is the Gain, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, \texttt{DTN} is the Dark Temporal Noise value in \# $e^-$, \texttt{DS} is the Dark Signal in \# $e^-/s$, $t_S$ is the exposure time and $\mathcal{N}(\mu, \sigma)$ is the Normal Distribution Function.
 
-DTN=Dark Temporal Noise, DS=Dark Signal, N=Normal Distribution.
+Note that the rounding is important as number of electrons can't be a fractional number. 
 
 % --- %
 % FPN %
@@ -192,10 +211,10 @@ This is the standard deviation value.
 
 The formula used in the code is:
 \begin{equation}
-    \boxed{ \color{blue} PV = PV_0 + \mathcal{N}(0, FPN)   \color{black}}
+    \boxed{ \color{blue} PV = PV_0 + \mathcal{N}(0, \texttt{FPN})   \color{black}}
 \end{equation}
 
-where, $G$ is the Gain, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, $FPN$ is the FPN noise value in LSB10, and $\mathcal{N}(\mu, \sigma)$ is the Normal Distribution Function.
+where, $G$ is the Gain, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, \texttt{FPN} is the FPN noise value in LSB10, and $\mathcal{N}(\mu, \sigma)$ is the Normal Distribution Function.
 
 A Pseudo-Random Generator with a Seed Value is used to ensure that the noise remains same across iterations because FPN Value is remains same for each pixel over time.
 
@@ -204,23 +223,90 @@ A Pseudo-Random Generator with a Seed Value is used to ensure that the noise rem
 % -- %
 
 \subsubsection{Read Noise} % 9.
-Read noise is a combination of noise from the pixel and from the ADC. The Read Noise (RN) of the sensor is the equivalent noise level (in electrons RMS) at the output of the camera in the dark and at zero integration time. The ADCs for a CMOS image sensor are in each pixel.
+Read noise is a combination of noise from the pixel and from the ADC. The Read Noise (RN) of the sensor is the equivalent noise level (in electrons RMS) at the output of the camera in the dark and at zero integration time. The ADCs for a CMOS image sensor are present for each pixel.
+
 Read noise basically determines the contrast resolution that the camera is able to achieve. The lower the read noise level, the lower the minimum number of signal electrons that can be detected. Read noise is also important in combination with expressing the sensitivity of a camera. 
+
 It is one of the main sources of noise in an imaging camera for relatively short exposures. Low read noise is desirable as it allows the camera to detect low level signals and attain a high dynamic range and therefore results in a more sensitive sensor.
-The read noise of the CMOS sensor is a noise distribution and is normally given as in e-, as a median value.
+
+The read noise of the CMOS sensor is a noise distribution and is normally given as in $e^-$, as a median value.
+
 Formula used in the code:
+\begin{equation}
+    \boxed{ \color{blue} \texttt{DNR} = 20 \cdot \log_{10} \left(\frac{\texttt{FWC}}{\texttt{Read Noise}} \right) \color{black} }
+\end{equation}
 
-DNR =$ 20 * \log_{10}{(FWC / Read Noise)}$
+where, \texttt{DNR} is the Dynamic Range of the Pixel, \texttt{FWC} is the Full Well Count. 
 
-From this formula, the read noise is calculated appropriately.
+Note that the Read Noise is an almost constant value.
 
 % ---- %
 % PSNL %
 % ---- %
 
 \subsubsection{Pixel Storage Node Leakage} % 7. 
-In a global shutter, after exposure the integrated charge from each pixel is transferred to the pixel storage node. Since this is typically diffusion, it has some leakage. The storage nodes of some pixels are leakier than others, resulting in the bright spots that can be seen in images with larger frame times and the default timing.
-The storage node of each row is reset during the row overhead time of the previous frame. The time between 2 resets of the floating diffusion is therefore equal to 1/frame rate.
-Formula Used in the code:
 
- Pixel Value =Pixel Value- G * round(PSNL * (t$_{Readout} - t_{Close}$))
+In a global shutter, after exposure the integrated charge from each pixel is transferred to the pixel storage node. Since this is typically diffusion, it has some leakage. The storage nodes of some pixels are leakier than others, resulting in the bright spots that can be seen in images with larger frame times and the default timing.
+
+The storage node of each row is reset during the row overhead time of the previous frame. The time between 2 resets of the floating diffusion is therefore equal to $\frac{1}{frame rate}$.
+
+Formula Used in the code:
+\begin{equation}
+    \boxed{ \color{blue} PV = PV_0 - \texttt{G} \cdot \texttt{round}(\texttt{PSNL} \cdot (t_{Readout} - t_{Close}) \color{black}}
+\end{equation}
+
+where, $G$ is the Gain, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, \texttt{PSNL} is the PSNL noise value in \# electrons.
+ 
+% ------------- %
+% Sample Images %
+% ------------- %
+ 
+\subsubsection{Sample Images}
+These are some images generated using the \SISM Version 2 in Figure \ref{fig:sample_images}.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_1.png}
+        \caption{Sample Image 1}
+        \label{fig:sample_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_2.png}
+        \caption{Sample Image 2}
+        \label{fig:sample_2}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_3.png}
+        \caption{Sample Image 3}
+        \label{fig:sample_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_4.png}
+         \caption{Sample Image 4}
+         \label{fig:sample_4}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_5.png}
+        \caption{Sample Image 5}
+        \label{fig:sample_5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Model/Sample Images/Image_6.png}
+         \caption{Sample Image 6}
+         \label{fig:sample_6}
+    \end{subfigure}
+    \caption{Sample Images}
+    \label{fig:sample_images}
+\end{figure}

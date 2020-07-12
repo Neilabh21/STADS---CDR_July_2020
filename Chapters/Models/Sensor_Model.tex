@@ -9,8 +9,8 @@
 % ===================== %
 
 \newpage
-\section{\SIS}
-\label{sec:Sensor_Model}
+\section{\SIS \label{sec:SISM}}
+
 
 % ---------- %
 % Background %
@@ -63,8 +63,9 @@ Thus, given the sensor's attitude or boresight pointing and angular velocities, 
 \subsection{Iterations of the \SISM}
 The Sensor Model has been developed in multiple iterations. The first iteration was in Python. When the team moved to Matlab in January 2020, The codes in Python were ported to MATLAB, without any major changes to the code. Hence, this is again the Version 1 (MATLAB). However, at this point, we realised that the structuring of the code was not compliant to the team's OOP Practices. Hence, the Version 2 (MATLAB) was created. Eventually, we realised that Version 2 can't be modified to allow for slew rate, and hence, a new version is needed. This is called the Version 3, and is to incorporate Slew Model, Lens Model as well as use the Dynamics Model. This is currently under development.
 
-\subsubsection{Version - 1 (Python)}
-The first iteration of the Sensor Model was written in Python. This included a very basic model of the image formation, with no noises due to the sensor, or the aberrations due to the lens. The star vectors in the Lens Frame are calculated, back projected on to the Sensor Frame (2D), and a Gaussian Point Spread Function is added to the image. The codes for this are available at \url{https://github.com/Neilabh21/STADS_v1_Python/tree/master/Sensor_Modelling}
+\subsubsection{Version 1 (Python)}
+The first iteration of the Sensor Model was written in Python. This included a very basic model of the image formation, with no noises due to the sensor, or the aberrations due to the lens. The star vectors in the Lens Frame are calculated, back projected on to the Sensor Frame (2D), and a Gaussian Point Spread Function is added to the image. The codes for this are available at 
+\href{https://github.com/Neilabh21/STADS_v1_Python/tree/master/Sensor_Modelling}{SISM - Version 1 - Python}
 
 % Put flowchart here
 
@@ -72,39 +73,37 @@ The first iteration of the Sensor Model was written in Python. This included a v
 This was a port of Version - 1 (Python) to MATLAB. Structurally, this was the same. The only change is in terms of the language.
 
 \subsubsection{Version 2 (MATLAB) - Current Model}
-This is the latest stable version for the Sensor Model. It is hosted at \url{https://github.com/Neilabh21/STADS_v2_MATLAB/tree/master/Sensor_Model}. The details to this model are given in the Section \ref{subsection:v2}.
+This is the latest stable version for the Sensor Model. It is hosted at \href{https://github.com/Neilabh21/STADS_v2_MATLAB/tree/master/Sensor_Model}{SISM - Version 2 - MATLAB}. The details to this model are given in the Section \ref{subsection:v2}.
+
 
 \subsubsection{Version 3 (MATLAB) - In Development}
-The Version 2 is complete in itself, and has been used to generate preliminary images for the first Model In-Loop Simulation. However, the way it has been structured, it can't be modified to include the Lens Model, the Slew Model, the Ephemeris Model. Also, with the Version 2, the Dynamics Block has not yet been implemented. So, we have arrived at a new structure for the Version 3 of \SISM, which is modular and can accommodate all the deficiencies of the Version 2.
+The Version 2 is complete in itself, and has been used to generate preliminary images for the first Model In-Loop Simulation. However, the way it has been structured, it can't be modified to include the Lens Model, the Slew Model, the Ephemeris Model. Also, with the Version 2, the Dynamics Block has not yet been implemented. So, we have arrived at a new structure for the Version 3 of \SISM, which is modular and can accommodate all the deficiencies of the Version 2. The details to this model are given in the Section \ref{subsection:v3}.
 
-
+% --------- %
+% Version 2 %
+% --------- %
 
 \subsection{Detailed Model - Version 2 \label{subsection:v2}}
 
 \input{Chapters/Models/Sensor_Model_v2}
 
-
-
+% --------- %
+% Version 3 %
+% --------- %
 
 \subsection{Detailed Model - Version 3 \label{subsection:v3}}
 
 \input{Chapters/Models/Sensor_Model_v3}
 
 
-\subsection{Softwares Used}
-
-
-
-
-
-\subsection{Sample Images}
-\blindtext
+% \subsection{Softwares Used}
+% Initially, Python was being used 
 
 
 
 \subsection{Future Tasks}
-The future task is to code the Version 3. 
+The future task is to implement the Version 3 of the \SISM.
 
-\printbibliography
+% \printbibliography
 %----------------------------END----------------------------%
 \end{document}
