@@ -92,15 +92,25 @@ have been tabulated below
 \end{itemize}
     \begin{table}[h!]
         \centering
-        \begin{tabular}{|p{5cm}|p{3cm}|p{3cm}|p{3cm}|}
+        \begin{tabular}{|p{7cm}|p{2.5cm}|p{2.5cm}|}
              \hline
-             \textbf{Properties} & \textbf{AL6061-TS} & \textbf{FR04} & \textbf{Copper}  \\
+             \textbf{Properties} & \textbf{AL6061-TS} & \textbf{FR04}\\
              \hline
-             \textbf{Density(g/cc)} & 2.7 & 1.85 & 8.92\\
+             \textbf{Density(g/cc)} & 2.7 & 1.85 \\
              \hline
-             \textbf{Young’s Modulus(GPa)} & 68.9 & 22 & 117\\
+             \textbf{Young’s Modulus(GPa) (X Axis)} & 69 & 20.4 \\
              \hline
-            \textbf{Yield Strength(Mpa)} & 240 & 68 & 70\\
+             \textbf{Young’s Modulus(GPa) (Y Axis)} & 69 & 18.4 \\
+             \hline
+             \textbf{Young’s Modulus(GPa) (Z Axis)} & 69 & 15 \\
+             \hline
+            \textbf{Poisson Ratio(Mpa) (XY Plane)} & 0.33 & 0.11 \\
+            \hline
+            \textbf{Poisson Ratio(Mpa) (YZ Plane)} & 0.33 & 0.09\\
+            \hline
+            \textbf{Poisson Ratio(Mpa) (ZX Plane)} & 0.33 & 0.14\\
+            \hline
+            \textbf{Yield STrength(MPa)} &240 &120\\
             \hline
         \end{tabular}
         \caption{Material Properties}
@@ -148,18 +158,24 @@ have been tabulated below
             \label{tab:my_label}
         \end{table}
     \end{enumerate}
-    \item \textbf{Mesh Generation}
+\subsection {Mesh Generation}
     \begin{enumerate}
-        \item \textbf{Mesh Method Features: }Multizone meshing was initially used on critical areas like the top panel but it was not continued because it was incompatible with Convergence study feature.Sweep Meshing was not continued as it could be easily applied on regular/symmetrical components but could not be applied on components like Support Rails. Only Body Sizing and Automatic Methods were finalized with sizes variable according to part criticality.
+        \item \textbf{Mesh Method Features: 
+        }
+        \begin{itemize}
+            \item Multizone meshing was initially used on critical areas like the top panel but it was not continued because it was incompatible with Convergence study feature.
+            \item Sweep Meshing was not continued as it could be easily applied on regular/symmetrical components but could not be applied on components like Support Rails.
+            \item Only Body Sizing and Automatic Methods were finalized with sizes variable according to part criticality.
+        \end{itemize}
         \item \textbf{Mesh Accuracy Features: }Convergence Study was applied on critical components like support rails, Top panel etc. to increase the accuracy of the results but was not continued because of high computation time requirement. Sphere of Influence with radius 5 mm was applied on all screw holes with a mesh refinement of size 1mm inside the region to increase the accuracy of results in critical areas with a limited computation time.
         \begin{figure}[H]
-        \centering
-        \includegraphics[scale=0.5]{Figures/Mechanical/spoi.PNG}
-        \caption{Sphere of Influence-Radius 5mm}
-        \label{fig:sys_CAD}
-    \end{figure}
+            \centering
+            \includegraphics[scale=0.5]{Figures/Mechanical/spoi.PNG}
+            \caption{Sphere of Influence-Radius 5mm}
+            \label{fig:sys_CAD}
+        \end{figure}
     \end{enumerate}
-    \item \textbf{Joints: }
+\subsection{Joints \& Contacts }
     \begin{enumerate}
         \item Concentric surfaces were interfaced with the joint to simulate the bond as shown in the figure.
         \item When doing the simulation, fixed joints were used to model screws. All degrees of freedom are constrained in fixed joints. 
@@ -170,9 +186,6 @@ have been tabulated below
         \caption{Fixed Joint}
         \label{fig:sys_CAD}
     \end{figure}
-    \end{enumerate}
-    \item \textbf{Contacts: }
-    \begin{enumerate}
         
         \item Bonded contacts were modelled to simulate adhesives used between two surfaces. They are defined between the rods and the top spacers and also on the interface between the rods and the panels.
         \begin{figure}[H]
@@ -189,7 +202,7 @@ have been tabulated below
         \label{fig:sys_CAD}
     \end{figure}
     \end{enumerate}
-    \item \textbf{Simulation Setup and Modelling: }
+\subsection{Simulation Setup and Modelling }
     \begin{enumerate}
         \item \textbf{Solid Rod and Spacers:}
         \begin{enumerate}
@@ -198,7 +211,7 @@ have been tabulated below
             \item \textbf{Mesh Details and Mesh Metrics:}
             \begin{enumerate}
                 \item \textbf{Mesh Details: }Automatic meshing was done on all components as the mesh metrics were the best for that type. Spheres of influence with a radius of 2.5mm and an element size of 0.5mm were done on critical parts. 
-                \begin{table}[h!]
+                \begin{table}[H]
                     \centering
                     \begin{tabular}{|p{3cm}|p{3cm}|}
                     \hline
@@ -215,9 +228,9 @@ have been tabulated below
                 \label{tab:my_label}
             \end{table}
                 \item \textbf{Mesh Metrics:}
-                \begin{table}[h!]
+                \begin{table}[H]
                 \centering
-                \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|}
+                \begin{tabular}{|p{3.5cm}|p{3.5cm}|p{3cm}|}
                     \hline
                     \textbf{Property Name} & \textbf{Observed Value(Average)} & \textbf{Ideal Value} \\
                     \hline
@@ -233,14 +246,14 @@ have been tabulated below
 
                    \hline
                 \end{tabular}
-                \caption{Mesh Metrics : Rods+Spacers Model}
+                \caption{Mesh Metrics : Rods \& Spacers Model}
                 \label{tab:my_label}
             \end{table}
             \end{enumerate}
             \item \textbf{Joints: }
-            \begin{table}[h!]
+            \begin{table}[H]
                 \centering
-                \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|}
+                \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|}
                     \hline
                     \textbf{Component 1} & \textbf{Component 2} & \textbf{Type of Joint} \\
                     \hline
@@ -251,13 +264,13 @@ have been tabulated below
                     Top Panel & Top Spacer & Fixed \\
                    \hline
                 \end{tabular}
-                \caption{Joints in Rods+Spacers Model}
+                \caption{Joints in Rods \& Spacers Model}
                 \label{tab:my_label}
             \end{table}
             \item \textbf{Contacts: }
-            \begin{table}[h!]
+            \begin{table}[H]
                 \centering
-                            \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|}
+                            \begin{tabular}{|p{3cm}|p{5cm}|p{3cm}|}
                     \hline
                     \textbf{Component 1} & \textbf{Component 2} & \textbf{Type of Contact} \\
                     \hline
@@ -279,7 +292,7 @@ have been tabulated below
             \item \textbf{Results: }
             \begin{enumerate}
             \item \textbf{Static Analysis: Max Equivalent Stress: }
-                \begin{table}[h!]
+                \begin{table}[H]
                     \centering
                     \begin{tabular}{|p{8cm}|p{6cm}|}
                          \hline
@@ -338,8 +351,67 @@ have been tabulated below
         \caption{Harmonic Simulation : Equivalent Stress}
         \label{fig:sys_CAD}
     \end{figure}
+    \newpage
+        \item \textbf{Random Vibration Analysis: } Note: Only 100 modes were used and Mode insignificance level was set to 1E-04 to exclude insignificant modes.
+                \begin{enumerate}
+                    \item \textbf{X Axis: }
+                    \begin{table}[h!]
+                    \centering
+                    \begin{tabular}{|p{8cm}|p{3cm}|}
+                        \hline
+                        \textbf{Component} & \textbf{Max Eq Stress (Pa)} \\
+                        \hline
+                       
+                        Solid Rods and Spacers & 7.069E+05 \\
+                        \hline
+                        Panels & 9.199E+05 \\
+                        \hline
+                        PCBs  & 3.770E+05 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Random Vibrations Analysis for Rods+Spacers Model : X axis}
+                    \label{tab:my_label}
+                \end{table}
+        \item \textbf{Y Axis: }
+                    \begin{table}[h!]
+                    \centering
+                    \begin{tabular}{|p{8cm}|p{3cm}|}
+                        \hline
+                        \textbf{Component} & \textbf{Max Eq Stress (Pa)} \\
+                        \hline
+                     All Solid Rods and Spacers & 1.572E+06 \\
+                     \hline
+                    All Panels & 3.048E+05 \\
+                    \hline
+                    All PCBs \& Lens Holder with Optical Image Sensor & 9.441E+05 \\
+
+                        \hline
+                    \end{tabular}
+                    \caption{Random Vibrations Analysis for Rods+Spacers Model : Y axis}
+                    \label{tab:my_label}
+                    \end{table}
+                                \item \textbf{Z Axis: }
+                    \begin{table}[h!]
+                    \centering
+                    \begin{tabular}{|p{8cm}|p{3cm}|}
+                        \hline
+                        \textbf{Component} & \textbf{Max Eq Stress (Pa)} \\
+                        \hline
+                     All Solid Rods and Spacers & 7.015E+05 \\
+                     \hline
+                    All Panels & 9.219E+05 \\
+                    \hline
+                    All PCBs \& Lens Holder with Optical Image Sensor & 3.174E+05 \\
+
+                        \hline
+                    \end{tabular}
+                    \caption{Random Vibrations Analysis for Rods+Spacers Model : Z axis}
+                    \label{tab:my_label}
+                \end{table}
+                \end{enumerate} 
             \end{enumerate}
         \end{enumerate}
+        
         \newpage
         \item \textbf{Support rail:}
         \begin{enumerate}

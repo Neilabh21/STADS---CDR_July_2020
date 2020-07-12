@@ -3,7 +3,6 @@
 %-----------------------------------------------------------%
 \begin{document}
 \subsection{Tracking Mode}
-% Pranjal god - Lol XD
 
 \subsubsection{Introduction}
 Tracking Mode is the primary operating mode of a satellite (the other being the Lost-in-Space Mode, which is generally a rare event in the lifetime of a standard operating star tracker), wherein the attitude of the satellite is already known. The main objective of tracking mode is to perform Star Matching using the \textit{a priori} attitude information to decrease the computation time as compared to the Lost-in-Space Mode for successfully matching observed stars with their true Star-IDs (from the pre-loaded Star Catalogue). 
@@ -124,16 +123,68 @@ To speed up the process of star tracking, the algorithm also proposes 3 optimisa
 
 
 \subsubsection{Rapid Star Tracking Using Star Spot Matching Between Adjacent Frames} \label{zhang}
-This algorithm is very similar to the 'Rapid Star Tracking Algorithm' with a minor difference being in how the \textbf{Reference Image} is formed at every frame. The algorithm introduces another step, known as \textbf{Star Spot Prediction},  that only the attitude information of the current frame is used to match stars at the next frame instead of using the information of previously identified stars, evident after comparing Figure \ref{fig:zhang_tracking_flowchart} and Figure \ref{fig:rapid_tracking_flowchart}. \\
-The attitude information is used to calculate the boresight vector of the current frame, after which the Star ID process is carried out as described in steps 2, 3 and 4 of section \ref{sna}. 
-Star matching between the predicted centroids (Reference Image) and the true centroids (Measured Image) is carried out as shown in Fig. \ref{fig:radius_zhang}. 
-\begin{figure}[h]
+This algorithm is very similar to the 'Rapid Star Tracking Algorithm' with a minor difference being in how the \textbf{Reference Image} is formed at every frame. The algorithm introduces another step, known as \textbf{Star Spot Prediction}, which uses the movement of stars in the previous frames to predict the position of stars in the next frame of star image. The flowchart of the algorithm is shown in Fig. \ref{fig:zhang_tracking_flowchart}.\\
+In accordance with the attitude of star sensor, boresight vector of the current frame can be calculated, after which the Star ID process is carried out as described in steps 2, 3 and 4 of section \ref{sna}. 
+Star matching between the predicted centroids (Reference Image) and the true centroids (Measured Image) is carried out as shown in Fig. \ref{fig:radius_zhang}. A thing to be noted here is that the 'Matching Radius' used for star matching in this algorithm will be smaller because the reference stars here are the predicted centroids instead of the identified stars of the previous frame. 
+\begin{figure}[!h]
         \centering
         \includegraphics[scale=0.35]{Figures/GNC/zhang_tracking_flowchart.png}
         \caption{Star Tracking Algorithm Flowchart}
         \label{fig:zhang_tracking_flowchart}
+\end{figure}\\
+This algorithm also proposes three optimisation techniques to speed up the process of star tracking, where \textit{Sorting Before Matching} and \textit{Star Catalogue Partition} are the same as described before in algorithm \ref{rapidtrack}. The third technique, known as \textit{Threshold Mapping}, is explained below: 
+\begin{itemize}
+    \item \textbf{Threshold Mapping}\\ \label{threshold_mapping}
+    In the process of Star Tracking, 'Star Mapping' is the most time consuming process and executing it at every frame defeats the purpose of a tracking mode algorithm. \\
+    In Threshold Mapping, a star number threshold, defined as $N_{\textit{TH}}$, is set. Star Mapping is not conducted unless the number of 'Measured' stars tracked successfully is smaller than $N_{\textit{TH}}$. In this event, the measured image at the current frame, with the Star IDs identified, is used as the Reference Image for the next frame, after which Star Matching is carried out again as shown in Fig. \ref{fig:radius_zhang}. Hence, threshold mapping is adopted in order to reduce the frequency of star mapping. The process can be shown in Fig. \ref{fig:threshold_mapping}.
+\end{itemize}
+% PROBLEM : The figure shows \delta as the threshold whereas we have used Nth in the explanation. 
+\begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.55]{Figures/GNC/threshold_mapping.png}
+        \caption{Threshold Mapping}
+        \label{fig:threshold_mapping}
 \end{figure}
 
-Similar to algorithm \ref{rapidtrack}, this algorithm also proposes three optimisation techniques to speed up the process of star tracking, where \textit{Sorting Before Matching} and \textit{Star Catalogue Partition} are the same as described in sections \ref{sorting_before_matching} and \ref{catalogue_partition}. The third technique is known as \textbf{Threshold Mapping}, which essentially puts up a threshold for carrying out the process of 'Star Mapping'. As already mentioned in step 7 of section \ref{rapidtrack}, star mapping is generally a time consuming task, and executing it at every frame may defeat the purpose of a tracking mode algorithm. 
+
+\subsubsection{Fast Star Tracker Centroid Algorithm}
+This algorithm proposes a new star tracking algorithm, where the processes of Star Prediction and Star Matching are approached differently as compared to all algorithms discussed before. The algorithm does not require the use of a Gyroscope for obtaining the spacecraft angular velocity or the attitude information of any frame. Instead, the algorithm proposes an 'attitude independent' approach for estimating the angular velocity, i.e, the angular velocity can be estimated even without the attitude information of the current frame, and this estimated angular velocity is then used for centroid prediction. 
+\begin{itemize}
+    \item \textbf{Angular Velocity Estimation and Centroid Prediction}\\
+    The angular velocity estimate is obtained using only the centroid information of the previous \textbf{two} frames. The process is detailed below:
+    \begin{enumerate}
+        \item Each star's unit vector can be calculated from its corresponding image plane coordinates by using the following formula:
+        \begin{equation}
+            \begin{bmatrix}
+            x\\y\\z
+            \end{bmatrix} = \frac{1}{\sqrt{u^2 + v^2 + f^2}} 
+            \begin{bmatrix}
+            u\\v\\f
+            \end{bmatrix}
+        \end{equation}
+        where f is the lens focal length, and (u,v) are the image plane coordinates.
+        \item Now, recalling Euler's Rotation Matrix (or Direction Cosine Matrix or DCM) from one reference frame to another: 
+       \footnotesize{ \begin{equation}
+            DCM = 
+            \begin{bmatrix}
+            cos(\Psi)cos(\theta) & sin(\psi)cos(\theta) & -sin(\theta) \\
+            -sin(\psi)cos(\phi)+ cos(\psi)sin(\theta)sin(\phi) & cos(\psi)cos(\phi)+sin(\theta)sin(\psi)sin(\phi) & cos(\theta)sin(\phi)\\
+            sin(\phi)sin(\psi)+cos(\psi)sin(\theta)cos(\phi) & -cos(\psi)sin(\phi)+sin(\phi)sin(\theta)cos(\phi) & cos(\theta)cos(\phi)
+            \end{bmatrix}
+        \end{equation}
+        }\\
+        \begin{equation}
+            \begin{bmatrix}
+            x\\y\\z
+            \end{bmatrix} = DCM 
+            \begin{bmatrix}
+            x_{o}\\y_{o}\\z_{o}
+            \end{bmatrix}
+        \end{equation}
+        where \
+        
+    \end{enumerate}
+\end{itemize}
+
 %----------------------------END----------------------------%
 \end{document}
