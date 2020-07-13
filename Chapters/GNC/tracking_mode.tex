@@ -12,7 +12,7 @@ After an extensive literature survey on Tracking Mode algorithms, a few algorith
 
 \subsubsection{Recursive Mode Star Identification Algorithms}
 % hey, don't write "This Paper", instead write "This algorithm \cite{ref} proposes ...."
-This paper proposes two methods for recursive mode star identification, the Spherical Polygon search (SP-search) and the Star Neighbourhood Approach (SNA). Once the Lost In Space Algorithm (LISA) has been executed for a single frame of the star tracker, the proposed algorithm (SNA or SP Search) is used to obtain expected stars in the FOV from the Star Catalogue for the next frame. These expected stars form the \textit{Reference Image}.
+This paper proposes two methods for recursive mode star identification, the Spherical Polygon search (SP-search) and the Star Neighbourhood Approach (SNA). Once the Lost-in-Space Algorithm (LISA) has been executed for a single frame of the star tracker, the proposed algorithm (SNA or SP Search) is used to obtain expected stars in the FOV from the Star Catalogue for the next frame. These expected stars form the \textit{Reference Image}.
 The Feature Extraction process is executed in the next frame, obtaining the true centroids, which form the \textit{Measured Image}.The Star ID process is completed by matching the inter-star angles between the measured image and the reference image. The two algorithms are explained in detail below. 
 \begin{itemize}
     \item \textbf{Spherical Polygon Approach}\\
@@ -22,14 +22,14 @@ The Feature Extraction process is executed in the next frame, obtaining the true
    \begin{equation}
         \textit{$s_{k}$} = a\textit{$s_{i}$} + b\textit{$s_{j}$} +c(\textit{$s_{i}$} \times \textit{$s_{j}$})
     \end{equation}
-    unless \textit{$s_{i}$} and \textit{$s_{j}$} are not parallel (i.e. double stars). The a, b and c coefficients represent an invariant set of parameters with respect to the used system of coordinates. This means that there exist, in the Star Catalogue, three stars (\textit{$v_{i}$}, \textit{$v_{j}$} and \textit{$v_{k}$}) such that condition (10.1) holds as,  
+    unless \textit{$s_{i}$} and \textit{$s_{j}$} are not parallel (i.e. double stars). The a, b and c coefficients represent an invariant set of parameters with respect to the used system of coordinates. This means that there exists, in the Star Catalogue, three stars (\textit{$v_{i}$}, \textit{$v_{j}$} and \textit{$v_{k}$}) such that condition (10.1) holds as,  
     \begin{equation}                    
         \textit{$v_{k}$} = a'\textit{$v_{i}$} + b'\textit{$v_{j}$} +c'(\textit{$v_{i}$} \times \textit{$v_{j}$})
     \end{equation}
     where the a', b', and c' coefficients will differ from the a, b, and c coefficients because of the sensor’s limited precision, that is, because the observed stars directions do not perfectly overlap with the catalog star directions.\\
-    The algorithm uses the \textbf{\textit{k}-vector} range searching technique twice to finally match a triad of observed stars. Based on these facts, the algorithm follows the following steps:
+    The algorithm uses the \textbf{K-vector} (Refer \ref{appendix:k-vector}) range searching technique twice to finally match a triad of observed stars. Based on these facts, the algorithm follows the following steps:
     \begin{enumerate}                   
-        \item The first instance of the use of \textbf{\textit{k}-vector} is to find all the catalogue star pairs (\textit{$v_{i}$} and \textit{$v_{j}$}) admissible with the observed star pair \textit{$s_{i}$} and \textit{$s_{j}$}.
+        \item The first instance of the use of \textbf{K-vector} is to find all the catalogue star pairs (\textit{$v_{i}$} and \textit{$v_{j}$}) admissible with the observed star pair \textit{$s_{i}$} and \textit{$s_{j}$}.
         \item For each possible pair of catalogue stars, there exists a corresponding solution for the true catalogue star \textit{$v_{k}$} associated with the observed \textit{$s_{k}$} star.
         \item To find the true solution for \textit{$v_{k}$} out of all possible solutions, it has to be searched within a cone of aperture h$\sigma$ around each solution, which is done using the \textbf{\textit{k}-vector} technique.
         \item This is accomplished by approximating the observed cone area as the area covered by a spherical polygon, which is identified as the intersection of six cones, as shown in fig. 10.6
@@ -57,7 +57,7 @@ The Feature Extraction process is executed in the next frame, obtaining the true
         where \textbf{$C^{T}$ = [x,y,z]} is the sensor attitude matrix, \textbf{$b_{i}$ (i=1,2,3.....n)} are the simulated star vectors and \textbf{f} is the camera focal length. 
         \item \textbf{Star Spot Prediction}
         The estimated location of star i at the current frame ($x_{i}$, $y_{i}$)$_{t+\delta t}$ is calculated by adding the location of star i at the previous frame ($x_{i}$, $y_{i}$)$_{t}$ and estimated translation of the frame $\omega\delta$t.
-        \item \textbf{Star Matching} Now the estimated locations of stars (Reference Image) is matched with the measured locations of stars (Measured Image) using a Radius based approach as shown in figure (10.7). 
+        \item \textbf{Star Matching} Now the estimated locations of stars (Reference Image) is matched with the measured locations of stars (Measured Image) using a Radius based approach with \emph{Matching Radius} equal to $3\sqrt{2}\sigma$ as shown in figure (10.7). 
         \begin{figure}[!h]
         \centering
         \includegraphics[scale=0.20]{Figures/GNC/radius_matching.png}
@@ -66,13 +66,14 @@ The Feature Extraction process is executed in the next frame, obtaining the true
         \end{figure}
         \item For the unmatched stars from steps 4 and 5, the \textbf{Star Neighbourhood Table} is used to identify the stars which enter the sensor frame at ($t+\delta t$), by checking the inter-star angles between the unmatched stars and their matched star neighbours. 
     \end{enumerate}
-    The logic for the SNA is shown below:
-    \begin{figure}[!h]
+    The logic for the SNA is as follows (\ref{fig:sna_flowchart}):
+    
+    \begin{Flowchart}
         \centering
-        \includegraphics[scale=0.5]{Figures/GNC/sna_flowchart.png}
-        \caption{Logic Flow Diagram - SNA algorithm}
+        \includegraphics[scale=0.55]{Figures/GNC/sna_flowchart.png}
+        \caption{SNA algorithm}
         \label{fig:sna_flowchart}
-    \end{figure}
+    \end{Flowchart}
 \end{itemize}
 
 \subsubsection{Rapid Star Tracking Algorithm} \label{rapidtrack}
@@ -98,22 +99,26 @@ The principle of the algorithm is detailed step-by-step below:
     \item Now the stars in the Reference Image will be moved away from the FOV one-by-one. When the stars left in the reference image is less than \textbf{3}, new star identification is necessary, which is done by calculating the star sensor's \textbf{boresight} vector according to the result of the previous tracking, and the stars around the boresight can be obtained from the Star Catalogue.  
     \item The stars vectors obtained from the catalogue in the previous step are obtained from the \textit{Celestial Coordinates} (RA, Dec.) and need to be converted to \textit{Image Plane Coordinates} to start again from step 1. This process is known as \textbf{Star Mapping} is generally a time-consuming task, hence it is executed only when the reference stars are less than 3. 
 \end{enumerate}
-\begin{figure}[!h]
+
+\begin{Flowchart}
         \centering
         \includegraphics[scale=0.4]{Figures/GNC/rapid_tracking_flowchart.png}
-        \caption{Rapid Star Tracking Algorithm Flowchart}
+        \caption{Rapid Star Tracking Algorithm}
         \label{fig:rapid_tracking_flowchart}
-\end{figure}
+\end{Flowchart}
+
 To speed up the process of star tracking, the algorithm also proposes 3 optimisation techniques. These are explained below:
 \begin{itemize}
     \item \textit{Parallel Star Centroiding}:\\
-    'Ref pixel by pixel algo from feature extraction'
+    This employs the Pixel-by-Pixel centroiding algorithm (Refer \ref{sec:pixel_by_pixel})
+    %'Ref pixel by pixel algo from feature extraction'
     
     \item \textit{Sorting Before Matching} \label{sorting_before_matching}:\\
+    % Use the right \ref{} command here
     In step 2 in the algorithm above, the matching between the stars in observation star image and reference star image is implemented one-by-one. But matching between stars with a long distance is meaningless, so sorting before matching is introduced. That is, the stars in the observation image are sorted in ascending order according to their image plane coordinates using bubble sort, and then the matching is carried out. This decreases the number of operations significantly. 
     
     \item \textit{Star Catalogue Partition} \label{catalogue_partition}:\\
-    In step 6 and 7 of the algorithm, new star identification is done by accessing catalogue stars using the boresight vector and then mapping them onto the star sensor plane (Star Mapping), which can be time consuming and inefficient if searching for stars through the entire guide star catalogue. This is solved using the concept of \textit{'sub-catalogue'}.
+    In step 6 and 7 of the algorithm, new star identification is done by accessing catalogue stars using the boresight vector and then mapping them onto the star sensor plane (Star Mapping), which can be time consuming and inefficient if searching for stars through the entire guide star catalogue. This is solved using the concept of \textit{`sub-catalogue'}.
     \begin{itemize}
         \item The celestial sphere is divided into 6 equal zones by using an inscribed cube and then pushing the sides of the cube away from the center of the sphere, to generate 6 equal parts of the celestial spheres. 
         \item Each one of the 6 zones can be partitioned into N x N sub portions. This way, the entire celestial sphere is divided into 6 x N x N sub portions. 
@@ -123,34 +128,35 @@ To speed up the process of star tracking, the algorithm also proposes 3 optimisa
 
 
 \subsubsection{Rapid Star Tracking Using Star Spot Matching Between Adjacent Frames} \label{zhang}
-This algorithm is very similar to the 'Rapid Star Tracking Algorithm' with a minor difference being in how the \textbf{Reference Image} is formed at every frame. The algorithm introduces another step, known as \textbf{Star Spot Prediction}, which uses the movement of stars in the previous frames to predict the position of stars in the next frame of star image. The flowchart of the algorithm is shown in Fig. \ref{fig:zhang_tracking_flowchart}.\\
+This algorithm is very similar to the `Rapid Star Tracking Algorithm' with a minor difference being in how the \textbf{Reference Image} is formed at every frame. The algorithm introduces another step, known as \textbf{Star Spot Prediction}, which uses the movement of stars in the previous frames to predict the position of stars in the next frame of star image. The flowchart of the algorithm is shown in Fig. \ref{fig:zhang_tracking_flowchart}.\\
 In accordance with the attitude of star sensor, boresight vector of the current frame can be calculated, after which the Star ID process is carried out as described in steps 2, 3 and 4 of section \ref{sna}. 
-Star matching between the predicted centroids (Reference Image) and the true centroids (Measured Image) is carried out as shown in Fig. \ref{fig:radius_zhang}. A thing to be noted here is that the 'Matching Radius' used for star matching in this algorithm will be smaller because the reference stars here are the predicted centroids instead of the identified stars of the previous frame. 
-\begin{figure}[!h]
+Star matching between the predicted centroids (Reference Image) and the true centroids (Measured Image) is carried out as shown in Fig. \ref{fig:radius_zhang}. A thing to be noted here is that the `Matching Radius' used for star matching in this algorithm will be smaller because the reference stars here are the predicted centroids instead of the identified stars of the previous frame. 
+\begin{Flowchart}
         \centering
         \includegraphics[scale=0.35]{Figures/GNC/zhang_tracking_flowchart.png}
-        \caption{Star Tracking Algorithm Flowchart}
+        \caption{Star Tracking Algorithm}
         \label{fig:zhang_tracking_flowchart}
-\end{figure}\\
+\end{Flowchart}
+
 This algorithm also proposes three optimisation techniques to speed up the process of star tracking, where \textit{Sorting Before Matching} and \textit{Star Catalogue Partition} are the same as described before in algorithm \ref{rapidtrack}. The third technique, known as \textit{Threshold Mapping}, is explained below: 
 \begin{itemize}
     \item \textbf{Threshold Mapping}\\ \label{threshold_mapping}
-    In the process of Star Tracking, 'Star Mapping' is the most time consuming process and executing it at every frame defeats the purpose of a tracking mode algorithm. \\
-    In Threshold Mapping, a star number threshold, defined as $N_{\textit{TH}}$, is set. Star Mapping is not conducted unless the number of 'Measured' stars tracked successfully is smaller than $N_{\textit{TH}}$. In this event, the measured image at the current frame, with the Star IDs identified, is used as the Reference Image for the next frame, after which Star Matching is carried out again as shown in Fig. \ref{fig:radius_zhang}. Hence, threshold mapping is adopted in order to reduce the frequency of star mapping. The process can be shown in Fig. \ref{fig:threshold_mapping}.
+    In the process of Star Tracking, `Star Mapping' is the most time consuming process and executing it at every frame defeats the purpose of a tracking mode algorithm. \\
+    In Threshold Mapping, a star number threshold, defined as $N_{\textit{TH}}$, is set. Star Mapping is not conducted unless the number of `Measured' stars tracked successfully is smaller than $N_{\textit{TH}}$. In this event, the measured image at the current frame, with the Star IDs identified, is used as the Reference Image for the next frame, after which Star Matching is carried out again as shown in Fig. \ref{fig:radius_zhang}. Hence, threshold mapping is adopted in order to reduce the frequency of star mapping. The process is shown in (\ref{fig:threshold_mapping}).
 \end{itemize}
 % PROBLEM : The figure shows \delta as the threshold whereas we have used Nth in the explanation. 
-\begin{figure}[!h]
+\begin{Flowchart}
         \centering
         \includegraphics[scale=0.55]{Figures/GNC/threshold_mapping.png}
         \caption{Threshold Mapping}
         \label{fig:threshold_mapping}
-\end{figure}
+\end{Flowchart}
 
 
-\subsubsection{Fast Star Tracker Centroid Algorithm}
+\subsubsection{Fast Star Tracker Centroid Algorithm} \label{fast_algorithm}
 This algorithm proposes a new star tracking algorithm, where the processes of Star Prediction and Star Matching are approached differently as compared to all algorithms discussed before. The algorithm does not require the use of a Gyroscope for obtaining the spacecraft angular velocity or the attitude information of any frame. Instead, the algorithm proposes an 'attitude independent' approach for estimating the angular velocity, i.e, the angular velocity can be estimated even without the attitude information of the current frame, and this estimated angular velocity is then used for centroid prediction. 
 \begin{itemize}
-    \item \textbf{Angular Velocity Estimation and Centroid Prediction}\\
+    \item \textbf{Angular Velocity Estimation and Centroid Prediction}\\ \label{slew_prediction}
     The angular velocity estimate is obtained using only the centroid information of the previous \textbf{two} frames. 
     %The process is detailed below:
     % \begin{enumerate}
@@ -258,15 +264,92 @@ This algorithm proposes a new star tracking algorithm, where the processes of St
              \Delta u_{i}(k) = u_{i}(k) - u_{i}(k-1); \Delta v_{i}(k) = v_{i}(k) - v_{i}(k-1)
          \end{equation}
          
-         \item Equation \ref{slew_prediction_2} is solved to obtain the estimated roll, pitch and yaw of the optical detector. These values are the rotation angular rates from the previous frame to the current frame. Dividing these rates by the detector frame rate results in the estimated angular velocity. 
+         \item Equation \ref{slew_prediction_2} is solved to obtain the estimated roll, pitch and yaw of the optical detector. These values are the rotation angular rates from the previous frame to the current frame. Dividing these rates by the sensor's frame rate results in the estimated angular velocity. 
          \item A valid assumption here would be that the estimated rates between the previous frame \emph{(k-1)} and the current frame \emph{(k)} will be equal to the estimated rates between the current frame \emph{(k)} and the next frame \emph{(k+1)}. 
         \item Equation \ref{slew_prediction_1} can now be solved for $\Delta u(k+1)$ and $\Delta v(k+1)$, i.e, the change in the position of stars between the current frame \emph{(k)} and the next frame \emph{(k+1)}, using the estimated Roll, Pitch and Yaw obtained in the previous step. 
         \item Adding $\Delta u$ and $\Delta v$ to the position of stars at the current frame gives the \textbf{\emph{estimated}} positions of stars at the next frame (\emph{k+1}). 
      \end{enumerate}
      
-     \item \textbf{Window Based Centroiding}\\
-     Window Based Centroiding is another approach for the \textbf{\emph{Star Matching}} process instead of the traditional Radius Based Matching as seen in Fig. \ref{fig:radius_zhang} 
+     \item \textbf{Window Based Centroiding}\\ \label{subsec:window_matching}
+     Window Based Centroiding is another approach for the \textbf{\emph{Star Matching}} process instead of the traditional Radius Based Matching as seen in Fig. \ref{fig:radius_zhang}. This approach can be described step-by-step as follows:
+     \begin{enumerate}
+         \item  After the process of Centroid Prediction, a \emph{Region-Of-Interest} (\emph{ROI}) / \emph{Window} of certain width is created around each predicted centroid, with the centroid as the center.
+         \item The Region Growth algorithm (Refer \ref{subsec:fe_region_growth}) is now deployed in each of the windows to identify the 'true' centroid. 
+         \item If only one centroid is identified in a window, the true centroid and the corresponding predicted centroid is matched.
+         \item Steps 1 to 3 are repeated for all the remaining windows. 
+     \end{enumerate}
+     The window based centroiding is shown in Fig. \ref{fig:window_matching}
+     \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.4]{Figures/GNC/window_matching.png}
+        \caption{Window Based Centroiding}
+        \label{fig:window_matching}
+    \end{figure}
 \end{itemize}
+The algorithm at every frame checks whether the number of stars finally matched (either after LISA or tracking algorithm) are greater than or equal to \textbf{four}. At any given frame, if this condition is satisfied, the algorithm is executed, otherwise the particular frame is dropped and LISA is executed for the next frame. The algorithm can now be summarised as follows:
+\begin{enumerate}
+    \item The algorithm initialises to \textbf{State 1 (LIS Mode)}. State 1 runs the full frame centroiding on the input image and some stars are identified. The information of the identified centroids is stored as `Previous Centroids'. 
+    \item If the number of previous centroids are greater than or equal to four, \textbf{State 10 (Transition mode)} is executed, which again runs full frame centroiding on the input image, resulting in the new centroids. The new centroids and the previous centroids are now passed into the `Assign IDs function'. 
+    \item \textbf{`Assign IDs function'} \\
+    This function identifies the new position of the previously identified stars to match the new centroids with the previous centroids. \\
+    This is done by calculating the euclidean distance between each previous centroid and all new centroids, and the new centroid with the minimum distance is matched with the corresponding previous centroid. This process is repeated till all the previous centroids are matched.
+    %% Write MaxDeltaUV using math-typesetting
+    An upper threshold on the distance known as \emph{'MaxdeltaUV'} is kept to avoid false matching of new centroids entering or previous centroids exiting from the FOV. If less than two stars are matched between the two frames, or one star from the previous frame gets matched to more than one stars in the current frame, an error flag is generated and the algorithm return to State 1. 
+    \item The centroids identified at the current frame are stored as `New centroids' and again checked if they are greater than or equal to four. If yes, the algorithm moves to \textbf{`State 2 (Tracking Mode)'}.
+    \item State 2 passes the the centroids and IDs from the previous two images to the tracking code which predicts the location of the stars in the current image (Refer \ref{slew_prediction}). 
+    \item The Window centroiding code uses the predicted centroid locations to find the new centroids in the current image (Refer \ref{subsec:window_matching}). If the matched stars are more than 4, the attitude is estimated, and `Previous centroids' and `New centroids' are updated for tracking stars in the next frames. If not, then state is reset to `State 1'. 
+\end{enumerate}
+The flowchart of the algorithm is as follows (\ref{fig:window_algorithm}):
+\begin{Flowchart}
+        \centering
+        \includegraphics[scale=0.55]{Figures/GNC/window_algorithm.png}
+        \caption{Fast Star Tracker Centroid Algorithm}
+        \label{fig:window_algorithm}
+\end{Flowchart}
 
+\subsubsection{Current Tracking Mode Algorithm}
+The Tracking Mode Algorithm finally decided by the team after going through all the above algorithms and more, takes some elements from each of the algorithms discussed previously. These elements include \emph{Centroid Prediction}, \emph{Radius based matching} and \emph{angular velocity estimation} (without Gyroscope). 
+\begin{itemize}
+    \item \textbf{Prediction v/s No Prediction}\\
+    % Centroid prediction is the process of predicting the centroids of stars at the next frame, using the centroid information of previous frames or using an angular velocity estimate. The information of the predicted centroids, such as Star ID, RA and Dec value is already known. These predicted centroids form the \emph{'Reference Image'} and are then matched with the true centroids (which form the \emph{'Measured Image'}) obtained at the next frame, to perform Star Identification on the true centroids. 
+    The process of matching stars between the Reference Image and the Measured Image is known as Star Matching. The process of constructing the Reference Image can be done in two different ways, with or without Centroid Prediction. Centroid Prediction/Star spot prediction is explained in section \ref{slew_prediction}. \\
+    Using centroid prediction, the success rate of matching identification can be significantly improved in tracking and matching (Refer algorithm \ref{zhang}), as opposed to star matching without prediction (Refer algorithm \ref{rapidtrack}) \\
+    This is mainly because of the ambiguity in the \emph{Matching Radius}, \textbf{r} in the latter algorithm, where a radius value too large or too small will result in a decrease in the number of matched and identified stars (Refer image \ref{fig:radius_zhang}). On the other hand, when centroid prediction is adopted, the radius value/window size is much smaller and equal to the centroiding error in the predicted centroids, as shown in Fig.\ref{fig:radius_based_sna}. \\
+    It is important to note that the process of centroid prediction increases the amount of computation, and hence there is a trade off between speed and accuracy in this case. The team has finally decided to adopt centroid prediction in the final algorithm. 
+    
+    \item \textbf{Radius based v/s Window based Star Matching}\\
+    Given the reference image (with prediction) and the measured image, `star matching' is deployed to match the centroids in the two images. Star matching again has two different approaches, namely the \emph{Radius based} (refer section \ref{rapidtrack}) and the \emph{Window based approach} (refer section \ref{subsec:window_matching}). \\
+    The differences between the two approaches is as follows: 
+    \begin{enumerate}
+        %%% Include the flowchart you had made to explain the series and parallel nature of these operations
+        \item In the radius based matching, both the Reference and the Measured Images are required to carry out Star Matching. Full Frame centroiding is adopted on the input image to form the Measured image. Centroid prediction is adopted to form the Reference Image. Both these processes run simultaneously and hence save computation time. Once the two images have been obtained, the process of star matching is carried out. 
+        \item In the window based matching, first the reference image is formed by centroid prediction and then the window centroiding algorithm is deployed to look for the true centroids. In this case, the Measured image is not formed because of the absence of full frame centroiding, and hence the computation time decreases. But both the processes (prediction + window centroiding) run in series, so the computation time can increase.
+        \item Since the radius based approach deploys full frame centroiding on the input image at the current frame, any new stars which may have entered into the FOV at the current frame will also be identified, thus making the algorithm more robust. This is not possible with the window based approach because centroiding occurs only around the predicted centroids and hence does not account for new stars entering into the FOV. 
+    \end{enumerate}
+    Taking into account the above points, the team has decided to design a Radius Based Star Matching algorithm in lieu of a Window Centroiding based Star Matching algorithm. 
+    
+    \item \textbf{Prediction with Gyroscope v/s Prediction without Gyroscope}\\
+    The process of Centroid Prediction requires an estimate of the angular velocity and the centroids of the identified stars at the previous iteration. In algorithms \ref{sna} and \ref{zhang}, angular velocity is obtained using a Gyroscope, whereas in algorithm \ref{fast_algorithm}, the angular velocity is `predicted' using the centroid information of previous two frames (refer section \ref{slew_prediction}). Since the team is not sure whether a Gyroscope will be compatible with the STADS system, the Centroid Prediction algorithm will be designed using the latter approach. 
+\end{itemize} 
+Before explaining the detailed steps of the algorithm, it should be noted that the Star Identification process has been completed for the current frame ($k^{th}$) and the previous frame ($k-1^{th}$). The task at hand is to identify stars at the next frame ($k+1^{th}$) using the Tracking Algorithm. The algorithm can now be described as follows: 
+\begin{enumerate}
+    \item The stars at the previous frame and the current frame are identified using LISA, and the corresponding centroids are stored as $N_{1}(k-1)$ and $N_{1}(k)$ respectively. If the number of common stars among $N_{1}(k-1)$ and $N_{1}(k)$ are greater than equal to 2, the execution of algorithm continues, otherwise LISA is performed in the next frame. 
+    \item Angular Velocity is estimated using the set of centroids $N_{1}(k-1)$ and $N_{1}(k)$ after which the centroids at the next frame are predicted. (refer section \ref{slew_prediction} for more details). If no centroids were predicted, the algorithm switches back to LISA. The predicted centroids are stored as $N_{2}(k+1)$ and the \emph{Reference Image} is formed. 
+    \item Alongside the process of centroid prediction, the algorithm runs full frame centroiding code at the next frame to form the \emph{Measured Image}. The centroids from the two images are now matched and identified using the `Radius based approach' for star matching (refer section \ref{rapidtrack}). The identified stars are stored as $N_{3}(k+1)$. 
+    \item If $N_{3}(k+1)$ is greater than or equal to $N_{th}$, the identified stars are sent to the Estimation block for estimating the attitude and the Star ID process is finished. If $N_{3}(k+1)$ is less than $N_{th}$, the algorithm checks whether any new centroid was identified in the Measured Image which may have entered into the FOV. If yes, then the next step is executed, otherwise the tracking algorithm is terminated and LISA is deployed at the next frame. 
+    \item To identify and match the new centroids at the next frame, the \textbf{\emph{Star Neighbourhood Table}} is used (refer section \ref{sna}). By referring to the SN Table, the unmatched neighbours of the identified stars in the next frame can be identified by comparing the inter-star angles between the stars in the Table and between the centroids in the Measured Image. Finally, the identified stars (after matching the new stars as well) are stored as $N_{4}(k+1)$. 
+    \item Now, if $N_{4}(k+1)$ number of stars are greater than or equal to $N_{th}$, the star vectors are sent to the Estimation block and the Star ID process successfully ends. If $N_{4}(k+1)$ is still less than $N_{th}$, the Tracking algorithm is terminated and LISA is deployed at the next frame. 
+\end{enumerate}
+The algorithm is as follows  \ref{fig:tracking_flowchart}. 
+\begin{Flowchart}
+        %%% ADD new flowchart
+        \centering
+        \includegraphics[scale=0.25]{Figures/GNC/tracking_flowchart.png}
+        \caption{Current Tracking Algorithm}
+        \label{fig:tracking_flowchart}
+\end{Flowchart}
+% Explain Nth. 
+% Insert the Star Neighbourhood table
+% Write the Future work. 
 %----------------------------END----------------------------%
 \end{document}

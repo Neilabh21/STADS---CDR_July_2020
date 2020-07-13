@@ -12,6 +12,25 @@
 A lot of upcoming avenues in CubeSat development and usage, such as rendezvous \& docking and formation flying, and just as many established ones like earth observation, require the attitude of the satellite with a high level of accuracy. This level of accuracy can be achieved by using a star tracking system onboard the satellite. The attitude estimate attained using such systems is usually much better than that obtained by more conventional methods that use magmeters and photo-diodes.
 
 
+We decided to develop the Star Tracker based Attitude Determination System \emph{(STADS)} due to the lack of indigenously developed star trackers and the difficulty in importing ones from abroad. We intend to make a modular system that is compatible with 1U/2U/3U CubeSats and it is meant to be tested on the PSLV Stage 4 Orbital Platform. This mission can also help other student teams and organisations in the country that are looking to make a satellite of their own and allow them to focus on the payload. It will also help us build insight in developing space systems.
+
+\section*{Subsystems}
+
+    The system has been divided into five subsystems to streamline the design process. We now describe the main tasks of these subsystems.
+
+    \subsection*{Mechanical}
+    Mechanical Subsystem is responsible for designing, fabricating and testing the platform on which the star-tracker module will be built. It is responsible for the entire support frame as well as providing the layout and integration of all other subsystems. It also facilitates the interface with the user satellite. 
+    
+    \subsection*{Instrumentation}
+    The instrumentation subsystem is responsible for designing the complete optical framework of the STADS module. This involves designing, procurement/manufacturing and testing of the lens, sensor and optical baffle, as well as the necessary interfaces. Lens system is responsible to manifest an image of space onto the sensor such that it satisfies certain limits specified in order to achieve attitude determination within the error limit. Sensor is responsible for converting the output of the lens (electromagnetic energy) into electrical output to work on. It also affects the image quality. The optical baffle is designed to prevent stray light from entering the system.
+    
+
+    
+    \subsection*{Electrical}
+        Electrical Subsystem is responsible for designing the PCB which includes the selection of on-board electronic components that will run the algorithm and integrate the software and hardware modules along with their interfacing. It is also involved in detecting and obtaining the centroids of stars present in an image.
+
+    \subsection*{Guidance, Navigation and Control}
+        Guidance, Navigation and Control \emph{(GNC)} Subsystem is responsible for designing the star matching algorithm and the estimation algorithm, which is to be used on-board. It is also responsible for developing a rigorous testing framework for the System, that is, the Star Image Simulation Model.
 
 
 

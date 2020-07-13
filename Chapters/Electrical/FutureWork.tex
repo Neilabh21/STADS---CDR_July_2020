@@ -1,0 +1,25 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+\begin{document}
+\subsection{Future Work}
+
+	\subsubsection{More Testing}
+	The \textit{Pixel by Pixel} and \textit{Region Growth} Algorithms have been tested and the initial results are promising. Nevertheless, these algorithms will be extensively tested in the upcoming months, which will not only help us narrow down the values of the constants involved but will also make the algorithms more reliable. \\
+	A complete Model-In-Loop-Simulation (MILS) is also being set up.
+
+	\subsubsection{Conversion to Embedded C}
+	All the algorithms have been coded on MATLAB and C++ and the preliminary tests have run successfully on both. To implement them on a hardware module, we will need to convert these codes to \textit{Embedded C}.
+
+	\subsubsection{Correction Factors}
+	There are two aspects to the correction factors:
+	\begin{enumerate}
+		\item Centroiding Formulae: As mentioned above, we found a few other centroiding formulae\cite{zhang2011star} that could result in better accuracy. These will be tested along with the additional test cases that are being made.
+		\item Slew Effect: The translatory and rotatory movements of the satellite can result in streaks of stars being captured by the image sensor instead of granular points. We will work to counter its effect by first performing a literature survey and then implementing our findings.
+	\end{enumerate}
+
+	\subsubsection{Hardware Simulation}
+	Once the codes are translated to \textit{Embedded C}, we will run the same on a microcontroller. If memory permits, we will convert the \textit{iteration-based} algorithms to \textit{VHDL} and synthesize them on a FPGA. We will analyse our results and choose to implement the best possible option.
+
+%----------------------------END----------------------------%
+\end{document}

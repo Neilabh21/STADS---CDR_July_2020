@@ -5,8 +5,61 @@
 \section{K-Vector Search Technique}
 \label{appendix:k-vector}
 \thispagestyle{fancy}
-
 %-----------------------------------------------------------%
-\blindtext %remove this command and start writing your own content
+
+Mortari, D, et. al \cite{mortari2014k} developed the Search Less Algorithm (SLA), a novel new method to identify the stars observed by a wide FOV star tracker. 
+The technique was developed within the general problem of spacecraft attitude determination for the lost-in-space general case, that is, when the spacecraft attitude is completely unknown.
+SLA accomplishes the task much faster than any other star identification algorithms due to the new, range searching approach, named the \textbf{K-vector technique}, which constitutes the heart of SLA.
+
+This new range searching method requires the construction of an \textit{$N$-long} vector of integers, the \textit{vector-K}, whose entries contain information useful to solve the range searching problem by avoiding the searching phase, which constitutes the heaviest computational load of the star pattern recognition algorithms.
+
+
+\subsection{K-vector Technique}
+
+The range searching problem consists of identifying, within a large \textit{$N$-long} $(N>>1)$ database $Y$, the set of all data elements $Y[i]$ falling within a given required range $[Y_a, Y_b]$, where $Y_a < Y_b$. This problem was typically solved using the \textit{Binary Search Technique}, which would require $\approx 2\log_2(N)$ comparisons.
+A significant speed gain is obtained through the introduction of the K-vector technique, which is summarized below.
+
+Let $Y$ be an $N$-long data vector $(N>>1)$ and $S$ be the same vectors but sorted in an ascending order, i.e. $S[i] \le S[i+1], \forall$ $i \le N-1$. This implies $Y[I[i]] = S[i]$, where $I$ is the $N$-long integer vector associated with the sorting of the $Y$ vector. Thus $Y_{min} = \min_i Y[i] = S[1]$, and $Y_{max} = \max_iY[i]=S[N]$.
+
+The straight line connecting the two extreme points $(1, Y_{min})$ and $(N, Y_{max})$ has, on average, $E_0 = N/(N-1)$ elements for each $d = (Y_{max} - Y_{min})/(N - 1)$ step. 
+A slight modification is made to this line, based on which the equation is written as:
+\begin{equation}
+    Z[x] = mx + q
+\end{equation}
+where,
+\begin{equation}
+\begin{aligned}
+    m &= \frac{Y_{max} - Y_{min} + 2\varepsilon}{N-1} \\
+    q &= Y_{min} - m - \varepsilon \\
+    \varepsilon &= \epsilon \max(|Y_{min}|, |Y_{max}|)
+\end{aligned}
+\end{equation}
+where, $\epsilon$ is the relative machine precision ($\epsilon \approx 2.22E-16$ for double precision arithmetic).
+
+Setting $K[1] = 0$, and $K[N] = N$, the integer K-vector is then constructed as follows:
+\begin{equation}
+    K[i] = j, \text{ where } S[j] \le Z[i] < S[j+1]
+\end{equation}
+where the index $i$ ranges from $2$ to $(N-1)$.
+Therefore, $K[i]$ gives the number of the elements $S[j]$ below the value of $Z[i]$.
+
+Once the K-vector has been constructed, the evaluation of the two indices identifying, in the S-vector, all of the possible data falling within the range $[Y_a; Y_b]$, becomes a straightforward and fast task. In fact, the indices associated with these values in the S-vector are simply provided as:
+\begin{equation}
+\begin{aligned}
+    j_b &= \text{floor}\bigg( \frac{Y_a - q}{m} \bigg) \\
+    j_t &= \text{ceil}\bigg( \frac{Y_b - q}{m} \bigg)
+\end{aligned}
+\end{equation}
+
+Once the indices $j_b$ and $j_t$ are evaluated, it is possible to compute:
+\begin{equation}
+\begin{aligned}
+    K_{start} &= K[j_b] + 1 \\
+    K_{end} &= K[j_t]
+\end{aligned}
+\end{equation}
+
+The knowledge of $K_{start}$ and $K_{end}$ allows an immediate identification of the searched elements $Y[i] \in [Y_a, Y_b]$, which are all the $Y[I[k]]$ where $K$ ranges from $K_{start}$ to $K_{end}$.
+\newpage
 %----------------------------END----------------------------%
 \end{document}

@@ -41,13 +41,13 @@ Electrical Interfacing is the interconnection or linking together various aspect
 % Siddhi: 
 
 \subsection{Interfacing a Image Sensor with the FPGA}
-We began by choosing a cheap camera named OV7670 as a learning task.We have written an AVR code for interfacing it with a microcontroller and also written a VHDL code for interfacing with the FPGA.
+We began by choosing a cheap camera named OV7670 as a learning task.We have written an AVR code for interfacing it with a micro-controller and also written a VHDL code for interfacing with the FPGA.
 
 For the final task we have chosen the CMOS image sensor named ITS-PYTHON 1300 as the camera.
 
 On studying the datasheet of the python 1300 we came across a protocol named LVDS (low voltage differential signalling) for sending the captured image from the camera to the FPGA. LVDS is communication protocol for high speed communications and is pretty difficult to implement because of the problem of synchronization of the signals sent across the line. Owing to the fact that we do not require such a high speed in our task we decided to go forward with the standard parallel communication protocol.
 
-One portion of our Star Tracker Algorithm consists of image processing on the captured image.  The microcontroller cannot handle the output rate of the image from the Image sensor, thus FPGA, which acts as a buffer, along with external SRAM is being used. % Thus, after pre-processing rest of the task will be done on the microcontroller.
+One portion of our Star Tracker Algorithm consists of image processing on the captured image.  The micro-controller cannot handle the output rate of the image from the Image sensor, thus FPGA, which acts as a buffer, along with external SRAM is being used. % Thus, after pre-processing rest of the task will be done on the micro-controller.
 
 For further coding of this task we have also started learning Verilog in addition to VHDL (Hardware Description Languages) to understand codes online which are in Verilog.
 
@@ -84,8 +84,8 @@ We use an asynchronous SRAM since its working is far simpler than its synchronou
         \item Import the IP core exported from the appropriate repository and add it to the block design using IP intergrator.
         \item After creating block design, we add the IP cores according to our block-diagram and run connection automation. We can also customise existing IP Cores by  clicking on the block of IP.(e.g. We can have single/dual port BRAM).
         \item On completing our block design, we validate the design. We create an HDL wrapper for our design and then generate the bitstream to program our FPGA.
-        \item Finally, we export our hardware and launch SDK. SDK is a tool for testing the output of FPGA using embedded C, which is basically what is used to program the microcontroller.
-        \item At this stage, it is recommended to compare timings of the block using software as well as hardware. The sofware part can be done by simply copy-pasting the function used for HLS and getting its output and verifying it with the hardware output. If pragmas are used correctly, you can expect to see a significant boost in the time to run it on hardware.
+        \item Finally, we export our hardware and launch SDK. SDK is a tool for testing the output of FPGA using embedded C, which is basically what is used to program the micro-controller.
+        \item At this stage, it is recommended to compare timings of the block using software as well as hardware. The software part can be done by simply copy-pasting the function used for HLS and getting its output and verifying it with the hardware output. If pragmas are used correctly, you can expect to see a significant boost in the time to run it on hardware.
     \end{itemize}
     
     \begin{Flowchart}

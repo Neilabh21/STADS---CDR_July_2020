@@ -4,6 +4,7 @@
 \begin{document}
 \subsection{Feature Extraction}
 \subsubsection{Pixel-By-Pixel Tagging Algorithm}
+\label{sec:pixel_by_pixel}
 		There were broadly two stages in the testing process:
 		\begin{enumerate}
 			\item An \emph{internal testing} for every single function involved in the algorithm whose test cases included some possible shapes of stars and other geometrical shapes, a list of the intermediate values of the functions and their expected outputs were calculated by \textit{hand}. \\
@@ -64,7 +65,7 @@
 		\end{tabular}
 		\end{center}
 
-		To improve the accuracy of our centroids, we tried two additional centroiding formulae\cite{} and the results for a \textit{Threshold} value of 20 and \textit{Star\_min\_pixel} value of 3 have been documented\footnote{where T is the Threshold value}\footnote{Mean and STD measured in pixel lengths}.
+		To improve the accuracy of our centroids, we tried two additional centroiding formulae\cite{zhang2011star} and the results for a \textit{Threshold} value of 20 and \textit{Star\_min\_pixel} value of 3 have been documented\footnote{where T is the Threshold value}\footnote{Mean and STD measured in pixel lengths}.
 		\begin{center}
 		\begin{tabular}{ c|c|c|c } 
 			\textbf{Formula:} & \begin{math}  X = \frac{\sum{x_i w_i}}{\sum{w_i}} \end{math} & \begin{math}  X = \frac{\sum{x_i \left(w_i - T\right)}}{\sum{\left(w_i - T\right)}} \end{math} & \begin{math}  X = \frac{\sum{x_i \left(w_i - T\right)^2}}{\sum{\left(w_i - T\right)^2}} \end{math} \\ 

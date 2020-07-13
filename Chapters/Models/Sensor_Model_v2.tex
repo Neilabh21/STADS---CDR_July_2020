@@ -1,3 +1,9 @@
+\documentclass[../../main.tex]{subfiles}
+
+%-----------------------------------------------------------%
+
+\begin{document}
+
 % \begin{equation}
 %     \boxed{ \color{blue}    \color{black}}
 % \end{equation}
@@ -9,11 +15,17 @@
 % -------- %
 
 \subsubsection{Overview} % Summary
-The version 2 Model for \SIS involves ideal optics, with the Sensor Model with major sensor noises. A modest flowchart of the Sensor Model is as follows:
+The version 2 Model for \SIS involves -
+\begin{enumerate}[label={}]
+    \descitem{Optics Model -} The Optics Model in Version 2 is the simplest possible system, involving straight line ray optics. This takes no aberrations into account. 
+    \descitem{CMOS Model -} The CMOS Model takes Sensor Specifications into account, along with the major Sensor Noises. (The sensor specifications are taken from the datasheet of PYTHON-1300, which is the sensor of choice at the present. 
+\end{enumerate}
+
+A modest flowchart of the Sensor Model is as follows:
 
 \begin{Flowchart}[h!]
     \centering
-    \includegraphics[scale=0.09]{Figures/Model/Sensor Model v2.png}
+    \includegraphics[width=\textwidth]{Figures/Model/Sensor Model v2.png}
     \caption{Star Image Simulation Flowchart - Version 2}
     \label{fig:SIS_v2}
 \end{Flowchart}
@@ -21,7 +33,7 @@ The version 2 Model for \SIS involves ideal optics, with the Sensor Model with m
 % ------ %
 % Inputs %
 % ------ %
-
+\newpage
 \subsubsection{Inputs}
 The inputs to the \SISM are as follows:
 \begin{enumerate}[label={}]
@@ -68,9 +80,7 @@ The flowchart for the Processing sub-block is given in Figure \ref{fig:SIS_v2_PR
     \label{fig:SIS_v2_PR}
 \end{Flowchart}
 
-Visual information is recorded via the CMOS sensor placed at the focal plane of the optics system to measure the light gathered during the exposure. The sensor is platted into an array of pixels, each of which is tasked to gather the light arriving within a small patch of sensor area. The efficiency with which the sensor and its pixels gather light, and the accuracy to which it determines the amount gathered by each pixel, are crucial in determining the quality of the recorded image. \cite{DSLRs} 
-
-Hence, we need to have an accurate model for the CMOS Sensor. The noise effects in the CMOS Sensor have been separated out into the Noise Model; thus, this CMOS Model takes the input as the wavefront incident on the sensor due to the stars, and produces a no-noise matrix of pixel values as seen by the sensor. 
+Visual information is recorded via the CMOS sensor placed at the focal plane of the optics system to measure the light gathered during the exposure. The sensor is platted into an array of pixels, each of which is tasked to gather the light arriving within a small patch of sensor area. The efficiency with which the sensor and its pixels gather light, and the accuracy to which it determines the amount gathered by each pixel, are crucial in determining the quality of the recorded image. \cite{DSLRs} Hence, we need to have an accurate model for the CMOS Sensor. The noise effects in the CMOS Sensor have been separated out into the Noise Model.
 
 The processing sub-block involves the following steps -
 \begin{enumerate}[label={}]
@@ -87,16 +97,26 @@ The processing sub-block involves the following steps -
 % ---------------- %
 
 \subsubsection{Image Generation \label{subsubsection:IG}}
+\blindtext
+
+
+% ------------------- %
+% CMOS Sensor - Intro %
+% ------------------- %
+
+\subsubsection{Introduction to CMOS Sensor}
+CMOS image sensors with global shutter (GS) are becoming popular. It is possible to capture the shape of a high speed moving object with high accuracy without distortion. Conventional CMOS sensors adopt rolling shutter (RS) method. In the RS method, an exposure is sequentially performed for each row pixel and there is a slight time difference in signal readout for each row pixel. Thus, the high-speed moving object is distorted. For example, when a flash is used during shooting, the flash band phenomenon may occur with different brightness of the image on the top and the bottom. CMOS image sensor with GS exposes all the pixels at the same time and it can take a non-distorted photograph of the high speed moving object such as a rotating propeller. 
+
+GS CMOS image sensor with small pixel is demanded for high resolution pictures and sensing. In practical use of GS sensor, it is important to achieve high signal-to-noise ratio. High quantum efficiency (QE) is required to increase the signal intensity. In order to increase the QE, it is necessary to provide more light to the photo diode (PD) even in small size pixel. In terms of noise, it is necessary to care the noise caused by GS structure.
 
 % ----------- %
 % Noise Model %
 % ----------- %
 
-
 \subsubsection{Noise Model} % Introduction to noise model
 The incoming light from the stars is the signal we need the CMOS Imaging Sensor to transcribe faithfully; inaccuracies in the recording process constitute noise, and inhibit the ability to reconstruct the Star Vectors in the image frame, which leads to inaccuracies in the Star Tracking and Star Matching Algorithms. In order to extract the best performance from the CMOS Imaging Sensor, it is helpful to have an understanding of the various contributions to image noise and how various design choices in the Lens System and the choice of CMOS Sensor affect this noise.
 
-A flowchart for the Noise Model is as follows -
+A flowchart for the Noise Model for Version 2 is as follows -
 
 \begin{Flowchart}[h!]
     \centering
@@ -108,56 +128,92 @@ A flowchart for the Noise Model is as follows -
 There are several image sensor noise sources that must be simulated in the camera model. Our image sensor of choice is a CMOS sensor, and so, we have focused on the noises specific to a CMOS Sensor. The noises that have been considered in the Sensor Model, in a chronological order are - \emph{Parasitic Light Sensitivity, Photon Shot Noise, Photo-Response Non-Uniformity, Dark Noise, Fixed Pattern Noise, Read Noise,} and \emph{Pixel Storage Node Leakage}.
 
 The order is based on the following information - 
-The photons have dual nature, due to which, their detection at the CMOS Sensor follows Poisson Distribution, captured by the Photon Shot Noise. This noise is from before the photons even strike the Sensor, and is dependent on the inputs. We have 2 more noises that are dependent on the inputs - Parasitic Light Sensitivity, and the PRNU, so they are taken in the beginning. Dark Noise, Fixed Pattern Noise, Read Noise are independent of the input. Also, Pixel Storage Node Leakage needs to go to the last, because It is the number of pixels that leak out of the Storage Node.
+The photons are quantum particles, due to which, their detection at the CMOS Sensor follows Poisson Distribution, captured by the Photon Shot Noise. Photon Shot Noise, along with Parasitic Light Sensitivity, and the PRNU, are dependent on the inputs; so they are taken in the beginning. Dark Noise, Fixed Pattern Noise, Read Noise are independent of the input. Also, Pixel Storage Node Leakage needs to go to the last, because it refers to the number of pixels that leak out of the Storage Node.
 
 % --- %
 % PLS %
 % --- %
+\newpage
 
 \subsubsection{Parasitic Light Sensitivity} % ???
-Parasitic Light Sensitivity (PLS) is the ratio of the light sensitivity of the photodiode to the light sensitivity of the Memory Node (also called the Storage Node) in Global Shutter. \newline
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.48\textwidth]{Figures/Model/CMOS_PLS.jpeg}
+  \end{center}
+  \label{fig:PLS}
+  \caption{Reading Method of Global Shutter Pixel}
+\end{wrapfigure}
 
-Parasitic Light Sensitivity Noise (PLSN) is due to the light incident into Memory Node. An increase of PLS leads to a deterioration in the image quality.  This  is  because  the  photo-electrons  generated  by  incident  light  to  Memory Node  are  added  to  the  photo-electrons stored in Memory Node after the exposure. \newline
+The adjoining figure shows a simple configuration and reading method of GS pixel. In order to realize \emph{Global Shutter (GS)} capability, a \emph{Memory Mode (MN)} must be added in each pixel . The electrons stored in the \emph{Photo Diode (PD)} are collectively read out to Memory Node and used as an image signal. The exposure is performed at once, but the readout is performed for each row as shown in the figure. Therefore, the electrons are generated in the Memory Node before the readout becomes noise, and leads to deterioration in image quality. When an image is output with much noise, the part of the picture that is read later becomes brighter or noisy because the noise is increased in later read rows. Accordingly, it is necessary to reduce the noise generated in the Memory Node. Major causes of the noise are light penetration into Memory Node and dark current.
+
+PLS Noise is generated by light incident into Memory Node. An increase of PLS Noise leads to deterioration of image quality. This is because the charges generated by incident light to Memory Node are added to the charges stored in Memory Node after the exposure.
+
+In dual transfer Global Shutter pixels, the photo-generated charges are transferred to MN. This allows a correlated double sampling (CDS) on a floating diffusion in successive transfer, which can reduce pixel noise to below 1 to 2 electrons.
+
+\begin{equation*}
+    \texttt{PLS} = \frac{\text{Photodiode Responsivity}}{\text{Storage Node Responsivity}} \quad (\text{Unitless Ratio})
+\end{equation*}
 
 The Memory Node is about 80,000x more sensitive than the Photodiode. However, the Memory Node is susceptible to photons only after the Shutter closes. So, the time to be taken into account is $(t_{Readout} - t_{Close})$. \newline
 
 Formula Used in the code:
 \begin{equation}
     \begin{aligned}
-        \boxed{ \color{blue} PV =  PV_0 + \frac{PV_0}{\texttt{PLS}} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \color{black}} 
+        \boxed{ \color{blue} PV =  PV_0 \cdot \left( 1 + \frac{1}{\texttt{PLS}} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \right) \color{black}} 
     \end{aligned}
 \end{equation}
-where, $PV_0$ is the Pixel Value before \texttt{PLS} is applied. 
-
-Derivation:
-\begin{equation*}
-    \begin{aligned}
-        P_0 - \text{\# photons in } t_{Capture} & \rightarrow P_0 \\
-        P - \text{ \# photons in } (t_{Readout} - t_{Close}) & \rightarrow P_0 \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \\
-        \text{PV due to } P_0 \text{ in } t_{Capture} & \rightarrow PV_0 \\
-        \text{PV due to } P \text{ in } (t_{Readout} - t_{Close}) & \rightarrow \frac{PV_0}{PLS} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right)
-    \end{aligned}
-\end{equation*}
-where, $PV$ is the Pixel Value. 
+where, $PV_0$ is the Pixel Value before \texttt{PLS} is applied, and $PV$ is the new Pixel Value. 
 
 Note that the PLS Noise depends on the input illumination on the Sensor.
+
+% Derivation:
+% \begin{equation*}
+%     \begin{aligned}
+%         P_0 - \text{\# photons in } t_{Capture} & \rightarrow P_0 \\
+%         P - \text{ \# photons in } (t_{Readout} - t_{Close}) & \rightarrow P_0 \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right) \\
+%         \text{PV due to } P_0 \text{ in } t_{Capture} & \rightarrow PV_0 \\
+%         \text{PV due to } P \text{ in } (t_{Readout} - t_{Close}) & \rightarrow \frac{PV_0}{PLS} \cdot \left(\frac{t_{Readout} - t_{Close}}{t_{Capture}}\right)
+%     \end{aligned}
+% \end{equation*}
+% where, $PV$ is the Pixel Value. 
+
+
 
 % --- %
 % PSN %
 % --- %
-
+\newpage
 \subsubsection{Photon Shot Noise} % 3.
-Image sensors measure scene irradiance by counting the number of discrete photons incident on the sensor over a given time interval. The independence of random individual photon arrivals leads to photon noise, a signal dependent form of uncertainty that is a property of the underlying signal itself. Individual photon detections can be treated as independent events that follow a random temporal distribution. As a result, photon counting is a classic Poisson process. Even from Quantum Statistics, when collecting photons from an unvarying source over a set amount of time, we get a Poisson Distribution. Hence, if the mean value of the number of photons that hit the sensor is $n$, the variance in the number of photons is the $\sqrt{n}$. This is captured by the MATLAB function \texttt{poissrnd}.
+\emph{Photon Shot Noise} (PSN), or \emph{Poisson Noise} refers to the inherent variation in the incident photon flux. Photoelectrons collected by a CMOS Sensor or a CCD Sensor exhibit a Poisson Distribution. (\cite{DSLRs}, \cite{Hasinoff2014})
+
+Photons are discrete and the probability of one photon's arrival is independent of any other photon's arrival; so, individual photons detections can be treated as independent events that follow a random temporal distribution. Hence, the detection of photons at the sensor is a classical  \emph{Poisson Process}. 
+
+Even from Quantum Statistics, a Poisson Distribution is obtained when photons are collected from an unvarying source over a set amount of time, which starlight effectively is, over the exposure time. 
+
+Since the Poisson distribution approaches a normal distribution for large numbers, the photon noise in a signal will approach a normal distribution for large numbers of photons collected. However, instead of using a normal distribution, we stick to the Poisson Distribution as for the case of the CMOS Sensor for Star Tracker, the intensity of illumination at the Image Sensor can be low, where the Poisson Statistics are not reflected by a normal distribution. Hence, if the mean value of the number of photons that hit the sensor is $n$, the variance in the number of photons is the $\sqrt{n}$. 
+
+\begin{wrapfigure}{r}{0.42\textwidth}
+  \begin{center}
+    \includegraphics[width=0.4\textwidth]{Figures/Model/PSN_Hamamatsu.jpg}
+  \end{center}
+  \caption{(A) At low light levels, the variance introduced by photon shot noise contributes to a large proportion of the signal. (B, C) At higher light ranges, the variance introduced by photon shot noise is a smaller percentage of the overall signal. \cite{WhatIsPSN?}}
+\end{wrapfigure}
+
+The noise is therefore directly dependent on number of photons incident on the sensor. A very bright feature emitting many photons will have little (relative) noise. A very dim feature will look "granular", revealing that not many photons were averaged during its acquisition. This can not be known in advance just by looking at an empty calibration image. 
+
+Moreover, Photon Shot Noise is not something intrinsic to the device but something in the nature of the photons that are averaged. Therefore it also depends on the acquisition time: the larger the exposure, the larger is the amount of photons gathered and the lesser the noise.
+
+Hence, we use Random Numbers from Poisson Distribution. This is captured by the MATLAB function \texttt{poissrnd}, with the argument as the averaged number of photons, which is given by the number of photons incident in the no-noise case. 
 
 The formula used in the code is:
 \begin{equation}
-    \boxed{ \color{blue} PV = \texttt{poissrnd}(PV_0) \color{black}}
+    \boxed{ \color{blue} P = \texttt{poissrnd}(P_0) \color{black}}
 \end{equation}
 
 % ---- %
 % PRNU %
 % ---- %
-
+\newpage
 \subsubsection{Photo-Response Non-Uniformity} % 4.
 When uniform light falls on a camera sensor, each pixel should output exactly the same value. However, small variations in cell size and substrate material result in slightly different output values. The difference between the true response from a sensor and a uniform response is known as \emph{Photo Response Non Uniformity} (PRNU).
 
@@ -256,6 +312,8 @@ Formula Used in the code:
 \end{equation}
 
 where, $G$ is the Gain, $PV$ is the new Pixel Value, $PV_0$ is the old Pixel Value, \texttt{PSNL} is the PSNL noise value in \# electrons.
+
+
  
 % ------------- %
 % Sample Images %
@@ -310,3 +368,6 @@ These are some images generated using the \SISM Version 2 in Figure \ref{fig:sam
     \caption{Sample Images}
     \label{fig:sample_images}
 \end{figure}
+
+
+\end{document}

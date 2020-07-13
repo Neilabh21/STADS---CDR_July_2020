@@ -136,14 +136,25 @@ The angular distance between every pair of stars from the captured image is calc
 Each vote here corresponds to a possible identity for the image star, from the respective catalogue star. Usually, the correct identity of an image star is the one that receives the most number of votes at the end of process. Since this approach relies only on geometric information, it is thus not sensitive to the photometric properties of the sensor which might change during the operation of the system.
 The use of star brightness as a filter was left for further studies, with the capability to reduce the runtime of the algorithm.
 
-This algorithm uses information from the entire image and does not rely only on the local neighbourhoods of a certain star, thus making it more robust. The voting method is also capable of ignoring non-star objects in the image since the concurrent use of all of the image stars minimizes the influence of these non-stars.
+This algorithm (\ref{fig:GVM_runtime}) uses information from the entire image and does not rely only on the local neighbourhoods of a certain star, thus making it more robust. The voting method is also capable of ignoring non-star objects in the image since the concurrent use of all of the image stars minimizes the influence of these non-stars.
 
-% Insert Flowchart - Algorithm
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{Figures/GNC/GVM_Runtime.PNG}
+    \caption{Geometric Voting Algorithm - Runtime Pseudo-code}
+    \label{fig:GVM_runtime}
+\end{figure}
 
-An important aspect of this algorithm, is that there is a verification step after right after the voting step. 
+
+An important aspect of this algorithm, is that there is a verification step (\ref{fig:GVM_verification}) after right after the voting step. 
 If a non-star object is ever detected by Feature Extraction, there is a reasonable probability of the non-star being voted on by an actual catalogue star. It can thus be misidentified as a star. Such \textbf{false matches} affect the accuracy when calculating the attitude, and hence should be minimized. Hence a verification step, that can accurately detect and ignore such star-pairs is important for 
 
-% Insert Flowchart - verification Step
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{Figures/GNC/GVM_Voting_Method.PNG}
+    \caption{Geometric Voting Algorithm - Verification Step Pseudo-code}
+    \label{fig:GVM_verification}
+\end{figure}
 
 This algorithm was initially considered, and was implemented in Python.
 One of the key issues, however, was the \textit{localization uncertainty} ($\delta$), an important parameter in deciding the interval of the search window for a given angular distance. 
@@ -176,12 +187,17 @@ The pairwise angular distance is computed between every pair of the Guide Stars 
 \end{equation}
 where, $\vect{v_i}$ corresponds to the pointing unit vector of the $i^{th}$ Guide Star.
 If this computed angular distance is $\le$ the FOV ($cos(\phi)$, where $\phi=$ FOV), they are stored.
-All such pairs of stars are then compiled, and are sorted based on their angular distance. These angular distance values are then used to generate the K-vector for the angular distance. These pairwise Star-IDs and the corresponding K-vector value is stored as part of the \textbf{Reference Star Catalogue} (\ref{appendix:star_catalogue}). These catalogues shall be available on-board the STADS module.
-% Insert catalogue images
+All such pairs of stars are then compiled, and are sorted based on their angular distance. These angular distance values are then used to generate the K-vector for the angular distance. These pairwise Star-IDs and the corresponding K-vector value is stored as part of the \textbf{Reference Star Catalogue} (\ref{appendix:star_catalogue}). These catalogues shall be available on-board the STADS module (\ref{tab: guide_star_catalogue}, \ref{tab: reference_star_catalogue})    .
 
  
-When the module takes an image, the centroids of the stars that are identified from the image are obtained from Feature Extraction. These 2-dimensional centroids are then converted to 3-dimensional unit vectors in the body-frame that point towards the source of light responsible for a given centroid \cite{erlank2013development}.
-%insert light-ray image
+When the module takes an image, the centroids of the stars that are identified from the image are obtained from Feature Extraction. These 2-dimensional centroids are then converted to 3-dimensional unit vectors (\ref{fig:pin_hole_camera_model}) in the body-frame that point towards the source of light responsible for a given centroid \textit{(using the pin-hole camera model)} \cite{erlank2013development}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.35]{Figures/GNC/pin_hole_camera_model.png}
+    \caption{Pin Hole Camera Model}
+    \label{fig:pin_hole_camera_model}
+\end{figure}
 
 For a given $(x, y)$ centroid the corresponding unit vector is defined as follows:
 \begin{equation}

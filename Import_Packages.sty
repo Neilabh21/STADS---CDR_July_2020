@@ -57,14 +57,16 @@
 %%%% Header & Footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
-\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection~- ~#1}}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername~\thechapter~-~ #1}{}}
 
 \fancyhf{} % Remove default header and footer fields
 \fancyhead[R]{STADS - Conceptual Design Review} % Insert Project title
-\fancyhead[L]{\leftmark} % Insert Chapter Name
 \fancyfoot[R]{\thepage} % Insert Page Number
-\fancyfoot[L]{\rightmark} % Insert Section Name
+
+\fancyhead[L]{\footnotesize\scshape\leftmark}
+\fancyfoot[L]{\footnotesize\scshape\rightmark}
+
 
 \renewcommand{\headrulewidth}{0.4pt} % Header line thickness
 \renewcommand{\footrulewidth}{0.4pt} % Footer line thickness
@@ -178,10 +180,16 @@
 
 
 % For Sensor Model
+% Packages - 
+\usepackage{empheq}     % For boxing
+\usepackage{wrapfig}    % For wrapping figures
+\usepackage[skip=2pt,font=scriptsize]{caption}  % For smaller captions in images
+
+
 % \newcommand{\SM}{Sensor Model }
 \newcommand{\SIS}{Star Image Simulation }
 \newcommand{\SISM}{Star Image Simulation Model }
-\usepackage{empheq}     % For boxing
+
 
 % For Lists
 \newcommand\descitem[1]{\item{\bfseries #1}\\}

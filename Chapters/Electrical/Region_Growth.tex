@@ -2,7 +2,7 @@
 
 %-----------------------------------------------------------%
 \begin{document}
-\subsection{The Region Growth Algorithm}
+\subsection{The Region Growth Algorithm} \label{subsec:fe_region_growth}
 Starting from the first pixel in the top left corner of the raw image, only every n\textsuperscript{\textit{th}} pixel in the row is checked against the threshold. This value of n is decided based upon the typical size of a star. Suppose the smallest star is a 3x3 one, than the value of n will be 3. Since every detectable star will have a diameter of at least n pixels, no stars will be missed. However, if we check every pixel, the results won't improve and only execution time increases. When the end of the row is reached, the algorithm skips two rows and repeats itself. In this way only 1/9 of all the pixels need to be checked (for case where n = 3). This results in a slight decrease in run-time, nothing too significant, as the majority of the time is spent in the "region-growing" of the algorithm, so it is recommended that n be kept as close to 1 as possible.
 
 Whenever a pixel above the threshold is detected, the Region Growing Algorithm is called to find all pixels belonging to the detected star. When the Region Growing Algorithm completes, the search over the image plane continues.

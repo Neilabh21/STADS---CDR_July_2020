@@ -9,15 +9,98 @@
 %-----------------------------------------------------------%
 
 A star catalogue, is an astronomical catalogue that lists down the stars, along with other details of these stars.
-There are different star catalogues available which have been produced for different purposes over the years.
+There are different star catalogues available which have been produced for different purposes over the years. \\
 The completeness and accuracy of these catalogues are generally categorised by the weakest Limiting Magnitude and the accuracy of the positions of the stars in the catalogue. 
 Limiting Magnitude is defined as the faintest apparent magnitude\footnote{Apparent magnitude is a measure of the brightness of a star or other astronomical object observed from the Earth. The magnitude scale is reverse logarithmic: the brighter an object is, the lower its magnitude. An object that is measured to be 5 magnitudes higher than another object is 100 times dimmer} of a celestial body that is detectable by a given instrument.
 
-For 
+We decided to use the SKY200 Star Catalogue, for the purposes of Star-Matching and the Star Image Simulation Model. 
 
 \subsection{SKY2000 Star Catalogue}
 
+The SKYMAP Star Catalog System consists of a Master Catalog stellar database which consists of an extensive compilation of information on almost 300000 stars brighter than $8.0$ magnitude. 
+
+The original SKYMAP Master Catalog was generated in the early 1970's. Version 4 of the SKY2000 Master Catalog was completed in April 2002; it marks the global replacement of the variability identifier and variability data fields. 
+
+After considering various Star Catalogues that are available, it was decided to proceed with the SKY2000 Catalogue. This is because the catalogue was commissioned by NASA - Goddard, and prepared by Computer Sciences Corporation, specifically for Star Trackers \cite{sande1999skymap}.
+This ensured that the catalogue would suit the requirements of Star Trackers, and also had been commissioned by a reputable source.
 
 
+
+\subsection{Guide Star Catalogue}
+
+Based on our requirements for the system, it was decided to trim the SKY2000 Star Catalogue so as to accommodate a Limiting Magnitude of $6$. 
+Hence only those stars with an apparent photometric magnitude (Optical V band between 500 and 600 nm) $\le 6$ were selected. These stars are termed the \textbf{Guide Stars}, which were \textbf{5060} in number. The Right-Ascension and Declination coordinates of these stars were provided in the International Celestial Reference System (ICRS) at epoch $2000.0$. These coordinates were then converted to unit vectors in a rectilinear coordinate system defined as follows \cite{sande1999skymap}:
+\begin{equation}
+    \begin{aligned}
+    X &= \cos(\alpha) \cos(\delta) \\
+    Y &= \sin(\alpha) \cos(\delta) \\
+    Z &= \sin(\delta)
+    \end{aligned}
+\end{equation}
+where, $\alpha$ is the Right-Ascension coordinate, and $\delta$ is the Declination coordinate.
+
+The $(X, Y, Z)$ coordinate system definition corresponds to the projection of the Earth’s North Pole onto the celestial sphere as the \textit{Z-axis}, and the vernal equinox as the \textit{X-axis}, at epoch ICRS2000.
+The \textit{Y-axis} completes a right-handed orthonormal coordinate system such that:
+\begin{equation}
+    Z = X \times Y
+\end{equation}
+
+Neglecting the effect of heliocentric parallax (always less than 1 arc-second), this coordinate system is identical to the Earth-centered inertial frame used amongst attitude determination applications.
+
+
+The positional coordinates of the stars were used as is from the original catalogue. They were not corrected for the effect of \textit{proper motion}\footnote{Proper Motion is the apparent angular motion of a star across the sky with respect to more distant stars} of stars. However, the inclusion of this correction is left for future work.
+
+The Guide Stars are then sorted in an ascending order based on the values of their magnitudes, and provided with a \textit{pseudo Star-ID} called the \textbf{SSP-ID} which is used as \textit{de facto} Star-ID for all applications (\ref{tab: guide_star_catalogue })
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccc}
+\rowcolor[HTML]{C0C0C0} 
+\textbf{SSP-ID} & \textbf{X}          & \textbf{Y}          & \textbf{Z}         \\ \hline
+1               & -0.187455230215215  & 0.939217528659584   & -0.287629919381738 \\
+2               & -0.0632226543173948 & 0.602741948951830   & -0.795427582470468 \\
+3               & -0.373860515780470  & -0.312618779136842  & -0.873211207939609 \\
+4               & 0.125096461217334   & -0.769413095206134  & 0.626381963594273  \\
+...             & ...                 & ...                 & ...                \\
+5059            & 0.640944914122491   & -0.225037627283458  & -0.733858081216760 \\
+5060            & 0.677316329670077   & -0.0131295305496630 & 0.735574744665558 
+\end{tabular}
+\caption{Guide Star Catalogue}
+\label{tab: guide_star_catalogue }
+\end{table}
+
+
+
+\subsection{Reference Star Catalogue}
+
+Most of the Lost-in-Space based Star-Matching algorithms require the angular distances of pairs of stars (\ref{eq:ST_AngDst}).
+However, it is not necessary to find out the angular distances between all possible pairs of stars for the following reasons:
+\begin{enumerate}
+    \item For a given Field-of-View, it is impossible for the system to observe stars that are spaced further apart than the given FOV itself.\\
+    Thus such pairs of stars separated by a angular distance greater than the FOV need not be included in the catalogue
+    
+    \item The number of possible unique pairs of stars from 5060 Guide Stars are $\binom{5060}{2} \approx 12.8$ million. However, by neglecting pairs with angular distances greater than the FOV, the number of pairs is $188,700$
+\end{enumerate}
+
+These pairs of stars are then sorted in ascending order based on their angular distances (\ref{tab: reference_star_catalogue }).
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccc}
+\rowcolor[HTML]{C0C0C0} 
+\cellcolor[HTML]{C0C0C0}\textbf{Sl No} & \textbf{SSP-ID - 1} & \textbf{SSP-ID - 2} & \textbf{Angular Distance $- \cos(\theta_{ij})$} \\ \hline
+1      & 1699 & 2651 & 0.974001742955743 \\
+2      & 663  & 4642 & 0.974001905118332 \\
+3      & 170  & 500  & 0.974002465881089 \\
+4      & 751  & 1148 & 0.974002549901821 \\
+...    & ...  & ...  & ...               \\
+188699 & 4297 & 4298 & 0.999999999992493 \\
+188700 & 399  & 400  & 0.999999999992621
+\end{tabular}
+\caption{Reference Star Catalogue}
+\label{tab: reference_star_catalogue }
+\end{table}
+\newpage
 %----------------------------END----------------------------%
 \end{document}
