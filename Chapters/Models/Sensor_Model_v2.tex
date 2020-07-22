@@ -103,9 +103,9 @@ The processing sub-block involves the following steps -
 % ------------------- %
 % CMOS Sensor - Intro %
 % ------------------- %
-
+\newpage
 \subsubsection{Introduction to CMOS Sensor}
-CMOS image sensors with global shutter (GS) are becoming popular. It is possible to capture the shape of a high speed moving object with high accuracy without distortion. Conventional CMOS sensors adopt rolling shutter (RS) method. In the RS method, an exposure is sequentially performed for each row pixel and there is a slight time difference in signal readout for each row pixel. Thus, the high-speed moving object is distorted. For example, when a flash is used during shooting, the flash band phenomenon may occur with different brightness of the image on the top and the bottom. CMOS image sensor with GS exposes all the pixels at the same time and it can take a non-distorted photograph of the high speed moving object such as a rotating propeller. 
+CMOS image sensors with global shutter (GS) are becoming popular. It is possible to capture the shape of a high speed moving object with high accuracy without distortion. Conventional CMOS sensors adopt rolling shutter (RS) method. In the RS method, an exposure is sequentially performed for each row pixel and there is a slight time difference in signal readout for each row pixel. Thus, the high-speed moving object is distorted. For example, when a flash is used during shooting, the flash band phenomenon may occur with different brightness of the image on the top and the bottom. CMOS image sensor with GS exposes all the pixels at the same time and it can take a non-distorted photograph of the high speed moving object such as a rotating propeller. \cite{PLS} 
 
 GS CMOS image sensor with small pixel is demanded for high resolution pictures and sensing. In practical use of GS sensor, it is important to achieve high signal-to-noise ratio. High quantum efficiency (QE) is required to increase the signal intensity. In order to increase the QE, it is necessary to provide more light to the photo diode (PD) even in small size pixel. In terms of noise, it is necessary to care the noise caused by GS structure.
 
@@ -114,7 +114,7 @@ GS CMOS image sensor with small pixel is demanded for high resolution pictures a
 % ----------- %
 
 \subsubsection{Noise Model} % Introduction to noise model
-The incoming light from the stars is the signal we need the CMOS Imaging Sensor to transcribe faithfully; inaccuracies in the recording process constitute noise, and inhibit the ability to reconstruct the Star Vectors in the image frame, which leads to inaccuracies in the Star Tracking and Star Matching Algorithms. In order to extract the best performance from the CMOS Imaging Sensor, it is helpful to have an understanding of the various contributions to image noise and how various design choices in the Lens System and the choice of CMOS Sensor affect this noise.
+The incoming light from the stars is the signal we need the CMOS Imaging Sensor to transcribe faithfully; inaccuracies in the recording process constitute noise, and inhibit the ability to reconstruct the Star Vectors in the image frame, which leads to inaccuracies in the Star Tracking and Star Matching Algorithms. In order to extract the best performance from the CMOS Imaging Sensor, it is helpful to have an understanding of the various contributions to image noise and how various design choices in the Lens System and the choice of CMOS Sensor affect this noise. \cite{PLS} 
 
 A flowchart for the Noise Model for Version 2 is as follows -
 
@@ -125,7 +125,7 @@ A flowchart for the Noise Model for Version 2 is as follows -
     \label{fig:SIS_v2_NM}
 \end{Flowchart}
 
-There are several image sensor noise sources that must be simulated in the camera model. Our image sensor of choice is a CMOS sensor, and so, we have focused on the noises specific to a CMOS Sensor. The noises that have been considered in the Sensor Model, in a chronological order are - \emph{Parasitic Light Sensitivity, Photon Shot Noise, Photo-Response Non-Uniformity, Dark Noise, Fixed Pattern Noise, Read Noise,} and \emph{Pixel Storage Node Leakage}.
+Our image sensor of choice is a CMOS sensor, and so, we have focused on the noises specific to a CMOS Sensor. The noises that have been considered in the Sensor Model, in a chronological order are - \emph{Parasitic Light Sensitivity, Photon Shot Noise, Photo-Response Non-Uniformity, Dark Noise, Fixed Pattern Noise, Read Noise,} and \emph{Pixel Storage Node Leakage}.
 
 The order is based on the following information - 
 The photons are quantum particles, due to which, their detection at the CMOS Sensor follows Poisson Distribution, captured by the Photon Shot Noise. Photon Shot Noise, along with Parasitic Light Sensitivity, and the PRNU, are dependent on the inputs; so they are taken in the beginning. Dark Noise, Fixed Pattern Noise, Read Noise are independent of the input. Also, Pixel Storage Node Leakage needs to go to the last, because it refers to the number of pixels that leak out of the Storage Node.
@@ -141,10 +141,10 @@ The photons are quantum particles, due to which, their detection at the CMOS Sen
     \includegraphics[width=0.48\textwidth]{Figures/Model/CMOS_PLS.jpeg}
   \end{center}
   \label{fig:PLS}
-  \caption{Reading Method of Global Shutter Pixel}
+  \caption{Reading Method of Global Shutter Pixel \cite{PLS}}
 \end{wrapfigure}
 
-The adjoining figure shows a simple configuration and reading method of GS pixel. In order to realize \emph{Global Shutter (GS)} capability, a \emph{Memory Mode (MN)} must be added in each pixel . The electrons stored in the \emph{Photo Diode (PD)} are collectively read out to Memory Node and used as an image signal. The exposure is performed at once, but the readout is performed for each row as shown in the figure. Therefore, the electrons are generated in the Memory Node before the readout becomes noise, and leads to deterioration in image quality. When an image is output with much noise, the part of the picture that is read later becomes brighter or noisy because the noise is increased in later read rows. Accordingly, it is necessary to reduce the noise generated in the Memory Node. Major causes of the noise are light penetration into Memory Node and dark current.
+The adjoining figure shows a simple configuration and reading method of GS pixel. In order to realize \emph{Global Shutter (GS)} capability, a \emph{Memory Mode (MN)} must be added in each pixel . The electrons stored in the \emph{Photo Diode (PD)} are collectively read out to Memory Node and used as an image signal. The exposure is performed at once, but the readout is performed for each row as shown in the figure. Therefore, the electrons are generated in the Memory Node before the readout becomes noise, and leads to deterioration in image quality. When an image is output with much noise, the part of the picture that is read later becomes brighter or noisy because the noise is increased in later read rows. Accordingly, it is necessary to reduce the noise generated in the Memory Node. Major causes of the noise are light penetration into Memory Node and dark current. \cite{PLS}
 
 PLS Noise is generated by light incident into Memory Node. An increase of PLS Noise leads to deterioration of image quality. This is because the charges generated by incident light to Memory Node are added to the charges stored in Memory Node after the exposure.
 

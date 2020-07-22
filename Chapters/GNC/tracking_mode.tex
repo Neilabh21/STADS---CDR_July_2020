@@ -83,7 +83,7 @@ This algorithm does not require any previous attitude information or an estimate
     \item \textbf{Observed/Measured Image} : The image at the current frame where only the centroid information is known, and the task at hand is to correctly identify these centroids using the information of the Reference Stars (in the Reference Image). 
 \end{itemize}
 The principle of the algorithm is detailed step-by-step below:
-\begin{enumerate}
+\begin{enumerate} \label{rapid_explain}
     \item The star images at the $(k-1)^{th}$ frames and before have been identified, and the objective is to identify the Observed Image at $(k)^{th}$ frame. The identified star image at $(k-1)^{th}$ frame is considered as the Reference Image for the $(k)^{th}$ frame. 
     \item The euclidean distance between the stars in the two images is calculated and compared with a \textbf{radius r}, known as the matching radius, to determine if any reference stars fall in the neighbourhood of an observed star, and if yes, how many. 
     \item If a star's neighborhood in the observed image includes only one star in reference image, the star in observation image is matched with the star in reference image and the star in the observation star image is 'tracked' successfully.
@@ -111,14 +111,13 @@ To speed up the process of star tracking, the algorithm also proposes 3 optimisa
 \begin{itemize}
     \item \textit{Parallel Star Centroiding}:\\
     This employs the Pixel-by-Pixel centroiding algorithm (Refer \ref{sec:pixel_by_pixel})
-    %'Ref pixel by pixel algo from feature extraction'
     
     \item \textit{Sorting Before Matching} \label{sorting_before_matching}:\\
     % Use the right \ref{} command here
-    In step 2 in the algorithm above, the matching between the stars in observation star image and reference star image is implemented one-by-one. But matching between stars with a long distance is meaningless, so sorting before matching is introduced. That is, the stars in the observation image are sorted in ascending order according to their image plane coordinates using bubble sort, and then the matching is carried out. This decreases the number of operations significantly. 
+    In step 2 of the algorithm \ref{rapid_explain}, the matching between the stars in observation star image and reference star image is implemented one-by-one. But matching between stars with a long distance is meaningless, so sorting before matching is introduced. That is, the stars in the observation image are sorted in ascending order according to their image plane coordinates using bubble sort, and then the matching is carried out. This decreases the number of operations significantly. 
     
     \item \textit{Star Catalogue Partition} \label{catalogue_partition}:\\
-    In step 6 and 7 of the algorithm, new star identification is done by accessing catalogue stars using the boresight vector and then mapping them onto the star sensor plane (Star Mapping), which can be time consuming and inefficient if searching for stars through the entire guide star catalogue. This is solved using the concept of \textit{`sub-catalogue'}.
+    In step 6 and 7 of the algorithm \ref{rapid_explain}, new star identification is done by accessing catalogue stars using the boresight vector and then mapping them onto the star sensor plane (Star Mapping), which can be time consuming and inefficient if searching for stars through the entire guide star catalogue. This is solved using the concept of \textit{`sub-catalogue'}.
     \begin{itemize}
         \item The celestial sphere is divided into 6 equal zones by using an inscribed cube and then pushing the sides of the cube away from the center of the sphere, to generate 6 equal parts of the celestial spheres. 
         \item Each one of the 6 zones can be partitioned into N x N sub portions. This way, the entire celestial sphere is divided into 6 x N x N sub portions. 
@@ -329,7 +328,7 @@ The Tracking Mode Algorithm finally decided by the team after going through all 
     Taking into account the above points, the team has decided to design a Radius Based Star Matching algorithm in lieu of a Window Centroiding based Star Matching algorithm. 
     
     \item \textbf{Prediction with Gyroscope v/s Prediction without Gyroscope}\\
-    The process of Centroid Prediction requires an estimate of the angular velocity and the centroids of the identified stars at the previous iteration. In algorithms \ref{sna} and \ref{zhang}, angular velocity is obtained using a Gyroscope, whereas in algorithm \ref{fast_algorithm}, the angular velocity is `predicted' using the centroid information of previous two frames (refer section \ref{slew_prediction}). Since the team is not sure whether a Gyroscope will be compatible with the STADS system, the Centroid Prediction algorithm will be designed using the latter approach. 
+    The process of Centroid Prediction requires an estimate of the angular velocity and the centroids of the identified stars at the previous iteration. In algorithms \ref{sna} and \ref{zhang}, angular velocity is obtained using a Gyroscope, whereas in algorithm \ref{fast_algorithm}, the angular velocity is 'predicted' using the centroid information of previous two frames (refer section \ref{slew_prediction}). Since the team is not sure whether a Gyroscope will be compatible with the STADS system, the Centroid Prediction algorithm will be designed using the latter approach. 
 \end{itemize} 
 Before explaining the detailed steps of the algorithm, it should be noted that the Star Identification process has been completed for the current frame ($k^{th}$) and the previous frame ($k-1^{th}$). The task at hand is to identify stars at the next frame ($k+1^{th}$) using the Tracking Algorithm. The algorithm can now be described as follows: 
 \begin{enumerate}

@@ -40,7 +40,7 @@ Electrical Interfacing is the interconnection or linking together various aspect
 % Dhruv: 
 % Siddhi: 
 
-\subsection{Interfacing a Image Sensor with the FPGA}
+\subsection{Interfacing an Image Sensor with the FPGA}
 We began by choosing a cheap camera named OV7670 as a learning task.We have written an AVR code for interfacing it with a micro-controller and also written a VHDL code for interfacing with the FPGA.
 
 For the final task we have chosen the CMOS image sensor named ITS-PYTHON 1300 as the camera.
@@ -56,9 +56,9 @@ SRAM is a type of volatile memory which is static i.e. need not be refreshed fro
 
 The process is as follows:
 \begin{itemize}
-    \item The FPGA saves the image bits into the SRAM1.
-    \item After the image is stored in SRAM1, it is processed by the FPGA.
-    \item In the meantime the second image captured by the image sensor is stored in SRAM2.
+    \item The FPGA saves the image bits into the SRAM-1.
+    \item After the image is stored in SRAM-1, it is processed by the FPGA.
+    \item In the meantime the second image captured by the image sensor is stored in SRAM-2.
     \item So one SRAM acts as an image buffer by storing the incoming image while the other processes the current image at any given time.
 \end{itemize}
 
